@@ -19,6 +19,8 @@ func UpdateEventInstances(app *pocketbase.PocketBase) {
 	}
 
 	for i := 0; i < len(users); i++ {
-		functions.GetAndStoreNextThreeEvents(users[i].Id, app)
+		if users[i].GetRaw("accessLevel") != "none" {
+			functions.GetAndStoreNextThreeEvents(users[i].Id, app)
+		}
 	}
 }
