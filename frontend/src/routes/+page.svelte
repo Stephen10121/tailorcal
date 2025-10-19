@@ -4,6 +4,20 @@
     let { data } = $props();
 
     let emailNotSet = $state(!data.user?.email);
+
+    async function testHit(scope: "newAccessToken" | "compareExp") {
+        try {
+            const data = await fetch(`/api/test?scope=${scope}`);
+
+            if (data.ok) {
+                const dataJSON = await data.json();
+
+                console.log(dataJSON)
+            }
+        } catch (err) {
+            console.log(err);
+        }
+    }
 </script>
 
 <h1>Welcome to SvelteKit</h1>
@@ -24,6 +38,11 @@
     {:else}
         <p>hello {data.user?.email}</p>
     {/if}
+
+    <div>
+        <Button onclick={() => testHit("compareExp")}>Test time compare.</Button>
+        <Button onclick={() => testHit("newAccessToken")}>Test new access token.</Button>
+    </div>
     
     <a href="/logout" class="underline">Logout</a>
 {:else}

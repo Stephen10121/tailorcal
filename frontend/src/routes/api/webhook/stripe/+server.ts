@@ -1,6 +1,7 @@
 import { error, json } from "@sveltejs/kit";
 import Stripe from "stripe";
 import { config } from "dotenv";
+import { userHasSubscribed } from "@/userSubscribed.js";
 
 config();
 
@@ -39,8 +40,6 @@ export async function POST({ request, locals }) {
                 const customerId = session?.customer as string;
                 const customer = await stripe.customers.retrieve(customerId);
 
-                console.log(session.line_items, session.id)
-
                 const priceId = process.env.STRIPE_PRICE_ID;
 
                 //@ts-ignore
@@ -60,25 +59,8 @@ export async function POST({ request, locals }) {
                     }
                 });
 
-
-                // Send a user subscribed message to the backend to start getting the data to populate the calendar.
-                // const userSubscribedResp = await fetch(process.env.VITE_PB_URL + "/userSubscribed", {
-                //     method: "POST",
-                //     headers: {
-                //         "Content-Type": "application/json"
-                //     },
-                //     body: JSON.stringify({
-                //         "accessToken": user.authToken,
-                //         "id": user.id
-                //     })
-                // });
-
-                // if (userSubscribedResp.ok) {
-                //     const userSubscribedRespJSON = await userSubscribedResp.json();
-                //     console.log(userSubscribedRespJSON);
-                // } else {
-                //     console.log(userSubscribedResp.status);
-                // }
+                // Tells the backend that the user has subscribed.
+                await userHasSubscribed(user.id);
 
                 break
             }
