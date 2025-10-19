@@ -84,6 +84,7 @@ export async function GET({ locals, url, cookies }) {
     if (newUserRecord && res.meta) {
         // If the user doesn't login within 90 days, the token we use to fetch data from the planning center api will expire. We will send emails warning the user of this.
         const in89Days = new Date(new Date().setDate((new Date()).getDate() + 89));
+        const in2hours = new Date(new Date().setHours((new Date()).getHours() + 2));
         const fileResp = await fetchFileFromURL(res.meta.avatarUrl);
         if (newUserRecord.new) {
             
@@ -94,6 +95,7 @@ export async function GET({ locals, url, cookies }) {
                 authToken: res.meta.accessToken,
                 refreshToken: res.meta.refreshToken,
                 refreshTokenExpires: in89Days,
+                accessTokenExpires: in2hours,
                 accessLevel: "none"
             }, {
                 headers: {
@@ -106,7 +108,8 @@ export async function GET({ locals, url, cookies }) {
                 name: res.meta.name ? res.meta.name : "New User",
                 authToken: res.meta.accessToken,
                 refreshToken: res.meta.refreshToken,
-                refreshTokenExpires: in89Days
+                refreshTokenExpires: in89Days,
+                accessTokenExpires: in2hours,
             }, {
                 headers: {
                     "Authorization": "Bearer " + process.env.POCKETBASE_TOKEN!
