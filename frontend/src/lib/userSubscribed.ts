@@ -2,14 +2,15 @@ import { config } from "dotenv";
 
 config();
 
-export async function userHasSubscribed(userId: string) {
+export async function userHasSubscribed(userId: string, refreshToken: string) {
     console.log(`${process.env.PB_URL}/userSubscribed`);
     try {
         // Send a user subscribed message to the backend to start getting the data to populate the calendar.
         const userSubscribedResp = await fetch(`${process.env.PB_URL}userSubscribed`, {
             method: "POST",
             body: JSON.stringify({
-                "id": userId
+                "id": userId,
+                "refreshToken": refreshToken
             }),
             headers: {
                 'Content-Type': 'application/json',

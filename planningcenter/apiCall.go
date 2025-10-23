@@ -2,7 +2,6 @@ package planningcenter
 
 import (
 	"errors"
-	"fmt"
 	"io"
 	"log"
 	"net/http"
@@ -42,7 +41,7 @@ func SendAPICall(method string, endpointURL string, body io.Reader, userId strin
 		endpointURL,
 		body,
 	)
-	fmt.Println(record.GetString("authToken"))
+	req.Header.Add("Content-Type", "application/json")
 	req.Header.Add("Authorization", "Bearer "+record.GetString("authToken"))
 
 	if err != nil {

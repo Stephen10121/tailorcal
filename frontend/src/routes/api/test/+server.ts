@@ -1,6 +1,9 @@
 import { testerEndpoint } from "@/testerEndpoint.js";
 import { userHasSubscribed } from "@/userSubscribed";
 import { error, json } from "@sveltejs/kit";
+import { config } from "dotenv";
+
+config();
 
 export async function GET({ locals, url }) {
     console.log("Test Hit.");
@@ -15,9 +18,9 @@ export async function GET({ locals, url }) {
             });
             
             if (scope === "newAccessToken") {
-                await userHasSubscribed(user.id);
+                await userHasSubscribed(user.id, user.refreshToken);
             } else if (scope === "compareExp") {
-                let res = await testerEndpoint(user.id);
+                let res = await testerEndpoint(user.id, user.refreshToken);
                 return json({ msg: res});
             }
 

@@ -1,0 +1,44 @@
+<script lang="ts">
+    import { Button } from '@/components/ui/button';
+
+    let { data } = $props();
+
+    let emailNotSet = $derived(!data.user.userEmail);
+
+    async function testHit(scope: "newAccessToken" | "compareExp") {
+        try {
+            const data = await fetch(`/api/test?scope=${scope}`);
+
+            if (data.ok) {
+                const dataJSON = await data.json();
+
+                console.log(dataJSON)
+            }
+        } catch (err) {
+            console.log(err);
+        }
+    }
+</script>
+
+{#if data.user.accessLevel !== "none"}
+    <a href="{data.stripeCustomerPortal}?prefilled_email={data.user.userEmail}" target="_blank">Customer Portal</a>
+{:else}
+    <Button onclick={() => {
+        if (data.user && data.user.userEmail) {
+            window.location.replace(data.stripeUrl + "?prefilled_email=" + data.user.userEmail);
+        }
+    }}>Pay $1 a month.</Button>
+{/if}
+
+{#if emailNotSet}
+    <p>You need to set the email.</p>
+{:else}
+    <p>hello {data.user?.userEmail}</p>
+{/if}
+
+<div>
+    <Button onclick={() => testHit("compareExp")}>Test time compare.</Button>
+    <Button onclick={() => testHit("newAccessToken")}>Test new access token.</Button>
+</div>
+
+<a href="/logout" class="underline">Logout</a>

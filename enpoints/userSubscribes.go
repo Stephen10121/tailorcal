@@ -5,12 +5,14 @@ import (
 	"io"
 
 	"github.com/Stephen10121/tailorcalbackend/functions"
+	"github.com/pocketbase/dbx"
 	"github.com/pocketbase/pocketbase"
 	"github.com/pocketbase/pocketbase/core"
 )
 
 type UserSubscribedBody struct {
-	Id string `json:"id"`
+	Id           string `json:"id"`
+	RefreshToken string `json:"refreshToken"`
 }
 
 // Whenever the user just subscribed to a payment plan. This enpoint triggers to initialize the "benefits" haha
@@ -37,7 +39,17 @@ func UserHasSubscribed(e *core.ServeEvent, base *pocketbase.PocketBase) {
 			})
 		}
 
-		record, err := base.FindRecordById("users", bodyStruct.Id)
+		if len(bodyStruct.RefreshToken) == 0 {
+			return c.JSON(400, map[string]string{
+				"msg": "Missing data in the body!",
+			})
+		}
+
+		record, err := base.FindFirstRecordByFilter(
+			"users",
+			"id = {:theId} && refreshToken = {:refreshedToken}",
+			dbx.Params{"theId": bodyStruct.Id, "refreshedToken": bodyStruct.RefreshToken},
+		)
 		if err != nil {
 			return c.JSON(401, map[string]string{
 				"msg": "Unauthorized!",

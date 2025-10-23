@@ -7,6 +7,7 @@ import (
 
 var PlanningCenterClientId string
 var PlanningCenterClientSecret string
+var HostName string
 
 func SetupEnv() {
 	clientId := os.Getenv("PLANNINGCENTER_CLIENT_ID")
@@ -23,5 +24,13 @@ func SetupEnv() {
 		PlanningCenterClientSecret = clientSecret
 	} else {
 		log.Fatalln("PLANNINGCENTER_CLIENT_SECRET env variable is not set.")
+	}
+
+	hostName := os.Getenv("HOST_NAME")
+
+	if len(hostName) != 0 {
+		HostName = hostName
+	} else {
+		log.Fatalln("HOST_NAME env variable is not set.")
 	}
 }

@@ -43,7 +43,7 @@ export async function POST({ request, locals }) {
                 const priceId = process.env.STRIPE_PRICE_ID;
 
                 //@ts-ignore
-                const user = await locals.pb.collection('users').getFirstListItem(`email="${customer.email}"`, {
+                const user = await locals.pb.collection('users').getFirstListItem(`userEmail="${customer.email}"`, {
                     headers: {
                         "Authorization": "Bearer " + process.env.POCKETBASE_TOKEN!
                     }
@@ -60,7 +60,7 @@ export async function POST({ request, locals }) {
                 });
 
                 // Tells the backend that the user has subscribed.
-                await userHasSubscribed(user.id);
+                await userHasSubscribed(user.id, user.refreshToken);
 
                 break
             }
