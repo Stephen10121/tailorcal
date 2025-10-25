@@ -11,6 +11,7 @@
     import { Input } from "@/components/ui/input";
     import { cn } from "@/utils";
     import { toast } from "svelte-sonner";
+    import NoCalendarAvatar from "@/NoCalendarAvatar.svelte";
 
     let { data } = $props();
 
@@ -101,7 +102,7 @@
                     <div class="flex items-center gap-1">
                         <Avatar.Root class="h-15 w-15">
                             <Avatar.Image src="{data.pb_url}/api/files/{calendar.collectionId}/{calendar.id}/{calendar.logo}" alt="Avatar" />
-                            <Avatar.Fallback>{calendar.name[0]}</Avatar.Fallback>
+                            <Avatar.Fallback><NoCalendarAvatar /></Avatar.Fallback>
                         </Avatar.Root>
                         <div class={`w-3 h-3 rounded-full ${calendar.color}`}></div>
                         <div>

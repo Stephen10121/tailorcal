@@ -11,6 +11,7 @@
     import { Spinner } from "$lib/components/ui/spinner/index.js";
     import { toast } from "svelte-sonner";
     import { clearFileInput } from "@/utils.js";
+    import NoCalendarAvatar from "@/NoCalendarAvatar.svelte";
 
     let { data } = $props();
 
@@ -85,7 +86,7 @@
 
 <div class="max-w-5xl mx-auto space-y-6">
     {#if saveRequired}
-        <div class="w-full stickySidebar z-50">
+        <div class="w-full stickySidebar z-50 p-2">
             <div class="bg-foreground w-full p-3 shadow-2xl border rounded-md flex items-center justify-between">
                 <p class="text-accent-foreground">You have some unsaved changes.</p>
                 <Button variant="outline" disabled={savingChanges} onclick={saveChanges}>
@@ -134,9 +135,7 @@
                             </button>
                         </div>
                     {:else}
-                        <div class="w-24 h-24 rounded-lg flex items-center justify-center bg-accent">
-                            <CalendarDays class="h-10 w-10 text-white" />
-                        </div>
+                        <NoCalendarAvatar />
                     {/if}
                 </div>
                 <div class="flex-1 space-y-3">
@@ -241,9 +240,7 @@
                     class="w-12 h-12 rounded-lg object-cover"
                     />
                 {:else}
-                    <div class="w-12 h-12 rounded-lg flex items-center justify-center bg-accent">
-                    <CalendarDays class="h-6 w-6 text-white" />
-                    </div>
+                    <NoCalendarAvatar />
                 {/if}
                 <div class="flex-1">
                     <h3 class="text-xl font-semibold text-foreground">{calendarName}</h3>
@@ -293,12 +290,8 @@
             <Card.Content class="space-y-4">
             <div class="space-y-2">
                 <div class="flex items-center justify-between text-sm">
-                <span class="text-muted-foreground">This Month</span>
-                <span class="font-semibold text-foreground">8</span>
-                </div>
-                <div class="flex items-center justify-between text-sm">
-                <span class="text-muted-foreground">Completion Rate</span>
-                <span class="font-semibold text-foreground">94%</span>
+                <span class="text-muted-foreground">Visits</span>
+                <span class="font-semibold text-foreground">{data.selectedCalendar.visits}</span>
                 </div>
             </div>
             </Card.Content>
