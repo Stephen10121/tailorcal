@@ -23,7 +23,7 @@
                 href={route.href}
                 class={cn(
                 "flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors",
-                pathname === route.href ? "bg-accent/10 text-accent" : "text-muted-foreground hover:bg-muted hover:text-foreground",
+                pathname === route.href || (pathname.includes("/dashboard/calendars") && route.href === "/dashboard/calendars") ? "bg-accent/10 text-accent" : "text-muted-foreground hover:bg-muted hover:text-foreground",
                 )}
             >
                 <route.icon class="h-5 w-5" />

@@ -4,4 +4,5 @@ Disallow: /cgi-bin/
 Disallow: /dashboard/
 Disallow: /api/
 Disallow: /oath/
+Disallow: /cal/
 Sitemap: https://tailorcal.com/sitemap.xml

@@ -1,5 +1,3 @@
-import { testerEndpoint } from "@/testerEndpoint.js";
-import { userHasSubscribed } from "@/userSubscribed";
 import { error, json } from "@sveltejs/kit";
 import { config } from "dotenv";
 

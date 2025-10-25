@@ -20,6 +20,10 @@
     }
 </script>
 
+<svelte:head>
+    <title>Dashboard | TailorCal</title>
+</svelte:head>
+
 {#if data.user.accessLevel !== "none"}
     <a href="{data.stripeCustomerPortal}?prefilled_email={data.user.userEmail}" target="_blank">Customer Portal</a>
 {:else}

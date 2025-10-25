@@ -6,6 +6,10 @@
     import CTA from "@/landingPage/CTA.svelte";
 </script>
 
+<svelte:head>
+    <title>TailorCal</title>
+</svelte:head>
+
 <Header />
 <Hero />
 <Features />

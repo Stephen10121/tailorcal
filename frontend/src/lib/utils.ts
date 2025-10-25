@@ -32,3 +32,18 @@ export async function fetchFileFromURL(fileLink: string): Promise<{error: false,
 		}
 	}
 }
+
+// Don't judge
+export function clearFileInput(ctrl: HTMLElement | null) {
+	if (ctrl === null) return
+	try {
+		//@ts-ignore
+		ctrl.value = null;
+		//@ts-ignore
+		if (ctrl.value) {
+			//@ts-ignore
+			ctrl.parentNode.replaceChild(ctrl.cloneNode(true), ctrl); 
+		} 
+		} catch(ex) {
+	}
+}
