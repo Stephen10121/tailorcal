@@ -3,6 +3,7 @@
     import type { RecordModel } from "pocketbase";
     import { Input } from "@/components/ui/input";
     import {  Search, } from "@lucide/svelte";
+    import Badge from "./components/ui/badge/badge.svelte";
 
     let { calendars }: { calendars: RecordModel[] } = $props();
 
@@ -55,13 +56,17 @@
     <div class="border shadow-lg bg-card absolute left-0 -bottom-1 translate-y-full w-full max-w-md rounded-lg p-1 z-50">
         {#each filteredTerms as term (`filteredSearchTerms${term.id}`)}
             <a
-                onclick={() => {if (everythingInput) everythingInput.value = ""}}
+                onclick={() => {if (everythingInput) {
+                    everythingInput.value = "";
+                    filteredTerms = [];
+                }}}
                 href="/dashboard/calendars/{term.id}"
                 class="w-full px-4 py-3 hover:bg-accent/50 transition-colors text-left flex flex-col gap-1 rounded-md"
             >
                 <div class="flex items-center justify-between">
                     <span class="font-medium text-foreground underline">{term.name}</span>
-                    <span class="text-xs text-muted-foreground">{term.id}</span>
+                    <Badge variant="outline">Calendar</Badge>
+                    <!-- <span class="text-xs text-muted-foreground">{term.id}</span> -->
                 </div>
                 <p class="text-sm text-muted-foreground line-clamp-1">{term.description}</p>
             </a>

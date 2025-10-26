@@ -1,31 +1,33 @@
 <script lang="ts">
-    import { invalidateAll } from "$app/navigation";
-    import { Button } from "@/components/ui/button";
-    import * as Card from "@/components/ui/card/index";
-    import { Input } from "@/components/ui/input";
-    import { Label } from "@/components/ui/label";
+    import { ArrowLeft, Clock, Copy, Eye, Link2, Shield, SquareArrowOutUpRight, Upload, X } from "@lucide/svelte";
+    import { changeCalendarSettings } from "@/endpointCalls/changeCalendarSetting.js";
+    import { Spinner } from "$lib/components/ui/spinner/index.js";
+    import NoCalendarAvatar from "@/NoCalendarAvatar.svelte";
     import { Switch } from "@/components/ui/switch/index.js";
     import { Textarea } from "@/components/ui/textarea";
-    import { changeCalendarSettings } from "@/endpointCalls/changeCalendarSetting.js";
-    import { ArrowLeft, CalendarDays, Clock, Copy, Eye, Link2, Shield, Upload, X } from "@lucide/svelte";
-    import { Spinner } from "$lib/components/ui/spinner/index.js";
+    import * as Card from "@/components/ui/card/index";
+    import { goto, invalidateAll } from "$app/navigation";
+    import { Button, buttonVariants } from "@/components/ui/button";
+    import { Input } from "@/components/ui/input";
+    import { Label } from "@/components/ui/label";
+    import { clearFileInput, cn } from "@/utils.js";
     import { toast } from "svelte-sonner";
-    import { clearFileInput } from "@/utils.js";
-    import NoCalendarAvatar from "@/NoCalendarAvatar.svelte";
+    import { deleteCalendar } from "@/endpointCalls/deleteCalendar.js";
+    import * as Dialog from "$lib/components/ui/dialog/index.js";
 
     let { data } = $props();
 
-    let avatarLink = $derived(data.selectedCalendar.logo ? `${data.pb_url}/api/files/${data.selectedCalendar.collectionId}/${data.selectedCalendar.id}/${data.selectedCalendar.logo}` : "")
+    let avatarLink = $derived(data.selectedCalendar.logo ? `${data.pb_url}/api/files/${data.selectedCalendar.collectionId}/${data.selectedCalendar.id}/${data.selectedCalendar.logo}` : "");
+    
     let uploadNewAvatar: File | null = $state(null);
     let uploadNewAvatarLink = $derived(uploadNewAvatar ? URL.createObjectURL(uploadNewAvatar) : null);
 
-    let calendarName = $derived(data.selectedCalendar.name);
+    let passwordScreenMessage = $derived(data.selectedCalendar.passwordScreenMessage);
     let calendarDescription = $derived(data.selectedCalendar.description);
-
     let passwordEnabled = $derived(data.selectedCalendar.passwordEnabled);
-    let newPassword = $state("");
-
+    let calendarName = $derived(data.selectedCalendar.name);
     let saveRequired = $state(false);
+    let newPassword = $state("");
 
     // This effect checks if any configurations have changed. If so, the saveRequired state will be set to true.
     $effect(() => {
@@ -35,8 +37,9 @@
         const newPasswordCreated = newPassword.length !== 0;
         const nameChanged = calendarName !== data.selectedCalendar.name;
         const descriptionChanged = calendarDescription !== data.selectedCalendar.description;
+        const passwordScreenMessageChanged = passwordScreenMessage !== data.selectedCalendar.passwordScreenMessage;
 
-        saveRequired = passwordEnableHasChanged || newAvatarUploaded || currentAvatarRemoved || newPasswordCreated || nameChanged || descriptionChanged;
+        saveRequired = passwordEnableHasChanged || newAvatarUploaded || currentAvatarRemoved || newPasswordCreated || nameChanged || descriptionChanged || passwordScreenMessageChanged;
     });
 
     function handleRemoveAvatar() {
@@ -67,7 +70,7 @@
     let savingChanges = $state(false);
     async function saveChanges() {
         savingChanges = true;
-        const success = await changeCalendarSettings(data.selectedCalendar.id, calendarName, calendarDescription, passwordEnabled, newPassword, avatarLink, uploadNewAvatar);
+        const success = await changeCalendarSettings(data.selectedCalendar.id, calendarName, calendarDescription, passwordEnabled, newPassword, avatarLink, uploadNewAvatar, passwordScreenMessage);
         newPassword = "";
         savingChanges = false;
         if (success) {
@@ -76,6 +79,16 @@
             let updating = toast.info("Updating Calendar");
             await invalidateAll();
             toast.dismiss(updating);
+        }
+    }
+
+    async function deleteCal() {
+        savingChanges = true;
+        const success = await deleteCalendar(data.selectedCalendar.id);
+        newPassword = "";
+        savingChanges = false;
+        if (success) {
+            goto("/dashboard/calendars");
         }
     }
 </script>
@@ -105,8 +118,8 @@
             <ArrowLeft class="h-5 w-5" />
         </Button>
         <div>
-        <h1 class="text-3xl font-bold text-foreground">Calendar Details</h1>
-        <p class="text-muted-foreground mt-1">Manage your calendar settings and view bookings</p>
+        <h1 class="text-3xl font-bold text-foreground">{data.selectedCalendar.name} | Calendar Details</h1>
+        <p class="text-muted-foreground mt-1">Manage your calendar settings and filters.</p>
         </div>
     </div>
 
@@ -206,26 +219,35 @@
             <Card.Description>Control access to your calendar</Card.Description>
             </Card.Header>
             <Card.Content class="space-y-4">
-            <div class="flex items-center justify-between">
-                <div class="space-y-0.5">
-                <Label for="password-protection" class="text-base">
-                    Password Protection
-                </Label>
-                <p class="text-sm text-muted-foreground">Require a password to book this calendar</p>
+                <div class="flex items-center justify-between">
+                    <div class="space-y-0.5">
+                    <Label for="password-protection" class="text-base">
+                        Password Protection
+                    </Label>
+                    <p class="text-sm text-muted-foreground">Require a password to access this calendar</p>
+                    </div>
+                    <Switch id="password-protection" bind:checked={passwordEnabled} />
                 </div>
-                <Switch id="password-protection" bind:checked={passwordEnabled} />
-            </div>
 
-            {#if passwordEnabled}
-                <div class="space-y-2 pt-2">
-                <Label for="password">Calendar Password</Label>
-                <Input id="password" bind:value={newPassword} type="password" placeholder="Enter password" />
-                </div>
-            {/if}
+                {#if passwordEnabled}
+                    <div class="space-y-2 pt-2">
+                        <Label for="password">Calendar Password</Label>
+                        <Input id="password" bind:value={newPassword} type="password" placeholder="Enter password" />
+                    </div>
+                    <div class="space-y-2">
+                        <Label for="passwordScreenMessage">Password Screen Message</Label>
+                        <Textarea
+                        id="passwordScreenMessage"
+                        bind:value={passwordScreenMessage}
+                        placeholder="Enter Password Screen Message"
+                        rows={3}
+                        />
+                    </div>
+                {/if}
             </Card.Content>
         </Card.Root>
 
-        <Card.Root>
+        <!-- <Card.Root>
             <Card.Header>
             <Card.Title>Calendar Preview</Card.Title>
             <Card.Description>How your calendar appears to visitors</Card.Description>
@@ -257,14 +279,14 @@
                 </div>
             </div>
             </Card.Content>
-        </Card.Root>
+        </Card.Root> -->
         </div>
 
         <div class="space-y-6 stickySidebar h-fit">
         <Card.Root>
             <Card.Header>
-            <Card.Title>Booking Link</Card.Title>
-            <Card.Description>Share this link with others</Card.Description>
+            <Card.Title>Link</Card.Title>
+            <Card.Description>Share this calendar with others</Card.Description>
             </Card.Header>
             <Card.Content class="space-y-3">
             <div class="flex items-center gap-2 p-3 bg-muted rounded-lg">
@@ -275,9 +297,9 @@
                 <Copy class="h-4 w-4" />
                 Copy Link
             </Button>
-            <Button class="w-full gap-2">
-                <Eye class="h-4 w-4" />
-                Preview Page
+            <Button class="w-full gap-2" href="/cal/{data.selectedCalendar.id}" target="_blank">
+                <SquareArrowOutUpRight class="h-4 w-4" />
+                Goto Page
             </Button>
             </Card.Content>
         </Card.Root>
@@ -302,18 +324,23 @@
             <Card.Title>Quick Actions</Card.Title>
             </Card.Header>
             <Card.Content class="space-y-2">
-            <Button variant="outline" class="w-full justify-start bg-transparent">
-                View All Bookings
-            </Button>
-            <Button variant="outline" class="w-full justify-start bg-transparent">
-                Edit Availability
-            </Button>
-            <Button
-                variant="outline"
-                class="w-full justify-start text-destructive hover:text-destructive bg-transparent"
-            >
-                Delete Calendar
-            </Button>
+                <!-- Delete Calendar Dialog -->
+                <Dialog.Root>
+                    <Dialog.Trigger class={cn(buttonVariants({ variant: "outline" }), "w-full justify-start text-destructive hover:bg-red-500 bg-transparent")}>
+                        Delete Calendar
+                    </Dialog.Trigger>
+                    <Dialog.Content>
+                        <Dialog.Header>
+                            <Dialog.Title>Are you sure absolutely sure?</Dialog.Title>
+                            <Dialog.Description>
+                                This action cannot be undone. This will permanently delete this calendar from our servers. All links relying on this calendar will not work.
+                            </Dialog.Description>
+                            <Dialog.Footer>
+                                <Button variant="destructive" onclick={deleteCal}>Confirm Delete</Button>
+                            </Dialog.Footer>
+                        </Dialog.Header>
+                    </Dialog.Content>
+                </Dialog.Root>
             </Card.Content>
         </Card.Root>
         </div>

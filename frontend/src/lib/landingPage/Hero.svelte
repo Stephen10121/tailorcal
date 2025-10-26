@@ -3,7 +3,7 @@
     import { ArrowRight } from "@lucide/svelte";
 
     let mostPopular = $state([
-        { name: "All Events", visits: "47 visits" },
+        { name: "Church Website Front Page", visits: "47 visits" },
         { name: "Only Approved Events", visits: "32 visits" },
         { name: "Church Location Events", visits: "28 visits" },
     ]);

@@ -12,20 +12,39 @@
     import { cn } from "@/utils";
     import { toast } from "svelte-sonner";
     import NoCalendarAvatar from "@/NoCalendarAvatar.svelte";
+    import { goto, invalidateAll } from "$app/navigation";
+    import { deleteCalendar } from "@/endpointCalls/deleteCalendar.js";
+    import { Switch } from "@/components/ui/switch/index.js";
+    import { Spinner } from "@/components/ui/spinner/index.js";
+    import { createCalendar } from "@/endpointCalls/createCalendar.js";
 
     let { data } = $props();
 
     let newCalendarDialogOpen = $state(false);
     let newCalendarDescription = $state("");
     let newCalendarName = $state("");
+    let newCalendarPasswordEnabled = $state(false);
+    let newCalendarPassword = $state("");
+    let creatingCalendar = $state(false);
 
-    function handleCreateCalendar() {
+    async function handleCreateCalendar() {
         if (newCalendarName && newCalendarDescription) {
-            console.log("Creating a calendar.");
+            creatingCalendar = true;
+            const success = await createCalendar(newCalendarName, newCalendarDescription, newCalendarPasswordEnabled, newCalendarPassword, data.stripeUrl, data.user.userEmail);
+            creatingCalendar = false;
+            if (success) {
+                newCalendarDialogOpen = false;
+                newCalendarDescription = "";
+                newCalendarName = "";
+                newCalendarPasswordEnabled = false;
+                newCalendarPassword = "";
 
-            newCalendarName = "";
-            newCalendarDescription = ""
-            newCalendarDialogOpen = false;
+                let updating = toast.info("Updating Calendar List");
+                await invalidateAll();
+                toast.dismiss(updating);
+            }
+        } else {
+            toast.error("Missing Fields.");
         }
     }
 
@@ -38,6 +57,19 @@
             description: link,
             descriptionClass: "underline"
         })
+    }
+
+    let deleteCalendarId: string | null = $state(null);
+
+    async function deleteCal() {
+        if (deleteCalendarId === null) return
+        const deletingCalendar = toast.loading("Deleting Calendar");
+        const success = await deleteCalendar(deleteCalendarId);
+        toast.dismiss(deletingCalendar);
+        deleteCalendarId = null;
+        if (success) {
+            invalidateAll();
+        }
     }
 </script>
 
@@ -60,35 +92,58 @@
         <Dialog.Content class="sm:max-w-[500px]">
             <Dialog.Header>
             <Dialog.Title>Create New Calendar</Dialog.Title>
-            <Dialog.Description>Set up a new calendar type for your bookings</Dialog.Description>
+                <Dialog.Description>You can change more settings after creating the calendar.</Dialog.Description>
             </Dialog.Header>
 
             <div class="space-y-4 py-4">
-            <div class="space-y-2">
-                <Label for="name">Calendar Name</Label>
-                <Input
-                id="name"
-                placeholder="e.g., 30 Minute Meeting"
-                bind:value={newCalendarName}
-                />
-            </div>
+                <div class="space-y-2">
+                    <Label for="name">Calendar Name</Label>
+                    <Input
+                    id="name"
+                    placeholder="e.g., 30 Minute Meeting"
+                    bind:value={newCalendarName}
+                    />
+                </div>
 
-            <div class="space-y-2">
-                <Label for="description">Description</Label>
-                <Textarea
-                id="description"
-                placeholder="Brief description of this calendar type"
-                bind:value={newCalendarDescription}
-                rows={3}
-                />
-            </div>
+                <div class="space-y-2">
+                    <Label for="description">Description</Label>
+                    <Textarea
+                    id="description"
+                    placeholder="Brief description of this calendar type"
+                    bind:value={newCalendarDescription}
+                    rows={3}
+                    />
+                </div>
+                <div class="flex items-center justify-between">
+                    <div class="space-y-0.5">
+                    <Label for="password-protection" class="text-base">
+                        Password Protection
+                    </Label>
+                    <p class="text-sm text-muted-foreground">Require a password to access this calendar</p>
+                    </div>
+                    <Switch id="password-protection" bind:checked={newCalendarPasswordEnabled} />
+                </div>
+
+                {#if newCalendarPasswordEnabled}
+                    <div class="space-y-2 pt-2">
+                        <Label for="password">Calendar Password</Label>
+                        <Input id="password" bind:value={newCalendarPassword} type="password" placeholder="Enter password" />
+                    </div>
+                {/if}
             </div>
 
             <Dialog.Footer>
             <Button variant="outline" onclick={() => newCalendarDialogOpen = false}>
                 Cancel
             </Button>
-            <Button onclick={handleCreateCalendar}>Create Calendar</Button>
+            <Button onclick={handleCreateCalendar}>
+                {#if creatingCalendar}
+                    <Spinner />
+                    Creating Calendar...
+                {:else}
+                    Create Calendar
+                {/if}
+            </Button>
             </Dialog.Footer>
         </Dialog.Content>
         </Dialog.Root>
@@ -138,7 +193,7 @@
                         <Copy class="h-4 w-4 mr-2" />
                         Copy Link
                         </DropdownMenu.Item>
-                        <DropdownMenu.Item class="text-destructive data-highlighted:bg-red-500 dropdownStuff">
+                        <DropdownMenu.Item class="text-destructive data-highlighted:bg-red-500 dropdownStuff" onclick={() => {deleteCalendarId = calendar.id}}>
                         <Trash2 class="h-4 w-4 mr-2" />
                         Delete
                         </DropdownMenu.Item>
@@ -165,6 +220,21 @@
         {/each}
     </div>
 </div>
+
+<!-- Delete Calendar Dialog -->
+<Dialog.Root open={deleteCalendarId !== null} onOpenChange={() => deleteCalendarId = null}>
+    <Dialog.Content>
+        <Dialog.Header>
+            <Dialog.Title>Are you sure absolutely sure?</Dialog.Title>
+            <Dialog.Description>
+                This action cannot be undone. This will permanently delete this calendar from our servers. All links relying on this calendar will not work.
+            </Dialog.Description>
+            <Dialog.Footer>
+                <Button variant="destructive" onclick={deleteCal}>Confirm Delete</Button>
+            </Dialog.Footer>
+        </Dialog.Header>
+    </Dialog.Content>
+</Dialog.Root>
 
 <style>
     :global(.dropdownStuff:hover svg) {

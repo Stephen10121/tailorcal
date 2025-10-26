@@ -10,6 +10,7 @@ export async function changeCalendarSettings(
     newPassword: string,
     avatarLink: string,
     uploadedAvatar: File | null,
+    passwordScreenMessage: string
 ): Promise<Success> {
     const data = new FormData();
 
@@ -20,6 +21,7 @@ export async function changeCalendarSettings(
     data.append("enablePassword", enablePassword ? "1" : "0");
     data.append("newPassword", newPassword);
     data.append("avatarLink", avatarLink);
+    data.append("passwordScreenMessage", passwordScreenMessage);
 
     const response = await fetch('/api/calendar', {
         method: 'PATCH',
