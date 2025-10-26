@@ -14,6 +14,7 @@
     import { toast } from "svelte-sonner";
     import { deleteCalendar } from "@/endpointCalls/deleteCalendar.js";
     import * as Dialog from "$lib/components/ui/dialog/index.js";
+    import PrettyDate from "@/PrettyDate.svelte";
 
     let { data } = $props();
 
@@ -39,7 +40,7 @@
         const descriptionChanged = calendarDescription !== data.selectedCalendar.description;
         const passwordScreenMessageChanged = passwordScreenMessage !== data.selectedCalendar.passwordScreenMessage;
 
-        saveRequired = passwordEnableHasChanged || newAvatarUploaded || currentAvatarRemoved || newPasswordCreated || nameChanged || descriptionChanged || passwordScreenMessageChanged;
+        saveRequired = passwordEnableHasChanged || newAvatarUploaded || currentAvatarRemoved || (passwordEnableHasChanged && newPasswordCreated) || nameChanged || descriptionChanged || (passwordEnableHasChanged && passwordScreenMessageChanged);
     });
 
     function handleRemoveAvatar() {
@@ -312,8 +313,16 @@
             <Card.Content class="space-y-4">
             <div class="space-y-2">
                 <div class="flex items-center justify-between text-sm">
-                <span class="text-muted-foreground">Visits</span>
-                <span class="font-semibold text-foreground">{data.selectedCalendar.visits}</span>
+                    <span class="text-muted-foreground">Visits</span>
+                    <span class="font-semibold text-foreground">{data.selectedCalendar.visits}</span>
+                </div>
+                <div class="flex items-center justify-between text-sm">
+                    <span class="text-muted-foreground">Created</span>
+                    <span class="font-semibold text-foreground"><PrettyDate date={new Date(data.selectedCalendar.created)} /></span>
+                </div>
+                <div class="flex items-center justify-between text-sm">
+                    <span class="text-muted-foreground">Updated</span>
+                    <span class="font-semibold text-foreground"><PrettyDate date={new Date(data.selectedCalendar.updated)} /></span>
                 </div>
             </div>
             </Card.Content>

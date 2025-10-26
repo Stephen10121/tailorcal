@@ -19,7 +19,7 @@
 	<div class="flex-1 flex flex-col h-full">
 		<DashboardHeader avatar={data.avatar} user={data.user} calendars={data.calendars} />
 
-		<main class="flex-1 p-6 space-y-6 mainPage relative">
+		<main class="flex-1 p-6 space-y-6 mainPage relative h-full">
 			{#if navigating.complete !== null}
 				<DashboardIsNavigating />
 			{/if}

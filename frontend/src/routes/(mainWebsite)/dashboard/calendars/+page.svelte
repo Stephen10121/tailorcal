@@ -77,7 +77,7 @@
     <title>My Calendars | TailorCal</title>
 </svelte:head>
 
-<div class="w-full space-y-6">
+<div class="w-full h-full space-y-6">
     <div class="flex items-center justify-between">
         <div>
         <h1 class="text-3xl font-bold text-foreground">My Calendars</h1>
@@ -149,7 +149,10 @@
         </Dialog.Root>
     </div>
 
-    <div class="grid gap-4 xl:grid-cols-3">
+    <div class="w-full h-full grid gap-4 xl:grid-cols-3 relative">
+        {#if data.calendars.length === 0}
+            <p class="absolute top-3 left-1/2 -translate-1/2 text-muted-foreground">No Calendars Yet.</p>
+        {/if}
         {#each data.calendars as calendar (`calendarlist${calendar.id}`)}
             <Card.Root class="hover:shadow-lg transition-shadow">
                 <Card.Header>

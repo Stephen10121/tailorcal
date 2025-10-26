@@ -93,11 +93,14 @@ export async function PATCH({ locals, request }) {
             "name": name.toString(),
             "description": description.toString(),
             "passwordEnabled": enablePassword.toString() === "1",
-            "passwordScreenMessage": passwordScreenMessage.toString()
         };
 
         if (newPassword.toString().length > 0 && enablePassword.toString() === "1") {
             data["password"] = newPassword.toString();
+        }
+
+        if (enablePassword.toString() === "1") {
+            data["passwordScreenMessage"] = passwordScreenMessage.toString();
         }
 
         if (avatarLink.toString().length === 0) {
