@@ -12,4 +12,4 @@ RUN go build -o main main.go
 
 EXPOSE 8090
 
-CMD [ "./main", "serve", "-http=0.0.0.0:8090" ]
+CMD [ "./main", "serve", "--http=0.0.0.0:8090" ]
