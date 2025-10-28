@@ -1,0 +1,6 @@
+*.env
+pb_data/
+main
+frontend/
+info.txt
+run.sh
