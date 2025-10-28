@@ -1,4 +1,5 @@
 import { clsx, type ClassValue } from "clsx";
+import type { RecordModel } from "pocketbase";
 import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
@@ -46,4 +47,48 @@ export function clearFileInput(ctrl: HTMLElement | null) {
 		} 
 		} catch(ex) {
 	}
+}
+
+export const LONGDAYTOSTRING = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+export const DAYTOSTRING = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+export const MONTHTOSTRING = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+export function dateRangeOverlaps(a_start: Date, a_end: Date, b_start: Date, b_end: Date) {
+    if (a_start <= b_start && b_start <= a_end) return true; // b starts in a
+    if (a_start <= b_end   && b_end   <= a_end) return true; // b ends in a
+    if (b_start <  a_start && a_end   <  b_end) return true; // a in b
+    return false;
+}
+
+export type EventTimesType = {
+	name: string,
+	startTime: string,
+	endTime: string
+}
+
+export type EventResourcesType = {
+	id: string,
+	kind: string,
+	name: string,
+	path_name: string
+}
+
+export type EventTagsType = {
+	id: string,
+	color: string,
+	name: string
+}
+
+export interface EventDBModel extends RecordModel {
+	name: string,
+	location: string,
+	times: EventTimesType[] | null,
+	resources: EventResourcesType[] | null
+	tags: EventTagsType[] | null,
+	startTime: Date,
+	endTime: Date,
+}
+
+export interface EventDBModelPrivate extends EventDBModel {
+	owner: string
 }
