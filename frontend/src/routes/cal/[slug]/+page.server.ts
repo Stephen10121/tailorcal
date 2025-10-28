@@ -18,7 +18,7 @@ export async function load({ params, locals, cookies }) {
         return error(404, "Calendar Not Found");
     }
 
-    if (calendar.password) {
+    if (calendar.password && calendar.passwordEnabled) {
         if (cookies.get(`cal-${params.slug}`) !== calendar.password) {
             return redirect(301, `/cal/${params.slug}/login`);
         }

@@ -32,10 +32,10 @@
     }
 </script>
 
-<div class="rounded-lg bg-foreground p-4" style="border: 1px solid #333333">
-    <div class="mb-3 flex items-start justify-between">
-        <h3 class="text-lg font-semibold text-white">{event.name}</h3>
-        <p class="text-sm text-gray-400">{#if EVENT_DAY_NUMBER !== 1}{MONTHTOSTRING[start.getMonth()]} {start.getDate()}, {/if} <Time date={start} {useAMPM} /></p>
+<div class="dark rounded-lg bg-foreground p-4" style="border: 1px solid #333333">
+    <div class="dark mb-3 flex items-start justify-between">
+        <h3 class="dark text-lg font-semibold text-white">{event.name}</h3>
+        <p class="dark text-sm text-gray-400">{#if EVENT_DAY_NUMBER !== 1}{MONTHTOSTRING[start.getMonth()]} {start.getDate()}, {/if} <Time date={start} {useAMPM} /></p>
     </div>
 
     <div class="mb-2 flex items-center gap-2 text-sm text-gray-400">

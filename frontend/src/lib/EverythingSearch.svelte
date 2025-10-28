@@ -23,7 +23,8 @@
         filteredTerms = calendars.filter((calendar) => {
             return calendar.id.toLowerCase().includes(searchTerm) ||
             calendar.name.toLowerCase().includes(searchTerm) ||
-            calendar.description.toLowerCase().includes(searchTerm)
+            calendar.description.toLowerCase().includes(searchTerm) ||
+            "calendar".includes(searchTerm)
         });
     }
 

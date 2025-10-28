@@ -9,6 +9,6 @@
     <link rel="shortcut icon" href={data.logoLink} type="image/x-icon">
 </svelte:head>
 
-<div class="min-h-screen p-6">
+<div class="dark min-h-screen w-full p-6 bg-background">
     <Calendar events={data.events} />
 </div>

@@ -40,7 +40,7 @@
         const descriptionChanged = calendarDescription !== data.selectedCalendar.description;
         const passwordScreenMessageChanged = passwordScreenMessage !== data.selectedCalendar.passwordScreenMessage;
 
-        saveRequired = passwordEnableHasChanged || newAvatarUploaded || currentAvatarRemoved || (passwordEnableHasChanged && newPasswordCreated) || nameChanged || descriptionChanged || (passwordEnableHasChanged && passwordScreenMessageChanged);
+        saveRequired = passwordEnableHasChanged || newAvatarUploaded || currentAvatarRemoved || (passwordEnabled && newPasswordCreated) || nameChanged || descriptionChanged || (passwordEnabled && passwordScreenMessageChanged);
     });
 
     function handleRemoveAvatar() {
@@ -149,7 +149,9 @@
                             </button>
                         </div>
                     {:else}
-                        <NoCalendarAvatar />
+                        <div class="w-24 h-24">
+                            <NoCalendarAvatar />
+                        </div>
                     {/if}
                 </div>
                 <div class="flex-1 space-y-3">

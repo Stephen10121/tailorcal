@@ -1,6 +1,5 @@
 <script lang="ts">
     import { Button } from "@/components/ui/button";
-    import ModeToggler from "@/ModeToggler.svelte";
     import { Calendar } from "@lucide/svelte";
 </script>
 
@@ -22,7 +21,6 @@
                 <form method="post">
                     <Button type="submit" class="bg-primary text-primary-foreground hover:bg-primary/90">Get Started</Button>
                 </form>
-                <ModeToggler />
             </div>
         </div>
     </div>
