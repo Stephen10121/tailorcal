@@ -101,7 +101,6 @@ func main() {
 		automations.UpdateEventInstances(app)
 	})
 
-	log.Println("[server] TailorCal backend online.")
 	if err := app.Start(); err != nil {
 		log.Fatal(err)
 	}
