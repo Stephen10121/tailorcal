@@ -22,7 +22,7 @@ func UpdateEventInstances(app *pocketbase.PocketBase) {
 		if users[i].GetRaw("accessLevel") != "none" {
 			app.Logger().Info(
 				"Fetching event data for user.",
-				"user:", users[i].GetString("name"),
+				"user", users[i].GetString("name"),
 			)
 			functions.GetAndStoreNextThreeEvents(users[i].Id, app)
 		}

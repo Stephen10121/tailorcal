@@ -2,6 +2,7 @@ package functions
 
 import (
 	"encoding/json"
+	"fmt"
 
 	"github.com/Stephen10121/tailorcalbackend/planningcenter"
 	"github.com/pocketbase/pocketbase"
@@ -27,6 +28,7 @@ func GetAndStoreNextThreeEvents(userId string, app *pocketbase.PocketBase) {
 	}
 
 	for i := 0; i < len(events); i++ {
+		fmt.Println(events[i])
 		times, err := json.Marshal(events[i].Times)
 		if err != nil {
 			continue
