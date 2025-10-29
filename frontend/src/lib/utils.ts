@@ -106,27 +106,33 @@ export interface CalendarDBModel extends RecordModel {
 	displaySettings: CalendarCustomizations,
 }
 
+// Dont you dare judge
 export function toggleFullScreen() {
 	const elem = document.documentElement
 	// ## The below if statement seems to work better ## if ((document.fullScreenElement && document.fullScreenElement !== null) || (document.msfullscreenElement && document.msfullscreenElement !== null) || (!document.mozFullScreen && !document.webkitIsFullScreen)) {
+	//@ts-ignore
 	if ((document.fullScreenElement !== undefined && document.fullScreenElement === null) || (document.msFullscreenElement !== undefined && document.msFullscreenElement === null) || (document.mozFullScreen !== undefined && !document.mozFullScreen) || (document.webkitIsFullScreen !== undefined && !document.webkitIsFullScreen)) {
+		//@ts-ignore
 		if (elem.requestFullScreen) {
+			//@ts-ignore
 			elem.requestFullScreen();
+			//@ts-ignore
 		} else if (elem.mozRequestFullScreen) {
-			elem.mozRequestFullScreen();
-		} else if (elem.webkitRequestFullScreen) {
-			elem.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);
-		} else if (elem.msRequestFullscreen) {
-			elem.msRequestFullscreen();
+			//@ts-ignore
+			elem.mozRequestFullScreen();//@ts-ignore
+		} else if (elem.webkitRequestFullScreen) {//@ts-ignore
+			elem.webkitRequestFullScreen(Element.ALLOW_KEYBOARD_INPUT);//@ts-ignore
+		} else if (elem.msRequestFullscreen) {//@ts-ignore
+			elem.msRequestFullscreen();//@ts-ignore
 		}
-	} else {
-		if (document.cancelFullScreen) {
-			document.cancelFullScreen();
-		} else if (document.mozCancelFullScreen) {
-			document.mozCancelFullScreen();
-		} else if (document.webkitCancelFullScreen) {
-			document.webkitCancelFullScreen();
-		} else if (document.msExitFullscreen) {
+	} else {//@ts-ignore
+		if (document.cancelFullScreen) {//@ts-ignore
+			document.cancelFullScreen();//@ts-ignore
+		} else if (document.mozCancelFullScreen) {//@ts-ignore
+			document.mozCancelFullScreen();//@ts-ignore
+		} else if (document.webkitCancelFullScreen) {//@ts-ignore
+			document.webkitCancelFullScreen();//@ts-ignore
+		} else if (document.msExitFullscreen) {//@ts-ignore
 			document.msExitFullscreen();
 		}
 	}
