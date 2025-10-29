@@ -122,6 +122,7 @@ func EventFetcher(userId string, app *pocketbase.PocketBase) ([]Event, error) {
 				Tags:       tags,
 			})
 		} else {
+			fmt.Println("This event is not in the scope:", responseJson.Data[i].Id)
 			continue
 		}
 	}
