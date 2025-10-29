@@ -1,6 +1,8 @@
 package automations
 
 import (
+	"fmt"
+
 	"github.com/Stephen10121/tailorcalbackend/functions"
 	"github.com/pocketbase/pocketbase"
 )
@@ -17,7 +19,7 @@ func UpdateEventInstances(app *pocketbase.PocketBase) {
 		)
 		return
 	}
-
+	fmt.Println(users)
 	for i := 0; i < len(users); i++ {
 		if users[i].GetRaw("accessLevel") != "none" {
 			app.Logger().Info(
