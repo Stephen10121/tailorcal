@@ -1,17 +1,17 @@
 <script lang="ts">
-    import { Calendar, CreditCard, Layers } from "@lucide/svelte";
+    import { Calendar, CreditCard, Layers, Smartphone } from "@lucide/svelte";
 
     let features = $state([
         {
             icon: Calendar,
-            title: "Smart Scheduling",
+            title: "Smart Filtering",
             description:
-            "Intelligent calendar management that automatically finds the best meeting times for everyone involved.",
+            "You can filter events based on if they're public, have certain tags, all resources are approved.",
         },
         {
-            icon: CreditCard,
-            title: "Customizable Cards",
-            description: "Create personalized booking pages that match your brand and workflow requirements.",
+            icon: Smartphone,
+            title: "Customizable Views",
+            description: "Create a custom look for a front page website, or a kiosk at church.",
         },
         {
             icon: Layers,
@@ -25,10 +25,10 @@
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center space-y-4 mb-16">
             <h2 class="text-3xl sm:text-4xl font-bold text-foreground text-balance">
-            Everything you need to schedule smarter
+            Everything you need to show only what you need
             </h2>
             <p class="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Powerful features designed to simplify your scheduling workflow and save you time.
+            Powerful features designed to filter and select the events that you want displayed in your custom calendar. 
             </p>
         </div>
 

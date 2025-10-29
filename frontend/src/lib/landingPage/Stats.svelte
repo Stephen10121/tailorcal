@@ -1,9 +1,9 @@
 <script lang="ts">
     const stats = [
-        { value: "98%", label: "Customer satisfaction", company: "Based on 500+ reviews" },
-        { value: "2.5x", label: "Faster scheduling", company: "vs traditional methods" },
-        { value: "50k+", label: "Meetings booked", company: "Every month" },
-        { value: "24/7", label: "Always available", company: "Automated booking" },
+        { value: "98%", label: "Customer satisfaction", company: "Feedback is greatly appreciated" },
+        { value: "2.5x", label: "Faster setup", company: "vs traditional methods" },
+        { value: "50k+", label: "Calendar Views", company: "and rising" },
+        { value: "24/7", label: "Always available", company: "Automated event fetching" },
     ]
 </script>
 

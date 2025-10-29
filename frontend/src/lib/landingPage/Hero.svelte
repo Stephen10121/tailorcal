@@ -23,14 +23,16 @@
                 </h1>
 
                 <p class="text-lg text-muted-foreground leading-relaxed max-w-xl">
-                    We offer a unified view of every event, sortable by location, approval status, and custom filters so you can focus on what's happening, where it matters.
+                    We offer a unified view of every event, sortable by location, tags, and custom filters so you can focus on what's happening, where it matters.
                 </p>
 
                 <div class="flex flex-col sm:flex-row gap-4">
-                    <Button size="lg" class="bg-primary text-primary-foreground hover:bg-primary/90">
-                        Start Free Trial
-                        <ArrowRight class="ml-2 h-4 w-4" />
-                    </Button>
+                    <form method="post">
+                        <Button size="lg" type="submit" class="bg-primary text-primary-foreground hover:bg-primary/90">
+                            Start Free Trial
+                            <ArrowRight class="ml-2 h-4 w-4" />
+                        </Button>
+                    </form>
                     <Button size="lg" variant="outline">
                         Watch Demo
                     </Button>
@@ -38,13 +40,13 @@
 
                 <div class="flex items-center gap-8 pt-4">
                     <div>
-                        <div class="text-2xl font-bold text-foreground">10k+</div>
-                        <div class="text-sm text-muted-foreground">Active users</div>
+                        <div class="text-2xl font-bold text-foreground">Unlimited</div>
+                        <div class="text-sm text-muted-foreground">Custom Calendars</div>
                     </div>
                     <div class="h-12 w-px bg-border"></div>
                     <div>
                         <div class="text-2xl font-bold text-foreground">50k+</div>
-                        <div class="text-sm text-muted-foreground">Meetings booked</div>
+                        <div class="text-sm text-muted-foreground">Calendar Views</div>
                     </div>
                 </div>
             </div>

@@ -10,14 +10,16 @@
                 Ready to transform your scheduling?
             </h2>
             <p class="text-lg text-secondary-foreground/80 leading-relaxed">
-                Join thousands of professionals who have streamlined their calendar management with TailorCal. Start your
+                Join many professionals who have streamlined their calendar management with TailorCal. Start your
                 free trial today—no credit card required.
             </p>
             <div class="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" variant="default">
-                Start Free Trial
-                <ArrowRight class="ml-2 h-4 w-4" />
-            </Button>
+            <form method="post">
+                <Button size="lg" type="submit" class="bg-primary text-primary-foreground hover:bg-primary/90">
+                    Start Free Trial
+                    <ArrowRight class="ml-2 h-4 w-4" />
+                </Button>
+            </form>
             <Button
                 size="lg"
                 variant="outline"
