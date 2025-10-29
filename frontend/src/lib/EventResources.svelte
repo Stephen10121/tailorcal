@@ -40,7 +40,7 @@
             <div class="text-gray-400">Room:</div>
             <div class="text-gray-300">
                 {#each rooms as room, index}
-                    {#if room.path_name}{room.path_name}\\{/if}{room.name}{#if index+1 < rooms.length}, {/if}
+                    {#if room.path_name}{room.path_name}\\{/if} {room.name}{#if index+1 < rooms.length}, {/if}
                 {/each}
             </div>
         </div>
