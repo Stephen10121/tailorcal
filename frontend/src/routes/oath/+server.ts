@@ -62,6 +62,7 @@ export async function GET({ locals, url, cookies }) {
         return redirect(303, "/");
     }
     
+    console.log(process.env.PB_URL)
     let res: RecordAuthResponse;
     try {
         res = await locals.pb.collection("users").authWithOAuth2Code(provider.name, code, expectedVerifier, redirectURL, {
