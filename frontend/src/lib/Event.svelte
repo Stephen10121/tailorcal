@@ -13,7 +13,7 @@
     const hours = $derived((end.getTime() - start.getTime()) / (1000 * 60 * 60));
 
     const EVENT_DAY_NUMBER = $derived(currentDay.getDate() - start.getDate() + 1);
-    const MULTI_DAY_EVENT = $derived(hours >= 24);
+    const MULTI_DAY_EVENT = $derived(hours === 24 ? start.getHours() !== 0 : hours > 24);
 
     function getContrastYIQ(hexColor: string) {
         // Remove '#' if present
@@ -43,7 +43,7 @@
         {#if MULTI_DAY_EVENT}
             <span class="text-sm text-gray-300">{MONTHTOSTRING[start.getMonth()]} {start.getDate()}, <Time date={start} {useAMPM} /> - {MONTHTOSTRING[end.getMonth()]} {end.getDate()}, <Time date={end} {useAMPM} /></span>
         {:else}
-            <span class="text-sm text-gray-300"><Time date={start} {useAMPM} /> - <Time date={end} {useAMPM} /></span>
+            <span class="text-sm text-gray-300"><Time date={start} {useAMPM} /> - {#if hours === 24 && start.getHours() === 0}{MONTHTOSTRING[end.getMonth()]} {end.getDate()}, {/if} <Time date={end} {useAMPM} /></span>
         {/if}
     </div>
 
