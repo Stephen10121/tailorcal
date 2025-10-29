@@ -21,7 +21,6 @@ func GetAndStoreNextThreeEvents(userId string, app *pocketbase.PocketBase) {
 		return
 	}
 
-	fmt.Println(events)
 	collection, err := app.FindCollectionByNameOrId("events")
 	if err != nil {
 		app.Logger().Warn("Create the users collection to save the data fetched from the planning center api!")
