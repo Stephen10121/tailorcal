@@ -56,7 +56,7 @@ func GetIncludedStructs(included []IncludedType) ([]EventItself, []EventTime, []
 
 func EventFetcher(userId string, app *pocketbase.PocketBase) ([]Event, error) {
 	year, month, day := time.Now().Add(-144 * time.Hour).Date()
-	thirdYear, thirdMonth, thirdDay := time.Now().Add(72 * time.Hour).Date()
+	thirdYear, thirdMonth, thirdDay := time.Now().Add(144 * time.Hour).Date()
 
 	resBody, err := SendAPICall(
 		http.MethodGet,
