@@ -18,7 +18,7 @@
 </svelte:head>
 
 <div id="cal-root" class="dark min-h-screen w-full p-6 bg-background relative">
-    <Calendar events={data.events} />
+    <Calendar events={data.events} displaySettings={data.displaySettings} />
     <Popover.Root>
         <Popover.Trigger class="absolute bottom-1 right-1 z-50 {invisibleTooltip ? "text-background bg-background" : "text-muted-foreground bg-foreground"} rounded p-2" style={invisibleTooltip ? "border:none;" : "border: 1px solid #333333"}>
             <CircleQuestionMark />
@@ -32,3 +32,27 @@
         </Popover.Content>
     </Popover.Root>
 </div>
+
+<style>
+    /* Target the overall scrollbar */
+    :global(::-webkit-scrollbar) {
+        width: 0; /* Adjust width as desired */
+        height: 5px; /* Adjust height for horizontal scrollbars */
+    }
+
+    /* Target the scrollbar track (the background area) */
+    :global(::-webkit-scrollbar-track) {
+        background: black;
+    }
+
+    /* Target the scrollbar thumb (the draggable part) */
+    :global(::-webkit-scrollbar-thumb) {
+        background-color: #888; /* A subtle gray for the thumb */
+        border-radius: 4px; /* Rounded corners for the thumb */
+    }
+
+    /* Style the thumb on hover */
+    :global(::-webkit-scrollbar-thumb:hover) {
+        background-color: #555; /* Darker gray on hover */
+    }
+</style>

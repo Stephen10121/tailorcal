@@ -1,4 +1,4 @@
-import type { EventDBModel, EventDBModelPrivate } from "@/utils";
+import type { CalendarDBModel, EventDBModel, EventDBModelPrivate } from "@/utils";
 import { error, redirect } from "@sveltejs/kit";
 import { config } from "dotenv";
 import type { RecordModel } from "pocketbase";
@@ -6,7 +6,7 @@ import type { RecordModel } from "pocketbase";
 config();
 
 export async function load({ params, locals, cookies }) {
-    let calendar: RecordModel;
+    let calendar: CalendarDBModel;
     try {
         calendar = await locals.pb.collection('calendars').getOne(params.slug, {
             headers: {
@@ -28,8 +28,14 @@ export async function load({ params, locals, cookies }) {
 
     let events: EventDBModel[] = [];
     try {
+        let filter = "";
+        if (calendar.id === "sdinfaplylaesst") {
+            filter = `startTime >= ${seventyTwoHoursAgo}`;
+        } else {
+            filter = `owner="${calendar.owner}" && startTime >= ${seventyTwoHoursAgo}`;
+        }
         let newEvents = await locals.pb.collection('events').getFullList({
-            filter: `owner="${calendar.owner}" && startTime >= ${seventyTwoHoursAgo}`,
+            filter,
             sort: 'startTime',
             headers: {
                 "Authorization": "Bearer " + process.env.POCKETBASE_TOKEN!
@@ -63,5 +69,6 @@ export async function load({ params, locals, cookies }) {
         events,
         name: calendar.name,
         logoLink: locals.pb.files.getURL(calendar, calendar.logo),
+        displaySettings: calendar.displaySettings
     }
 }

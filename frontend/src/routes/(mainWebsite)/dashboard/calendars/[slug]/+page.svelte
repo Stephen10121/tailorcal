@@ -10,7 +10,7 @@
     import { Button, buttonVariants } from "@/components/ui/button";
     import { Input } from "@/components/ui/input";
     import { Label } from "@/components/ui/label";
-    import { clearFileInput, cn } from "@/utils.js";
+    import { clearFileInput, cn, type CalendarCustomizations } from "@/utils.js";
     import { toast } from "svelte-sonner";
     import { deleteCalendar } from "@/endpointCalls/deleteCalendar.js";
     import * as Dialog from "$lib/components/ui/dialog/index.js";
@@ -19,10 +19,11 @@
     let { data } = $props();
 
     let avatarLink = $derived(data.selectedCalendar.logo ? `${data.pb_url}/api/files/${data.selectedCalendar.collectionId}/${data.selectedCalendar.id}/${data.selectedCalendar.logo}` : "");
-    
+
     let uploadNewAvatar: File | null = $state(null);
     let uploadNewAvatarLink = $derived(uploadNewAvatar ? URL.createObjectURL(uploadNewAvatar) : null);
 
+    let displaySettings: CalendarCustomizations = $state(data.selectedCalendar.displaySettings);
     let passwordScreenMessage = $derived(data.selectedCalendar.passwordScreenMessage);
     let calendarDescription = $derived(data.selectedCalendar.description);
     let passwordEnabled = $derived(data.selectedCalendar.passwordEnabled);
@@ -39,8 +40,13 @@
         const nameChanged = calendarName !== data.selectedCalendar.name;
         const descriptionChanged = calendarDescription !== data.selectedCalendar.description;
         const passwordScreenMessageChanged = passwordScreenMessage !== data.selectedCalendar.passwordScreenMessage;
+        const displaySettingsChanged = JSON.stringify(displaySettings) !== JSON.stringify(data.selectedCalendar.displaySettings);
 
-        saveRequired = passwordEnableHasChanged || newAvatarUploaded || currentAvatarRemoved || (passwordEnabled && newPasswordCreated) || nameChanged || descriptionChanged || (passwordEnabled && passwordScreenMessageChanged);
+        saveRequired = passwordEnableHasChanged || newAvatarUploaded || currentAvatarRemoved || (passwordEnabled && newPasswordCreated) || nameChanged || descriptionChanged || (passwordEnabled && passwordScreenMessageChanged) || displaySettingsChanged;
+    });
+
+    $effect(() => {
+        displaySettings = data.selectedCalendar.displaySettings;
     });
 
     function handleRemoveAvatar() {
@@ -71,7 +77,7 @@
     let savingChanges = $state(false);
     async function saveChanges() {
         savingChanges = true;
-        const success = await changeCalendarSettings(data.selectedCalendar.id, calendarName, calendarDescription, passwordEnabled, newPassword, avatarLink, uploadNewAvatar, passwordScreenMessage);
+        const success = await changeCalendarSettings(data.selectedCalendar.id, calendarName, calendarDescription, passwordEnabled, newPassword, avatarLink, uploadNewAvatar, passwordScreenMessage, displaySettings);
         newPassword = "";
         savingChanges = false;
         if (success) {
@@ -212,6 +218,62 @@
                 placeholder="Enter calendar description"
                 rows={3}
                 />
+            </div>
+            </Card.Content>
+        </Card.Root>
+
+        <Card.Root>
+            <Card.Header>
+                <Card.Title>Display Settings</Card.Title>
+                <Card.Description>Customize how event information is displayed</Card.Description>
+            </Card.Header>
+            <Card.Content>
+            <div class="grid grid-cols-1 gap-6">
+                <div class="flex items-center justify-between space-x-2">
+                    <Label for="useAMPM" class="flex flex-col items-start space-y-1 cursor-pointer">
+                        <span class="font-medium">Use AM/PM Format</span>
+                        <span class="text-sm text-muted-foreground">Display times in 12-hour format</span>
+                    </Label>
+                    <Switch
+                        id="useAMPM"
+                        bind:checked={displaySettings.useAMPM}
+                    />
+                </div>
+
+                <div class="flex items-center justify-between space-x-2">
+                    <Label for="showResourcePathname" class="flex flex-col items-start space-y-1 cursor-pointer">
+                        <span class="font-medium">Show Resource Pathname</span>
+                        <span class="text-sm text-muted-foreground">Display full resource paths</span>
+                    </Label>
+                    <Switch
+                        id="showResourcePathname"
+                        bind:checked={displaySettings.showResourcePathname}
+                    />
+                </div>
+
+                <div class="flex items-center justify-between space-x-2">
+                    <Label for="showLocation" class="flex flex-col space-y-1 items-start cursor-pointer">
+                        <span class="font-medium">Show Location</span>
+                        <span class="text-sm text-muted-foreground">Display location information in events</span>
+                    </Label>
+                    <Switch
+                        id="showLocation"
+                        bind:checked={displaySettings.showLocation}
+                    />
+                </div>
+
+                {#if displaySettings.showLocation}
+                    <div class="flex items-center justify-between space-x-2 ml-5">
+                        <Label for="onlyShowLocationTitle" class="flex flex-col items-start space-y-1 cursor-pointer">
+                            <span class="font-medium">Only Show Location Title</span>
+                            <span class="text-sm text-muted-foreground">Hide detailed location information</span>
+                        </Label>
+                        <Switch
+                            id="onlyShowLocationTitle"
+                            bind:checked={displaySettings.onlyShowLocationTitle}
+                        />
+                    </div>
+                {/if}
             </div>
             </Card.Content>
         </Card.Root>

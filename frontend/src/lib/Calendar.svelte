@@ -2,11 +2,11 @@
     import { invalidateAll } from "$app/navigation";
     import { onMount } from "svelte";
     import Day from "./Day.svelte";
-    import type { EventDBModel } from "./utils";
+    import type { CalendarCustomizations, EventDBModel } from "./utils";
 
-    let { events }: { events: EventDBModel[] } = $props();
+    let { events, displaySettings }: { events: EventDBModel[], displaySettings: CalendarCustomizations } = $props();
 
-    let useAMPM = $state(true);
+    let calendarCustomizations: CalendarCustomizations = $derived(displaySettings);
 
     let today = $state(new Date(new Date(new Date().getTime() + (24 * 60 * 60 * 1000) * 0).setHours(0, 0, 0, 0)));
     let tomorrow = $state(new Date(new Date(new Date().getTime() + (24 * 60 * 60 * 1000) * 1).setHours(0, 0, 0, 0)));
@@ -29,10 +29,10 @@
     });
 </script>
 
-<div class="dark mx-auto max-w-7xl">
+<div class="dark mx-auto">
     <div class="dark grid grid-cols-1 gap-6 lg:grid-cols-3">
-        <Day dayNumber={1} events={events} day={today} {useAMPM} />
-        <Day dayNumber={2} events={events} day={tomorrow} {useAMPM} />
-        <Day dayNumber={3} events={events} day={thirdDay} {useAMPM} />
+        <Day dayNumber={1} events={events} day={today} {calendarCustomizations} />
+        <Day dayNumber={2} events={events} day={tomorrow} {calendarCustomizations} />
+        <Day dayNumber={3} events={events} day={thirdDay} {calendarCustomizations} />
     </div>
 </div>

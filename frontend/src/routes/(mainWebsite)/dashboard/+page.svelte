@@ -40,9 +40,4 @@
     <p>hello {data.user?.userEmail}</p>
 {/if}
 
-<div>
-    <Button onclick={() => testHit("compareExp")}>Test time compare.</Button>
-    <Button onclick={() => testHit("newAccessToken")}>Test new access token.</Button>
-</div>
-
 <a href="/logout" class="underline">Logout</a>

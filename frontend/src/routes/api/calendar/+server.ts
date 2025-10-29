@@ -1,3 +1,4 @@
+import type { CalendarCustomizations, CalendarDBModel } from "@/utils.js";
 import { error, json } from "@sveltejs/kit";
 import { config } from "dotenv";
 import type { RecordModel } from "pocketbase";
@@ -63,8 +64,16 @@ export async function PATCH({ locals, request }) {
     const avatarLink = formData.get("avatarLink");
     const newAvatar = formData.get("newAvatar");
     const passwordScreenMessage = formData.get("passwordScreenMessage");
+    const displaySettings = formData.get("displaySettings");
 
-    if (id == null || name == null || description == null || enablePassword == null || newPassword == null || avatarLink == null || passwordScreenMessage == null) {
+    if (id == null || name == null || description == null || enablePassword == null || newPassword == null || avatarLink == null || passwordScreenMessage == null || displaySettings === null) {
+        return error(400, "Missing Data.");
+    }
+
+    let parsedDisplaySettings: CalendarCustomizations;
+    try {
+        parsedDisplaySettings = JSON.parse(displaySettings.toString());
+    } catch (_) {
         return error(400, "Missing Data.");
     }
 
@@ -89,10 +98,11 @@ export async function PATCH({ locals, request }) {
     }
 
     try {
-        let data: {[key:string]: any} = {
+        let data: Partial<CalendarDBModel> = {
             "name": name.toString(),
             "description": description.toString(),
             "passwordEnabled": enablePassword.toString() === "1",
+            "displaySettings": parsedDisplaySettings
         };
 
         if (newPassword.toString().length > 0 && enablePassword.toString() === "1") {
@@ -171,11 +181,17 @@ export async function POST({ locals, request }) {
     }
 
     try {
-        let data: {[key:string]: any} = {
+        let data: Partial<CalendarDBModel> = {
             "name": name.toString(),
             "description": description.toString(),
             "passwordEnabled": enablePassword.toString() === "1",
-            "owner": locals.user.id
+            "owner": locals.user.id,
+            "displaySettings": {
+                "useAMPM": true,
+                "showResourcePathname": false,
+                "onlyShowLocationTitle": false,
+                "showLocation": true
+            },
         };
 
         if (enablePassword.toString() === "1") {

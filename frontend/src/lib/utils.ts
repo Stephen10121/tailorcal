@@ -93,6 +93,19 @@ export interface EventDBModelPrivate extends EventDBModel {
 	owner: string
 }
 
+export interface CalendarDBModel extends RecordModel {
+	name: string,
+	password: string,
+	passwordEnabled: boolean,
+	owner: string,
+	logo: string,
+	visits: number,
+	filters: unknown,
+	description: string,
+	passwordScreenMessage: string,
+	displaySettings: CalendarCustomizations,
+}
+
 export function toggleFullScreen() {
 	const elem = document.documentElement
 	// ## The below if statement seems to work better ## if ((document.fullScreenElement && document.fullScreenElement !== null) || (document.msfullscreenElement && document.msfullscreenElement !== null) || (!document.mozFullScreen && !document.webkitIsFullScreen)) {
@@ -117,4 +130,11 @@ export function toggleFullScreen() {
 			document.msExitFullscreen();
 		}
 	}
+}
+
+export type CalendarCustomizations = {
+	useAMPM: boolean,
+    showResourcePathname: boolean,
+	onlyShowLocationTitle: boolean,
+	showLocation: boolean
 }

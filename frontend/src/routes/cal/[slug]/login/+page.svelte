@@ -62,7 +62,7 @@
                     </div>
                     <div class="flex flex-col space-y-1.5">
                         <Label for="password">Password</Label>
-                        <Input id="password" class="bg-(#f9f9f5)" type="password" name="password" placeholder="Password" />
+                        <Input autofocus  id="password" class="bg-(#f9f9f5)" type="password" name="password" placeholder="Password" />
                     </div>
                     <div class="flex justify-between">
                         <Button class="bg-(#f9f9f5)" href="/" variant="outline">Cancel</Button>

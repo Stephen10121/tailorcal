@@ -1,8 +1,8 @@
 <script lang="ts">
     import Event from "./Event.svelte";
-    import { dateRangeOverlaps, DAYTOSTRING, LONGDAYTOSTRING, type EventDBModel } from "./utils";
+    import { dateRangeOverlaps, LONGDAYTOSTRING, type CalendarCustomizations, type EventDBModel } from "./utils";
 
-    let { events, day, useAMPM, dayNumber }: { events: EventDBModel[], day: Date, dayNumber: number, useAMPM: boolean } = $props();
+    let { events, day, dayNumber, calendarCustomizations }: { events: EventDBModel[], day: Date, dayNumber: number, calendarCustomizations: CalendarCustomizations } = $props();
 
     let nextDay = $derived(new Date(day.getTime() + (24 * 60 * 60 * 999) * 1));
 </script>
@@ -24,7 +24,7 @@
     <div class="dark flex flex-col gap-4">
         {#each events as event (`eventListDat${day.toString()}${event.id}`)}
             {#if dateRangeOverlaps(day, nextDay, new Date(event.startTime), new Date(event.endTime))}
-                <Event {event} currentDay={day} {useAMPM} />
+                <Event {calendarCustomizations} {event} currentDay={day} />
             {/if}
         {/each}
     </div>
