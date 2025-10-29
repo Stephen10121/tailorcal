@@ -2,6 +2,7 @@
     import * as DropdownMenu from "$lib/components/ui/dropdown-menu/index.js";
     import EverythingSearch from "@/EverythingSearch.svelte";
     import { Button, buttonVariants } from "@/components/ui/button";
+    import * as Sidebar from "$lib/components/ui/sidebar/index.js";
     import * as Avatar from "$lib/components/ui/avatar/index.js";
     import { Bell, Settings } from "@lucide/svelte";
     import type { RecordModel } from "pocketbase";
@@ -11,8 +12,9 @@
 </script>
 
 <header class="h-16 border-b border-border bg-card">
-    <div class="flex h-full items-center gap-4 px-6">
+    <div class="flex h-full items-center gap-4 px-4">
         <div class="flex-1 relative flex items-center gap-4">
+            <Sidebar.Trigger class="w-9 h-9" />
             <EverythingSearch {calendars} />
         </div>
 

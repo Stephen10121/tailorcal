@@ -2,6 +2,7 @@
     import { navigating } from '$app/state';
     import DashboardHeader from '@/dashboard/DashboardHeader.svelte';
     import DashboardIsNavigating from '@/dashboard/DashboardIsNavigating.svelte';
+	import * as Sidebar from "$lib/components/ui/sidebar/index.js";
     import DashboardSidebar from '@/dashboard/DashboardSidebar.svelte';
     import SetEmailPopup from '@/dashboard/SetEmailPopup.svelte';
     import { emailNotSetDialog } from '@/store.js';
@@ -13,7 +14,7 @@
 
 <SetEmailPopup />
 
-<div class="flex min-h-screen bg-background">
+<Sidebar.Provider class="flex min-h-screen bg-background" style="--sidebar-width: 16rem; --sidebar-width-mobile: 16rem;">
 	<DashboardSidebar pathname={data.pathname} />
 
 	<div class="flex-1 flex flex-col h-full">
@@ -26,7 +27,7 @@
 			{@render children?.()}
 		</main>
 	</div>
-</div>
+</Sidebar.Provider>
 
 <style>
 	.mainPage {
