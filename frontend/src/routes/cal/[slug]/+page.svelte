@@ -5,26 +5,11 @@
     import { Label } from '@/components/ui/label/index.js';
     import { Switch } from '@/components/ui/switch/index.js';
     import Button from '@/components/ui/button/button.svelte';
+    import { toggleFullScreen } from '@/utils.js';
 
     let { data } = $props();
 
     let invisibleTooltip = $state(false);
-
-    function fullscreen() {
-        const elem = document.getElementById("cal-root");
-        if (!elem) return
-        if (elem.requestFullscreen) {
-            elem.requestFullscreen();
-            //@ts-ignore
-        } else if (elem.webkitRequestFullscreen) { /* Safari */
-            //@ts-ignore
-            elem.webkitRequestFullscreen();
-            //@ts-ignore
-        } else if (elem.msRequestFullscreen) { /* IE11 */
-            //@ts-ignore
-            elem.msRequestFullscreen();
-        }
-    }
 </script>
 
 <svelte:head>
@@ -43,7 +28,7 @@
                 <Label for="useinvis" class="dark text-sm">Hide tooltip (you can still click it)</Label>
                 <Switch class="dark" id="useinvis" bind:checked={invisibleTooltip} />
             </div>
-            <Button onclick={fullscreen} title="Fullscreen"><Fullscreen /></Button>
+            <Button onclick={toggleFullScreen} title="Fullscreen"><Fullscreen /></Button>
         </Popover.Content>
     </Popover.Root>
 </div>
