@@ -56,7 +56,7 @@ func GetIncludedStructs(included []IncludedType) ([]EventItself, []EventTime, []
 
 func EventFetcher(userId string, app *pocketbase.PocketBase) ([]Event, error) {
 	year, month, day := time.Now().Add(-144 * time.Hour).Date()
-	thirdYear, thirdMonth, thirdDay := time.Now().Add(144 * time.Hour).Date()
+	thirdDate := time.Now().Add(144 * time.Hour)
 
 	resBody, err := SendAPICall(
 		http.MethodGet,
@@ -94,9 +94,9 @@ func EventFetcher(userId string, app *pocketbase.PocketBase) ([]Event, error) {
 
 	for i := 0; i < len(responseJson.Data); i++ {
 		date, err := time.Parse(time.RFC3339, responseJson.Data[i].Attributes.StartsAt)
-		fmt.Println(date, thirdYear, thirdMonth, thirdDay, year, month, day)
-		fmt.Println(date.Year(), thirdYear, date.Month(), thirdMonth, date.Day(), thirdDay)
-		fmt.Println(date.Year() <= thirdYear, date.Month() <= thirdMonth, date.Day() <= thirdDay)
+		// fmt.Println(date, thirdYear, thirdMonth, thirdDay, year, month, day)
+		// fmt.Println(date.Year(), thirdYear, date.Month(), thirdMonth, date.Day(), thirdDay)
+		// fmt.Println(date.Year() <= thirdYear, date.Month() <= thirdMonth, date.Day() <= thirdDay)
 
 		if err != nil {
 			fmt.Println(err)
@@ -104,7 +104,7 @@ func EventFetcher(userId string, app *pocketbase.PocketBase) ([]Event, error) {
 		}
 
 		// This will only process the events that are happening in the next 3 days. We can probably afford to remove this limitation.
-		if date.Year() <= thirdYear && date.Month() <= thirdMonth && date.Day() <= thirdDay {
+		if date.Before(thirdDate) {
 			eventTime := ParseEventTimes(responseJson.Data[i].Relationships.EventTimes, eventTimes)
 			resources := ParseResourceBookings(responseJson.Data[i].Relationships.ResourceBookings, resourceBookings, resources)
 			tags := ParseTags(responseJson.Data[i].Relationships.Tags, allTags)
