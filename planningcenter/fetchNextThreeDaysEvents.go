@@ -94,6 +94,7 @@ func EventFetcher(userId string, app *pocketbase.PocketBase) ([]Event, error) {
 
 	for i := 0; i < len(responseJson.Data); i++ {
 		date, err := time.Parse(time.RFC3339, responseJson.Data[i].Attributes.StartsAt)
+		fmt.Println(date, thirdYear, thirdMonth, thirdDay, year, month, day)
 
 		if err != nil {
 			fmt.Println(err)
