@@ -27,8 +27,8 @@
                 </p>
 
                 <div class="flex flex-col sm:flex-row gap-4">
-                    <form method="post">
-                        <Button size="lg" type="submit" class="bg-primary text-primary-foreground hover:bg-primary/90">
+                    <form method="post" class="w-full">
+                        <Button size="lg" type="submit" class="w-full bg-primary text-primary-foreground hover:bg-primary/90">
                             Start Free Trial
                             <ArrowRight class="ml-2 h-4 w-4" />
                         </Button>

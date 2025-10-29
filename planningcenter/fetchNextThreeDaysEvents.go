@@ -68,7 +68,7 @@ func EventFetcher(userId string, app *pocketbase.PocketBase) ([]Event, error) {
 	if err != nil {
 		return []Event{}, err
 	}
-	fmt.Println(string(resBody))
+
 	responseJson := new(NewEventInstancesResponseType)
 
 	err = json.Unmarshal([]byte(resBody), &responseJson)
@@ -87,6 +87,7 @@ func EventFetcher(userId string, app *pocketbase.PocketBase) ([]Event, error) {
 			"id", userId,
 			"error", err,
 		)
+		return []Event{}, err
 	}
 
 	var fetchedEvents []Event

@@ -21,6 +21,7 @@ func GetAndStoreNextThreeEvents(userId string, app *pocketbase.PocketBase) {
 		return
 	}
 
+	fmt.Println(events)
 	collection, err := app.FindCollectionByNameOrId("events")
 	if err != nil {
 		app.Logger().Warn("Create the users collection to save the data fetched from the planning center api!")
@@ -28,19 +29,21 @@ func GetAndStoreNextThreeEvents(userId string, app *pocketbase.PocketBase) {
 	}
 
 	for i := 0; i < len(events); i++ {
-		fmt.Println(events[i])
 		times, err := json.Marshal(events[i].Times)
 		if err != nil {
+			fmt.Println(err)
 			continue
 		}
 
 		resources, err := json.Marshal(events[i].Resources)
 		if err != nil {
+			fmt.Println(err)
 			continue
 		}
 
 		tags, err := json.Marshal(events[i].Tags)
 		if err != nil {
+			fmt.Println(err)
 			continue
 		}
 
