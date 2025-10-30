@@ -190,7 +190,9 @@ export async function POST({ locals, request }) {
                 "useAMPM": true,
                 "showResourcePathname": false,
                 "onlyShowLocationTitle": false,
-                "showLocation": true
+                "showLocation": true,
+                "showResources": true,
+	            "showRooms": true
             },
         };
 

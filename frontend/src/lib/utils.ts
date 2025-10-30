@@ -142,5 +142,7 @@ export type CalendarCustomizations = {
 	useAMPM: boolean,
     showResourcePathname: boolean,
 	onlyShowLocationTitle: boolean,
-	showLocation: boolean
+	showLocation: boolean,
+	showResources: boolean,
+	showRooms: boolean
 }

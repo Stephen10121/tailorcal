@@ -15,6 +15,7 @@
     import { deleteCalendar } from "@/endpointCalls/deleteCalendar.js";
     import * as Dialog from "$lib/components/ui/dialog/index.js";
     import PrettyDate from "@/PrettyDate.svelte";
+    import Event from "@/Event.svelte";
 
     let { data } = $props();
 
@@ -241,13 +242,37 @@
                 </div>
 
                 <div class="flex items-center justify-between space-x-2">
-                    <Label for="showResourcePathname" class="flex flex-col items-start space-y-1 cursor-pointer">
-                        <span class="font-medium">Show Resource Pathname</span>
-                        <span class="text-sm text-muted-foreground">Display full resource paths</span>
+                    <Label for="showResources" class="flex flex-col items-start space-y-1 cursor-pointer">
+                        <span class="font-medium">Show Resources</span>
+                        <span class="text-sm text-muted-foreground">Display the resources that the event needs.</span>
                     </Label>
                     <Switch
-                        id="showResourcePathname"
-                        bind:checked={displaySettings.showResourcePathname}
+                        id="showResources"
+                        bind:checked={displaySettings.showResources}
+                    />
+                </div>
+
+                {#if displaySettings.showResources}
+                    <div class="flex items-center justify-between space-x-2 ml-5">
+                        <Label for="showResourcePathname" class="flex flex-col items-start space-y-1 cursor-pointer">
+                            <span class="font-medium">Show Resource Pathname</span>
+                            <span class="text-sm text-muted-foreground">Display full resource paths</span>
+                        </Label>
+                        <Switch
+                            id="showResourcePathname"
+                            bind:checked={displaySettings.showResourcePathname}
+                        />
+                    </div>
+                {/if}
+
+                <div class="flex items-center justify-between space-x-2">
+                    <Label for="showRooms" class="flex flex-col items-start space-y-1 cursor-pointer">
+                        <span class="font-medium">Show Rooms</span>
+                        <span class="text-sm text-muted-foreground">Display the rooms that the event needs.</span>
+                    </Label>
+                    <Switch
+                        id="showRooms"
+                        bind:checked={displaySettings.showRooms}
                     />
                 </div>
 
@@ -277,6 +302,42 @@
             </div>
             </Card.Content>
         </Card.Root>
+
+        <Event calendarCustomizations={displaySettings} event={{
+            id: "blankEvent",
+            name: "Event Info Preview",
+            location: "Home - 1234 Main Street, Vancouver WA",
+            times: [],
+            resources: [{
+                id: "res1",
+                kind: "Room",
+                name: "Kitchen",
+                path_name: ""
+            },
+            {
+                id: "res2",
+                kind: "Room",
+                name: "Santuary",
+                path_name: ""
+            },
+            {
+                id: "res3",
+                kind: "Resource",
+                name: "Projector",
+                path_name: "Santuary"
+            },
+            {
+                id: "res4",
+                kind: "Resource",
+                name: "Sound System",
+                path_name: "Santuary"
+            }],
+            tags: [],
+            startTime: new Date(),
+            endTime: new Date(),
+            collectionId: "",
+            collectionName: ""
+        }} currentDay={new Date()} />
 
         <Card.Root>
             <Card.Header>

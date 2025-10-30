@@ -54,7 +54,7 @@
         </div>
     {/if}
 
-    <EventResources resources={event.resources} showResourcePathname={calendarCustomizations.showResourcePathname} />
+    <EventResources resources={event.resources} showResourcePathname={calendarCustomizations.showResourcePathname} showRooms={calendarCustomizations.showRooms} showResources={calendarCustomizations.showResources} />
 
     {#if event.times && event.times.length > 1}
         <div class="mb-3 flex items-start gap-2 text-sm text-gray-400">
