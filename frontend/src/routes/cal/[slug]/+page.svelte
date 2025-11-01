@@ -6,10 +6,15 @@
     import { Switch } from '@/components/ui/switch/index.js';
     import Button from '@/components/ui/button/button.svelte';
     import { toggleFullScreen } from '@/utils.js';
+    import { onMount } from 'svelte';
 
     let { data } = $props();
 
     let invisibleTooltip = $state(false);
+
+    onMount(() => {
+        document.body.classList.add("dark");
+    });
 </script>
 
 <svelte:head>
@@ -20,7 +25,7 @@
 <div id="cal-root" class="dark min-h-screen w-full p-6 bg-background relative">
     <Calendar events={data.events} displaySettings={data.displaySettings} />
     <Popover.Root>
-        <Popover.Trigger class="absolute bottom-1 right-1 z-50 {invisibleTooltip ? "text-background bg-background" : "text-muted-foreground bg-foreground"} rounded p-2" style={invisibleTooltip ? "border:none;" : "border: 1px solid #333333"}>
+        <Popover.Trigger class="absolute bottom-1 right-1 z-50 {invisibleTooltip ? "opacity-0" : "text-muted-foreground bg-foreground"} rounded p-2" style={invisibleTooltip ? "border:none;" : "border: 1px solid #333333"}>
             <CircleQuestionMark />
         </Popover.Trigger>
         <Popover.Content class="text-muted-foreground bg-foreground rounded p-2" style="border: 1px solid #333333">

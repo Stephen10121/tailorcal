@@ -22,27 +22,27 @@
 {#if res.length > 0 && showResources}
     <div class="flex items-start gap-2 text-sm text-gray-400">
         <Package class="h-4 w-4 mt-0.5 flex-shrink-0" />
-        <div class="flex gap-0.5">
-            <div class="text-gray-400">Resources:</div>
-            <div class="text-gray-300">
+        <p>
+            <span class="text-gray-400">Resources:</span>
+            <span class="text-gray-300">
                 {#each res as resource, index}
                     {resource.name}{#if resource.path_name && showResourcePathname}<span class="pl-1">({resource.path_name})</span>{/if}{#if index+1 < res.length}<span class="pr-1">, </span> {/if}
                 {/each}
-            </div>
-        </div>
+            </span> 
+        </p>
     </div>
 {/if}
 
 {#if rooms.length > 0 && showRooms}
     <div class="flex items-start gap-2 text-sm text-gray-400">
         <Warehouse class="h-4 w-4 mt-0.5 flex-shrink-0" />
-        <div class="flex gap-0.5">
-            <div class="text-gray-400">Room:</div>
-            <div class="text-gray-300">
+        <p>
+            <span class="text-gray-400">Room:</span>
+            <span class="text-gray-300">
                 {#each rooms as room, index}
                     {#if room.path_name}{room.path_name}\\{/if} {room.name}{#if index+1 < rooms.length}, {/if}
                 {/each}
-            </div>
-        </div>
+            </span>
+        </p>
     </div>
 {/if}

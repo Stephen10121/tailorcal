@@ -35,8 +35,8 @@
 
 <div class="dark rounded-lg bg-foreground p-4 flex flex-col gap-2" style="border: 1px solid #333333">
     <div class="dark mb-3 flex items-start justify-between">
-        <h3 class="dark text-lg font-semibold text-white">{event.name}</h3>
-        <p class="dark text-sm text-gray-400">{#if EVENT_DAY_NUMBER !== 1}{MONTHTOSTRING[start.getMonth()]} {start.getDate()}, {/if} <Time date={start} useAMPM={calendarCustomizations.useAMPM} /></p>
+        <h3 class="dark text-lg font-semibold text-white pr-2">{event.name}</h3>
+        <p class="dark text-sm text-gray-400" style="white-space: nowrap;">{#if EVENT_DAY_NUMBER !== 1}{MONTHTOSTRING[start.getMonth()]} {start.getDate()}, {/if} <Time date={start} useAMPM={calendarCustomizations.useAMPM} /></p>
     </div>
 
     <div class="flex items-center gap-2 text-sm text-gray-400">
@@ -72,9 +72,12 @@
     {/if}
 
     {#if event.location && calendarCustomizations.showLocation}
-        <div class="flex items-center gap-2 text-sm text-gray-400">
-            <MapPin class="h-4 w-4" />
-            <span class="text-gray-300">{#if calendarCustomizations.onlyShowLocationTitle}{event.location.split(" - ")[0]}{:else}{event.location}{/if}</span>
+        <div class="flex items-start gap-2 text-sm text-gray-400">
+            <MapPin class="h-4 w-4 mt-0.5 flex-shrink-0" />
+            <p>
+                <span class="text-gray-400">Location:</span>
+                <span class="text-gray-300">{#if calendarCustomizations.onlyShowLocationTitle}{event.location.split(" - ")[0]}{:else}{event.location}{/if}</span>
+            </p>
         </div>
     {/if}
 
