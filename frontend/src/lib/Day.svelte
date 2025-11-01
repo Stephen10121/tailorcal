@@ -1,10 +1,11 @@
 <script lang="ts">
+    import { Temporal } from "temporal-polyfill";
     import Event from "./Event.svelte";
-    import { dateRangeOverlaps, LONGDAYTOSTRING, type CalendarCustomizations, type EventDBModel } from "./utils";
+    import { dateRangeOverlaps, LONGDAYTOSTRING, MONTHTOSTRING, type CalendarCustomizations, type EventDBModel } from "./utils";
 
-    let { events, day, dayNumber, calendarCustomizations }: { events: EventDBModel[], day: Date, dayNumber: number, calendarCustomizations: CalendarCustomizations } = $props();
+    let { events, day, dayNumber, calendarCustomizations, timeZone }: { events: EventDBModel[], day: Temporal.ZonedDateTime, dayNumber: number, calendarCustomizations: CalendarCustomizations, timeZone: Temporal.TimeZoneLike } = $props();
 
-    let nextDay = $derived(new Date(day.getTime() + (24 * 60 * 60 * 999) * 1));
+    let nextDay = $derived(day.add({ hours: 23, minutes: 59, seconds: 59, milliseconds: 1 }));
 </script>
 
 <div class="dark flex flex-col gap-4">
@@ -18,13 +19,13 @@
                 Day after Tomorrow
             {/if}
         </div>
-        <div class="dark text-xl font-semibold text-accent">{LONGDAYTOSTRING[day.getDay()]}, {["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"][day.getMonth()]} {day.getDate()}</div>
+        <div class="dark text-xl font-semibold text-accent">{LONGDAYTOSTRING[day.dayOfWeek]}, {MONTHTOSTRING[day.month]} {day.day}</div>
     </div>
 
     <div class="dark flex flex-col gap-4">
         {#each events as event (`eventListDat${day.toString()}${event.id}`)}
-            {#if dateRangeOverlaps(day, nextDay, new Date(event.startTime), new Date(event.endTime))}
-                <Event {calendarCustomizations} {event} currentDay={day} />
+            {#if dateRangeOverlaps(day.toInstant().epochMilliseconds, nextDay.toInstant().epochMilliseconds, (new Date(event.startTime)).valueOf(), (new Date(event.endTime)).valueOf())}
+                <Event {calendarCustomizations} {event} {timeZone} currentDay={day} />
             {/if}
         {/each}
     </div>

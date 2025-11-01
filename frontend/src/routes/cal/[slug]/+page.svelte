@@ -7,10 +7,12 @@
     import Button from '@/components/ui/button/button.svelte';
     import { toggleFullScreen } from '@/utils.js';
     import { onMount } from 'svelte';
+    import { Temporal } from 'temporal-polyfill';
 
     let { data } = $props();
 
     let invisibleTooltip = $state(false);
+    let timeZone = $state(Temporal.Now.timeZoneId());
 
     onMount(() => {
         document.body.classList.add("dark");
@@ -23,12 +25,13 @@
 </svelte:head>
 
 <div id="cal-root" class="dark min-h-screen w-full p-6 bg-background relative">
-    <Calendar events={data.events} displaySettings={data.displaySettings} />
+    <Calendar events={data.events} displaySettings={data.displaySettings} timeZone={timeZone} />
     <Popover.Root>
         <Popover.Trigger class="absolute bottom-1 right-1 z-50 {invisibleTooltip ? "opacity-0" : "text-muted-foreground bg-foreground"} rounded p-2" style={invisibleTooltip ? "border:none;" : "border: 1px solid #333333"}>
             <CircleQuestionMark />
         </Popover.Trigger>
         <Popover.Content class="text-muted-foreground bg-foreground rounded p-2" style="border: 1px solid #333333">
+            <p>{timeZone} timezone.</p>
             <div class="dark flex items-center gap-2 justify-between">
                 <Label for="useinvis" class="dark text-sm">Hide tooltip (you can still click it)</Label>
                 <Switch class="dark" id="useinvis" bind:checked={invisibleTooltip} />

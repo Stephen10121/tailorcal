@@ -1,7 +1,6 @@
 import type { CalendarDBModel, EventDBModel, EventDBModelPrivate } from "@/utils";
 import { error, redirect } from "@sveltejs/kit";
 import { config } from "dotenv";
-import type { RecordModel } from "pocketbase";
 
 config();
 

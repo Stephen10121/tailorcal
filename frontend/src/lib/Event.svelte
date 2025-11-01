@@ -4,17 +4,19 @@
     import EventResources from "./EventResources.svelte";
     import Time from "./Time.svelte";
     import EventTimes from "./EventTimes.svelte";
+    import { Temporal } from "temporal-polyfill";
 
-    let { event, currentDay, calendarCustomizations }: { event: EventDBModel, currentDay: Date, calendarCustomizations: CalendarCustomizations } = $props();
+    let { event, currentDay, calendarCustomizations, timeZone }: { event: EventDBModel, currentDay: Temporal.ZonedDateTime, calendarCustomizations: CalendarCustomizations, timeZone: Temporal.TimeZoneLike } = $props();
 
-    const start = $derived(new Date(event.startTime));
-    const end = $derived(new Date(event.endTime));
+    const start = $derived(Temporal.Instant.from(event.startTime).toZonedDateTimeISO(timeZone));
+    const end = $derived(Temporal.Instant.from(event.endTime).toZonedDateTimeISO(timeZone));
 
-    const hours = $derived((end.getTime() - start.getTime()) / (1000 * 60 * 60));
+    const hours = $derived(start.until(end, { largestUnit: "hours" }).total({ unit: "hours" }));
 
     // const EVENT_DAY_NUMBER = $derived(currentDay.getDate() - start.getDate() + 1);
-    const EVENT_DAY_NUMBER = $derived(Math.ceil(Math.abs(currentDay.valueOf() - (new Date(start)).setHours(0, 0, 0, 0)) / (1000 * 60 * 60 * 24)+1));
-    const MULTI_DAY_EVENT = $derived(hours === 24 ? start.getHours() !== 0 : hours > 24);
+
+    const EVENT_DAY_NUMBER = $derived(Math.ceil(Math.abs(currentDay.toInstant().epochMilliseconds - start.startOfDay().toInstant().epochMilliseconds) / (1000 * 60 * 60 * 24)+1));
+    const MULTI_DAY_EVENT = $derived(hours === 24 ? start.hour !== 0 : hours > 24);
 
     function getContrastYIQ(hexColor: string) {
         // Remove '#' if present
@@ -36,15 +38,15 @@
 <div class="dark rounded-lg bg-foreground p-4 flex flex-col gap-2" style="border: 1px solid #333333">
     <div class="dark mb-3 flex items-start justify-between">
         <h3 class="dark text-lg font-semibold text-white pr-2">{event.name}</h3>
-        <p class="dark text-sm text-gray-400" style="white-space: nowrap;">{#if EVENT_DAY_NUMBER !== 1}{MONTHTOSTRING[start.getMonth()]} {start.getDate()}, {/if} <Time date={start} useAMPM={calendarCustomizations.useAMPM} /></p>
+        <p class="dark text-sm text-gray-400" style="white-space: nowrap;">{#if EVENT_DAY_NUMBER !== 1}{MONTHTOSTRING[start.month]} {start.day}, {/if} <Time date={start} useAMPM={calendarCustomizations.useAMPM} /></p>
     </div>
 
     <div class="flex items-center gap-2 text-sm text-gray-400">
         <Clock class="h-4 w-4" />
         {#if MULTI_DAY_EVENT}
-            <span class="text-sm text-gray-300">{MONTHTOSTRING[start.getMonth()]} {start.getDate()}, <Time date={start} useAMPM={calendarCustomizations.useAMPM} /> - {MONTHTOSTRING[end.getMonth()]} {end.getDate()}, <Time date={end} useAMPM={calendarCustomizations.useAMPM} /></span>
+            <span class="text-sm text-gray-300">{MONTHTOSTRING[start.month]} {start.day}, <Time date={start} useAMPM={calendarCustomizations.useAMPM} /> - {MONTHTOSTRING[end.month]} {end.day}, <Time date={end} useAMPM={calendarCustomizations.useAMPM} /></span>
         {:else}
-            <span class="text-sm text-gray-300"><Time date={start} useAMPM={calendarCustomizations.useAMPM} /> - {#if hours === 24 && start.getHours() === 0}{MONTHTOSTRING[end.getMonth()]} {end.getDate()}, {/if} <Time date={end} useAMPM={calendarCustomizations.useAMPM} /></span>
+            <span class="text-sm text-gray-300"><Time date={start} useAMPM={calendarCustomizations.useAMPM} /> - {#if hours === 24 && start.hour === 0}{MONTHTOSTRING[end.month]} {end.day}, {/if} <Time date={end} useAMPM={calendarCustomizations.useAMPM} /></span>
         {/if}
     </div>
 
@@ -64,7 +66,7 @@
                 <div class="text-gray-400">Time Schedule:</div>
                 <div class="text-gray-300">
                     {#each event.times as time, index (`anEventTime${time.name}${event.id}`)}
-                        <EventTimes today={currentDay} useAMPM={calendarCustomizations.useAMPM} {time} multiDayEvent={MULTI_DAY_EVENT} />{#if index+1 < event.times.length},<br>{/if}
+                        <EventTimes {timeZone} today={currentDay} useAMPM={calendarCustomizations.useAMPM} {time} multiDayEvent={MULTI_DAY_EVENT} />{#if index+1 < event.times.length},<br>{/if}
                     {/each}
                 </div>
             </div>
