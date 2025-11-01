@@ -1,16 +1,18 @@
 <script lang="ts">
     import * as Kbd from "$lib/components/ui/kbd/index.js";
-    import type { RecordModel } from "pocketbase";
     import { Input } from "@/components/ui/input";
     import {  Search, } from "@lucide/svelte";
     import Badge from "./components/ui/badge/badge.svelte";
+    import { goto } from "$app/navigation";
+    import type { CalendarDBModel } from "./utils";
 
-    let { calendars }: { calendars: RecordModel[] } = $props();
+    let { calendars }: { calendars: CalendarDBModel[] } = $props();
 
     let everythingInput: HTMLInputElement | null = $state(null);
     let everythingInputFocused = $state(false);
 
-    let filteredTerms: RecordModel[] = $state([]);
+    let filteredTerms: CalendarDBModel[] = $state([]);
+    let arrowDownIndex = $state(-1);
 
     function searchInputChanged(event: Event) {
         //@ts-ignore
@@ -26,12 +28,43 @@
             calendar.description.toLowerCase().includes(searchTerm) ||
             "calendar".includes(searchTerm)
         });
+        arrowDownIndex = -1;
+    }
+
+    function resetSearch() {
+        if (everythingInput) {
+            everythingInput.value = "";
+            filteredTerms = [];
+            arrowDownIndex = -1;
+        }
     }
 
     function keyDown(event: KeyboardEvent) {
         if (event.key === "/" && everythingInput && !everythingInputFocused) {
             event.preventDefault();
+            arrowDownIndex = -1;
             everythingInput.focus();
+        }
+
+        if ((event.key === "ArrowUp" || event.key === "ArrowDown") && everythingInputFocused && filteredTerms.length > 0) {
+            if (event.key === "ArrowUp") {
+                if (arrowDownIndex === -1 || arrowDownIndex === 1) {
+                    arrowDownIndex = filteredTerms.length;
+                } else {
+                    arrowDownIndex -= 1;
+                }
+            } else if (event.key === "ArrowDown") {
+                if (arrowDownIndex === filteredTerms.length || arrowDownIndex === -1) {
+                    arrowDownIndex = 1;
+                } else {
+                    arrowDownIndex += 1;
+                }
+            }
+        }
+
+        if (event.key === "Enter" && arrowDownIndex !== -1) {
+            goto(`/dashboard/calendars/${filteredTerms[arrowDownIndex - 1].id}`);
+            resetSearch();
         }
     }
 </script>
@@ -51,26 +84,23 @@
         placeholder="Search calendars, webhooks, triggers..."
         class="pl-9 pr-9 bg-background"
     />
-</div>
 
-{#if everythingInputFocused && filteredTerms.length > 0}
-    <div class="border shadow-lg bg-card absolute left-0 -bottom-1 translate-y-full w-full max-w-md rounded-lg p-1 z-50">
-        {#each filteredTerms as term (`filteredSearchTerms${term.id}`)}
-            <a
-                onclick={() => {if (everythingInput) {
-                    everythingInput.value = "";
-                    filteredTerms = [];
-                }}}
-                href="/dashboard/calendars/{term.id}"
-                class="w-full px-4 py-3 hover:bg-accent/50 transition-colors text-left flex flex-col gap-1 rounded-md"
-            >
-                <div class="flex items-center justify-between">
-                    <span class="font-medium text-foreground underline">{term.name}</span>
-                    <Badge variant="outline">Calendar</Badge>
-                    <!-- <span class="text-xs text-muted-foreground">{term.id}</span> -->
-                </div>
-                <p class="text-sm text-muted-foreground line-clamp-1">{term.description}</p>
-            </a>
-        {/each}
-    </div>
-{/if}
+    {#if everythingInputFocused && filteredTerms.length > 0}
+        <div class="border shadow-lg bg-card absolute left-0 -bottom-1 translate-y-full w-full max-w-md rounded-lg p-1 z-50">
+            {#each filteredTerms as term, index (`filteredSearchTerms${term.id}`)}
+                <a
+                    onclick={resetSearch}
+                    href="/dashboard/calendars/{term.id}"
+                    class="w-full px-4 py-3 hover:bg-accent/50 transition-colors text-left flex flex-col gap-1 rounded-md {arrowDownIndex - 1 === index ? "bg-accent/20" : ""}"
+                >
+                    <div class="flex items-center justify-between">
+                        <span class="font-medium text-foreground underline">{term.name}</span>
+                        <Badge variant="outline">Calendar</Badge>
+                        <!-- <span class="text-xs text-muted-foreground">{term.id}</span> -->
+                    </div>
+                    <p class="text-sm text-muted-foreground line-clamp-1">{term.description}</p>
+                </a>
+            {/each}
+        </div>
+    {/if}
+</div>

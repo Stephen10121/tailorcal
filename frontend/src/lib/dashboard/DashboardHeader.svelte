@@ -6,9 +6,9 @@
     import * as Avatar from "$lib/components/ui/avatar/index.js";
     import { Bell, Settings } from "@lucide/svelte";
     import type { RecordModel } from "pocketbase";
-    import { cn } from "@/utils";
+    import { cn, type CalendarDBModel } from "@/utils";
 
-    let { avatar, user, calendars }: { avatar: string, user: RecordModel, calendars: RecordModel[] } = $props();
+    let { avatar, user, calendars }: { avatar: string, user: RecordModel, calendars: CalendarDBModel[] } = $props();
 </script>
 
 <header class="h-16 border-b border-border bg-card">

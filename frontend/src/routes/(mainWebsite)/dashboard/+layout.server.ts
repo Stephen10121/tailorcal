@@ -1,5 +1,5 @@
+import type { CalendarDBModel } from '@/utils.js';
 import { redirect } from '@sveltejs/kit';
-import type { RecordModel } from 'pocketbase';
 
 export async function load({ parent, locals }) {
     const data = await parent();
@@ -8,7 +8,7 @@ export async function load({ parent, locals }) {
         return redirect(301, "/");
     }
 
-    let calendars: RecordModel[] = [];
+    let calendars: CalendarDBModel[] = [];
     try {
         calendars = await locals.pb.collection('calendars').getFullList({
             filter: `owner="${data.user.id}"`,
