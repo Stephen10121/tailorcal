@@ -15,7 +15,7 @@
 
     // const EVENT_DAY_NUMBER = $derived(currentDay.getDate() - start.getDate() + 1);
 
-    const EVENT_DAY_NUMBER = $derived(Math.ceil(Math.abs(currentDay.toInstant().epochMilliseconds - start.startOfDay().toInstant().epochMilliseconds) / (1000 * 60 * 60 * 24)+1));
+    const EVENT_DAY_NUMBER = $derived(Math.ceil(Math.abs((currentDay ? currentDay.toInstant().epochMilliseconds : 0) - start.startOfDay().toInstant().epochMilliseconds) / (1000 * 60 * 60 * 24)+1));
     const MULTI_DAY_EVENT = $derived(hours === 24 ? start.hour !== 0 : hours > 24);
 
     function getContrastYIQ(hexColor: string) {

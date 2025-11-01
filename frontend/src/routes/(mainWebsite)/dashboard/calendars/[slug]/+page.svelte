@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { ArrowLeft, Clock, Copy, Eye, Link2, Shield, SquareArrowOutUpRight, Upload, X } from "@lucide/svelte";
+    import { ArrowLeft, Copy, Link2, SquareArrowOutUpRight, Upload, X } from "@lucide/svelte";
     import { changeCalendarSettings } from "@/endpointCalls/changeCalendarSetting.js";
     import { Spinner } from "$lib/components/ui/spinner/index.js";
     import NoCalendarAvatar from "@/NoCalendarAvatar.svelte";
@@ -16,6 +16,7 @@
     import * as Dialog from "$lib/components/ui/dialog/index.js";
     import PrettyDate from "@/PrettyDate.svelte";
     import Event from "@/Event.svelte";
+    import { Temporal } from "temporal-polyfill";
 
     let { data } = $props();
 
@@ -333,11 +334,11 @@
                 path_name: "Santuary"
             }],
             tags: [],
-            startTime: new Date(),
-            endTime: new Date(),
+            startTime: Temporal.Now.zonedDateTimeISO().toString(),
+            endTime: Temporal.Now.zonedDateTimeISO().toString(),
             collectionId: "",
             collectionName: ""
-        }} currentDay={new Date()} />
+        }} currentDay={Temporal.Now.zonedDateTimeISO()} timeZone={Temporal.Now.timeZoneId()} />
 
         <Card.Root>
             <Card.Header>

@@ -30,13 +30,13 @@
     const triggerContent = $derived(timezones.find((azone) => azone === timeZone) ?? "Select a timezone");
 </script>
  
-<Select.Root type="single" name="favoriteFruit" bind:value={timeZone}>
+<Select.Root type="single" name="selectTimezone" bind:value={timeZone}>
     <Select.Trigger class="w-[180px]">
         {triggerContent}
     </Select.Trigger>
     <Select.Content>
         <Select.Group>
-            <Select.Label>Fruits</Select.Label>
+            <Select.Label>Timezones</Select.Label>
             {#each timezones as timezone (timezone)}
                 <Select.Item
                     value={timezone}
