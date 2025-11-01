@@ -20,6 +20,7 @@
 
     let { data } = $props();
 
+    let nowDate = $state(Temporal.Now.zonedDateTimeISO());
     let avatarLink = $derived(data.selectedCalendar.logo ? `${data.pb_url}/api/files/${data.selectedCalendar.collectionId}/${data.selectedCalendar.id}/${data.selectedCalendar.logo}` : "");
 
     let uploadNewAvatar: File | null = $state(null);
@@ -334,11 +335,11 @@
                 path_name: "Santuary"
             }],
             tags: [],
-            startTime: Temporal.Now.zonedDateTimeISO().toString(),
-            endTime: Temporal.Now.zonedDateTimeISO().toString(),
+            startTime: nowDate.toString(),
+            endTime: nowDate.toString(),
             collectionId: "",
             collectionName: ""
-        }} currentDay={Temporal.Now.zonedDateTimeISO()} timeZone={Temporal.Now.timeZoneId()} />
+        }} currentDay={nowDate} timeZone={Temporal.Now.timeZoneId()} />
 
         <Card.Root>
             <Card.Header>
