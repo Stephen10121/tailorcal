@@ -104,6 +104,8 @@ export interface CalendarDBModel extends RecordModel {
 	description: string,
 	passwordScreenMessage: string,
 	displaySettings: CalendarCustomizations,
+	created: string,
+	updated: string
 }
 
 // Dont you dare judge

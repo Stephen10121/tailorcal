@@ -14,13 +14,15 @@
     import { toast } from "svelte-sonner";
     import { deleteCalendar } from "@/endpointCalls/deleteCalendar.js";
     import * as Dialog from "$lib/components/ui/dialog/index.js";
-    import PrettyDate from "@/PrettyDate.svelte";
     import Event from "@/Event.svelte";
     import { Temporal } from "temporal-polyfill";
+    import PrettyDate from "@/PrettyDate.svelte";
 
+    
     let { data } = $props();
 
-    let nowDate = $state(Temporal.Now.zonedDateTimeISO());
+    let timeZone = $state(Temporal.Now.timeZoneId());
+    let nowDate = $derived(Temporal.Now.zonedDateTimeISO(timeZone));
     let avatarLink = $derived(data.selectedCalendar.logo ? `${data.pb_url}/api/files/${data.selectedCalendar.collectionId}/${data.selectedCalendar.id}/${data.selectedCalendar.logo}` : "");
 
     let uploadNewAvatar: File | null = $state(null);
@@ -445,11 +447,11 @@
                 </div>
                 <div class="flex items-center justify-between text-sm">
                     <span class="text-muted-foreground">Created</span>
-                    <span class="font-semibold text-foreground"><PrettyDate date={new Date(data.selectedCalendar.created)} /></span>
+                    <span class="font-semibold text-foreground"><PrettyDate date={Temporal.Instant.from(data.selectedCalendar.created).toZonedDateTimeISO(timeZone)} /></span>
                 </div>
                 <div class="flex items-center justify-between text-sm">
                     <span class="text-muted-foreground">Updated</span>
-                    <span class="font-semibold text-foreground"><PrettyDate date={new Date(data.selectedCalendar.updated)} /></span>
+                    <span class="font-semibold text-foreground"><PrettyDate date={Temporal.Instant.from(data.selectedCalendar.updated).toZonedDateTimeISO(timeZone)} /></span>
                 </div>
             </div>
             </Card.Content>

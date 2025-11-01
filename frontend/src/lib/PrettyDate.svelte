@@ -1,7 +1,9 @@
 <script lang="ts">
+    import type { Temporal } from "temporal-polyfill";
+    import { MONTHTOSTRING } from "./utils";
     import Time from "./Time.svelte";
 
-    let { date }: { date: Date } = $props();
+    let { date }: { date: Temporal.ZonedDateTime } = $props();
 </script>
 
-{["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"][date.getMonth()]} {date.getDate()} {date.getFullYear()} <Time {date} useAMPM />
+{MONTHTOSTRING[date.month]} {date.day} {date.year} <Time {date} useAMPM />
