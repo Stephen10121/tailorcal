@@ -3,20 +3,21 @@
     import { onMount } from "svelte";
     import Day from "./Day.svelte";
     import type { CalendarCustomizations, EventDBModel } from "./utils";
+    import { Temporal } from 'temporal-polyfill';
 
     let { events, displaySettings }: { events: EventDBModel[], displaySettings: CalendarCustomizations } = $props();
 
     let calendarCustomizations: CalendarCustomizations = $derived(displaySettings);
 
-    let today = $state(new Date(new Date(new Date().getTime() + (24 * 60 * 60 * 1000) * 0).setHours(0, 0, 0, 0)));
-    let tomorrow = $state(new Date(new Date(new Date().getTime() + (24 * 60 * 60 * 1000) * 1).setHours(0, 0, 0, 0)));
-    let thirdDay = $state(new Date(new Date(new Date().getTime() + (24 * 60 * 60 * 1000) * 2).setHours(0, 0, 0, 0)));
+    let today = $state(new Date(Temporal.Now.zonedDateTimeISO().startOfDay().toInstant().epochMilliseconds));
+    let tomorrow = $state(new Date(Temporal.Now.zonedDateTimeISO().add({ days: 1 }).startOfDay().toInstant().epochMilliseconds));
+    let thirdDay = $state(new Date(Temporal.Now.zonedDateTimeISO().add({ days: 2 }).startOfDay().toInstant().epochMilliseconds));
 
     function updatePage() {
         console.log("Updating Page.");
-        today = new Date(new Date(new Date().getTime() + (24 * 60 * 60 * 1000) * 0).setHours(0, 0, 0, 0));
-        tomorrow = new Date(new Date(new Date().getTime() + (24 * 60 * 60 * 1000) * 1).setHours(0, 0, 0, 0));
-        thirdDay = new Date(new Date(new Date().getTime() + (24 * 60 * 60 * 1000) * 2).setHours(0, 0, 0, 0));
+        today = new Date(Temporal.Now.zonedDateTimeISO().startOfDay().toInstant().epochMilliseconds);
+        tomorrow = new Date(Temporal.Now.zonedDateTimeISO().add({ days: 1 }).startOfDay().toInstant().epochMilliseconds);
+        thirdDay = new Date(Temporal.Now.zonedDateTimeISO().add({ days: 2 }).startOfDay().toInstant().epochMilliseconds);
 
         invalidateAll();
     }

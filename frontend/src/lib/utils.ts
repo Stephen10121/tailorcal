@@ -85,8 +85,8 @@ export interface EventDBModel extends RecordModel {
 	times: EventTimesType[] | null,
 	resources: EventResourcesType[] | null
 	tags: EventTagsType[] | null,
-	startTime: Date,
-	endTime: Date,
+	startTime: string,
+	endTime: string,
 }
 
 export interface EventDBModelPrivate extends EventDBModel {
