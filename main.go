@@ -28,6 +28,7 @@ func main() {
 
 	app.OnServe().BindFunc(func(se *core.ServeEvent) error {
 		enpoints.UserHasSubscribed(se, app)
+		enpoints.NewUserLoggedIn(se, app)
 		webhooks.HandleWebhookEndpoint(se, app)
 
 		se.Router.POST("/tester", func(e *core.RequestEvent) error {

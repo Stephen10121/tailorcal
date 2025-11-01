@@ -3,6 +3,7 @@ import { redirect } from "@sveltejs/kit";
 import type { AuthProviderInfo, RecordAuthResponse } from "pocketbase";
 import { config } from "dotenv";
 import { fetchFileFromURL } from "$lib/utils.js";
+import { newUserLoggedIn } from "@/newUserLoggedIn";
 
 config();
 
@@ -62,7 +63,6 @@ export async function GET({ locals, url, cookies }) {
         return redirect(303, "/");
     }
     
-    console.log(process.env.PB_URL)
     let res: RecordAuthResponse;
     try {
         res = await locals.pb.collection("users").authWithOAuth2Code(provider.name, code, expectedVerifier, redirectURL, {
@@ -103,6 +103,9 @@ export async function GET({ locals, url, cookies }) {
                     "Authorization": "Bearer " + process.env.POCKETBASE_TOKEN!
                 }
             });
+
+            // Tells the backend that the user has subscribed.
+            await newUserLoggedIn(newUserRecord.id, newUserRecord.refreshToken);
         } else {
             await locals.pb.collection("users").update(newUserRecord.id, {
                 avatar: fileResp.error ? null : fileResp.blob,
