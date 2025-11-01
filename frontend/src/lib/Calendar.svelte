@@ -9,18 +9,26 @@
 
     let calendarCustomizations: CalendarCustomizations = $derived(displaySettings);
 
-    let today = $state(Temporal.Now.zonedDateTimeISO().startOfDay());
-    let tomorrow = $state(Temporal.Now.zonedDateTimeISO().add({ days: 1 }).startOfDay());
-    let thirdDay = $state(Temporal.Now.zonedDateTimeISO().add({ days: 2 }).startOfDay());
+    let today = $state(Temporal.Now.zonedDateTimeISO(timeZone).startOfDay());
+    let tomorrow = $state(Temporal.Now.zonedDateTimeISO(timeZone).add({ days: 1 }).startOfDay());
+    let thirdDay = $state(Temporal.Now.zonedDateTimeISO(timeZone).add({ days: 2 }).startOfDay());
+    let currentTimeZone = $state(timeZone);
 
     function updatePage() {
         console.log("Updating Page.");
-        today = Temporal.Now.zonedDateTimeISO().startOfDay();
-        tomorrow = Temporal.Now.zonedDateTimeISO().add({ days: 1 }).startOfDay();
-        thirdDay = Temporal.Now.zonedDateTimeISO().add({ days: 2 }).startOfDay();
+        today = Temporal.Now.zonedDateTimeISO(timeZone).startOfDay();
+        tomorrow = Temporal.Now.zonedDateTimeISO(timeZone).add({ days: 1 }).startOfDay();
+        thirdDay = Temporal.Now.zonedDateTimeISO(timeZone).add({ days: 2 }).startOfDay();
 
         invalidateAll();
     }
+
+    $effect(() => {
+        if (currentTimeZone !== timeZone) {
+            updatePage();
+            currentTimeZone = timeZone;
+        }
+    });
 
     onMount(() => {
         const updater = setInterval(updatePage, 20000);

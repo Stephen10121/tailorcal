@@ -8,6 +8,7 @@
     import { toggleFullScreen } from '@/utils.js';
     import { onMount } from 'svelte';
     import { Temporal } from 'temporal-polyfill';
+    import TimeZoneSelector from '@/TimeZoneSelector.svelte';
 
     let { data } = $props();
 
@@ -31,7 +32,7 @@
             <CircleQuestionMark />
         </Popover.Trigger>
         <Popover.Content class="text-muted-foreground bg-foreground rounded p-2" style="border: 1px solid #333333">
-            <p>{timeZone} timezone.</p>
+            <TimeZoneSelector bind:timeZone />
             <div class="dark flex items-center gap-2 justify-between">
                 <Label for="useinvis" class="dark text-sm">Hide tooltip (you can still click it)</Label>
                 <Switch class="dark" id="useinvis" bind:checked={invisibleTooltip} />
