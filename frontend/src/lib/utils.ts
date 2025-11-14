@@ -107,6 +107,17 @@ export interface CalendarDBModel extends RecordModel {
 	updated: string
 }
 
+export interface ImageFeedDBModel extends RecordModel {
+	name: string,
+	owner: string,
+	logo: string,
+	visits: number,
+	description: string,
+	displaySettings: ImageFeedCustomizations,
+	created: string,
+	updated: string
+}
+
 // Dont you dare judge
 export function toggleFullScreen() {
 	const elem = document.documentElement
@@ -147,4 +158,8 @@ export type CalendarCustomizations = {
 	showResources: boolean,
 	showRooms: boolean,
 	showDescription: boolean
+}
+
+export type ImageFeedCustomizations = {
+	showEventName: boolean
 }

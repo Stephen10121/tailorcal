@@ -1,6 +1,5 @@
 <script lang="ts">
-    import { cn } from "@/utils";
-    import { Calendar, Home, BarChart3 } from "@lucide/svelte";
+    import { Calendar, Home, GalleryHorizontalEnd } from "@lucide/svelte";
     import * as Sidebar from "$lib/components/ui/sidebar/index.js";
     import { useSidebar } from "$lib/components/ui/sidebar/index.js";
 
@@ -11,7 +10,8 @@
     const navigation = [
       { title: "Dashboard", icon: Home, url: "/dashboard" },
       { title: "Calendars", icon: Calendar, url: "/dashboard/calendars"  },
-      { title: "Analytics", icon: BarChart3, url: "/dashboard/analytics" },
+      { title: "Image Feeds", icon: GalleryHorizontalEnd, url: "/dashboard/image-feeds" },
+    //   { title: "Analytics", icon: BarChart3, url: "/dashboard/analytics" },
     ]
 </script>
 

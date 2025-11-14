@@ -1,4 +1,4 @@
-import type { CalendarCustomizations, CalendarDBModel } from "@/utils.js";
+import type { CalendarCustomizations, CalendarDBModel, ImageFeedCustomizations, ImageFeedDBModel } from "@/utils.js";
 import { error, json } from "@sveltejs/kit";
 import { config } from "dotenv";
 import type { RecordModel } from "pocketbase";
@@ -16,9 +16,9 @@ export async function DELETE({ locals, request }) {
         return error(400, "Missing Data.");
     }
 
-    let calendar: RecordModel | null = null;
+    let imageFeed: RecordModel | null = null;
     try {
-        calendar = await locals.pb.collection("calendars").getOne(id.toString(), {
+        imageFeed = await locals.pb.collection("imageFeeds").getOne(id.toString(), {
             headers: {
                 "Authorization": "Bearer " + process.env.POCKETBASE_TOKEN!
             }
@@ -28,16 +28,16 @@ export async function DELETE({ locals, request }) {
         return error(500);
     }
 
-    if (calendar === null) {
+    if (imageFeed === null) {
         return error(400, "No user");
     }
 
-    if (calendar.owner !== locals.user.id) {
+    if (imageFeed.owner !== locals.user.id) {
         return error(401, "Invalid Request.");
     }
 
     try {
-        await locals.pb.collection('calendars').delete(calendar.id, {
+        await locals.pb.collection('imageFeeds').delete(imageFeed.id, {
             headers: {
                 "Authorization": "Bearer " + process.env.POCKETBASE_TOKEN!
             }
@@ -59,27 +59,24 @@ export async function PATCH({ locals, request }) {
     const id = formData.get("id");
     const name = formData.get("name");
     const description = formData.get("description");
-    const enablePassword = formData.get("enablePassword");
-    const newPassword = formData.get("newPassword");
     const avatarLink = formData.get("avatarLink");
     const newAvatar = formData.get("newAvatar");
-    const passwordScreenMessage = formData.get("passwordScreenMessage");
     const displaySettings = formData.get("displaySettings");
 
-    if (id == null || name == null || description == null || enablePassword == null || newPassword == null || avatarLink == null || passwordScreenMessage == null || displaySettings === null) {
+    if (id == null || name == null || description == null || avatarLink == null || displaySettings === null) {
         return error(400, "Missing Data.");
     }
 
-    let parsedDisplaySettings: CalendarCustomizations;
+    let parsedDisplaySettings: ImageFeedCustomizations;
     try {
         parsedDisplaySettings = JSON.parse(displaySettings.toString());
     } catch (_) {
         return error(400, "Missing Data.");
     }
 
-    let calendar: RecordModel | null = null;
+    let imageFeed: ImageFeedDBModel | null = null;
     try {
-        calendar = await locals.pb.collection("calendars").getOne(id.toString(), {
+        imageFeed = await locals.pb.collection("imageFeeds").getOne(id.toString(), {
             headers: {
                 "Authorization": "Bearer " + process.env.POCKETBASE_TOKEN!
             }
@@ -89,35 +86,26 @@ export async function PATCH({ locals, request }) {
         return error(500);
     }
 
-    if (calendar === null) {
+    if (imageFeed === null) {
         return error(400, "No user");
     }
 
-    if (calendar.owner !== locals.user.id) {
+    if (imageFeed.owner !== locals.user.id) {
         return error(401, "Invalid Request.");
     }
 
     try {
-        let data: Partial<CalendarDBModel> = {
+        let data: Partial<ImageFeedDBModel> = {
             "name": name.toString(),
             "description": description.toString(),
-            "passwordEnabled": enablePassword.toString() === "1",
             "displaySettings": parsedDisplaySettings
         };
-
-        if (newPassword.toString().length > 0 && enablePassword.toString() === "1") {
-            data["password"] = newPassword.toString();
-        }
-
-        if (enablePassword.toString() === "1") {
-            data["passwordScreenMessage"] = passwordScreenMessage.toString();
-        }
 
         if (avatarLink.toString().length === 0) {
             data["logo"] = newAvatar?.toString();
         }
 
-        await locals.pb.collection('calendars').update(calendar.id, data, {
+        await locals.pb.collection('imageFeeds').update(imageFeed.id, data, {
             headers: {
                 "Authorization": "Bearer " + process.env.POCKETBASE_TOKEN!
             }
@@ -138,15 +126,13 @@ export async function POST({ locals, request }) {
 
     const name = formData.get("name");
     const description = formData.get("description");
-    const enablePassword = formData.get("enablePassword");
-    const newPassword = formData.get("newPassword");
 
-    if (name == null || description == null || enablePassword == null || newPassword == null) {
+    if (name == null || description == null) {
         return error(400, "Missing Data.");
     }
 
     let user: RecordModel | null = null;
-    let calendars: RecordModel[] = [];
+    let imageFeeds: ImageFeedDBModel[] = [];
     try {
         user = await locals.pb.collection("users").getOne(locals.user.id, {
             headers: {
@@ -164,7 +150,7 @@ export async function POST({ locals, request }) {
     }
 
     try {
-        calendars = await locals.pb.collection('calendars').getFullList({
+        imageFeeds = await locals.pb.collection('imageFeeds').getFullList({
             filter: `owner = "${user.id}"`,
             headers: {
                 "Authorization": "Bearer " + process.env.POCKETBASE_TOKEN!
@@ -176,32 +162,21 @@ export async function POST({ locals, request }) {
         return error(500, "No user");
     }
 
-    if (calendars.length > 0 && user.accessLevel === "none") {
-        return error(402, "Exceed the amount of calendars on the free plan.");
+    if (imageFeeds.length > 0 && user.accessLevel === "none") {
+        return error(402, "Exceed the amount of image feeds on the free plan.");
     }
 
     try {
-        let data: Partial<CalendarDBModel> = {
+        let data: Partial<ImageFeedDBModel> = {
             "name": name.toString(),
             "description": description.toString(),
-            "passwordEnabled": enablePassword.toString() === "1",
             "owner": locals.user.id,
             "displaySettings": {
-                "useAMPM": true,
-                "showResourcePathname": false,
-                "onlyShowLocationTitle": false,
-                "showLocation": true,
-                "showResources": true,
-	            "showRooms": true,
-                "showDescription": false
+                "showEventName": false
             },
         };
 
-        if (enablePassword.toString() === "1") {
-            data["password"] = newPassword.toString();
-        }
-
-        await locals.pb.collection('calendars').create(data, {
+        await locals.pb.collection('imageFeeds').create(data, {
             headers: {
                 "Authorization": "Bearer " + process.env.POCKETBASE_TOKEN!
             }

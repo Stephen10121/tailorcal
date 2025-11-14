@@ -162,7 +162,6 @@
                             <Avatar.Image src="{data.pb_url}/api/files/{calendar.collectionId}/{calendar.id}/{calendar.logo}" alt="Avatar" />
                             <Avatar.Fallback><NoCalendarAvatar /></Avatar.Fallback>
                         </Avatar.Root>
-                        <div class={`w-3 h-3 rounded-full ${calendar.color}`}></div>
                         <div>
                             <Card.Title class="text-lg flex">
                                 {calendar.name}

@@ -2,20 +2,20 @@ import { toast } from "svelte-sonner";
 
 type Success = boolean
 
-export async function deleteCalendar(id: string): Promise<Success> {
+export async function deleteIFeed(id: string): Promise<Success> {
     const data = new FormData();
 
     data.append("id", id);
 
-    const response = await fetch('/api/calendar', {
+    const response = await fetch('/api/imageFeed', {
         method: 'DELETE',
         body: data
     });
     if (response.ok) {
-        toast.success("Successfully deleted calendar.");
+        toast.success("Successfully deleted image feed.");
         return true;
     } else {
-        toast.error("Failed to delete calendar");
+        toast.error("Failed to delete image feed");
         console.log(response);
 
         return false;
