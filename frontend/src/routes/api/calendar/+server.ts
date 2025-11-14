@@ -114,7 +114,8 @@ export async function PATCH({ locals, request }) {
         }
 
         if (avatarLink.toString().length === 0) {
-            data["logo"] = newAvatar?.toString();
+            //@ts-ignore
+            data["logo"] = newAvatar;
         }
 
         await locals.pb.collection('calendars').update(calendar.id, data, {
