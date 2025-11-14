@@ -4,14 +4,22 @@
     import {  Search, } from "@lucide/svelte";
     import Badge from "./components/ui/badge/badge.svelte";
     import { goto } from "$app/navigation";
-    import type { CalendarDBModel } from "./utils";
+    import type { CalendarDBModel, ImageFeedDBModel } from "./utils";
 
-    let { calendars }: { calendars: CalendarDBModel[] } = $props();
+    let { 
+        calendars,
+        imageFeeds
+    }: {
+        calendars: CalendarDBModel[],
+        imageFeeds: ImageFeedDBModel[]
+    } = $props();
 
     let everythingInput: HTMLInputElement | null = $state(null);
     let everythingInputFocused = $state(false);
 
-    let filteredTerms: CalendarDBModel[] = $state([]);
+    type FilteredTermsList = ({type: "calendar", data: CalendarDBModel } | { type: "image-feed", data: ImageFeedDBModel })
+
+    let filteredTerms: FilteredTermsList[] = $state([]);
     let arrowDownIndex = $state(-1);
 
     function searchInputChanged(event: Event) {
@@ -22,12 +30,35 @@
             return
         }
 
-        filteredTerms = calendars.filter((calendar) => {
-            return calendar.id.toLowerCase().includes(searchTerm) ||
-            calendar.name.toLowerCase().includes(searchTerm) ||
-            calendar.description.toLowerCase().includes(searchTerm) ||
-            "calendar".includes(searchTerm)
-        });
+        let newFilteredTerms: FilteredTermsList[] = [];
+
+        for (let i=0;i<calendars.length;i++) {
+            if (calendars[i].id.toLowerCase().includes(searchTerm) ||
+            calendars[i].name.toLowerCase().includes(searchTerm) ||
+            calendars[i].description.toLowerCase().includes(searchTerm) ||
+            "calendar".includes(searchTerm)) {
+                newFilteredTerms.push({ type: "calendar", data: calendars[i] });
+            }
+        }
+
+        for (let i=0;i<imageFeeds.length;i++) {
+            if (imageFeeds[i].id.toLowerCase().includes(searchTerm) ||
+            imageFeeds[i].name.toLowerCase().includes(searchTerm) ||
+            imageFeeds[i].description.toLowerCase().includes(searchTerm) ||
+            "image feed".includes(searchTerm)) {
+                newFilteredTerms.push({ type: "image-feed", data: imageFeeds[i] });
+            }
+        }
+
+        filteredTerms = newFilteredTerms;
+
+        // filteredTerms = calendars.filter((calendar) => {
+        //     return calendar.id.toLowerCase().includes(searchTerm) ||
+        //     calendar.name.toLowerCase().includes(searchTerm) ||
+        //     calendar.description.toLowerCase().includes(searchTerm) ||
+        //     "calendar".includes(searchTerm)
+        // });
+
         arrowDownIndex = -1;
     }
 
@@ -63,7 +94,7 @@
         }
 
         if (event.key === "Enter" && arrowDownIndex !== -1) {
-            goto(`/dashboard/calendars/${filteredTerms[arrowDownIndex - 1].id}`);
+            goto(`/dashboard/${filteredTerms[arrowDownIndex - 1].type === "calendar" ? "calendars" : "image-feeds"}/${filteredTerms[arrowDownIndex - 1].data.id}`);
             resetSearch();
         }
     }
@@ -81,24 +112,28 @@
         onfocusin={() => everythingInputFocused=true}
         onfocusout={() => setTimeout(() => everythingInputFocused=false, 200)}
         oninput={searchInputChanged}
-        placeholder="Search calendars, webhooks, triggers..."
+        placeholder="Search calendars, image feeds..."
         class="pl-9 pr-9 bg-background"
     />
 
     {#if everythingInputFocused && filteredTerms.length > 0}
         <div class="border shadow-lg bg-card absolute left-0 -bottom-1 translate-y-full w-full max-w-md rounded-lg p-1 z-50">
-            {#each filteredTerms as term, index (`filteredSearchTerms${term.id}`)}
+            {#each filteredTerms as term, index (`filteredSearchTerms${term.data.id}`)}
                 <a
                     onclick={resetSearch}
-                    href="/dashboard/calendars/{term.id}"
+                    href="/dashboard/{term.type === "calendar" ? "calendars" : "image-feeds"}/{term.data.id}"
                     class="w-full px-4 py-3 hover:bg-accent/50 transition-colors text-left flex flex-col gap-1 rounded-md {arrowDownIndex - 1 === index ? "bg-accent/20" : ""}"
                 >
                     <div class="flex items-center justify-between">
-                        <span class="font-medium text-foreground underline">{term.name}</span>
-                        <Badge variant="outline">Calendar</Badge>
+                        <span class="font-medium text-foreground underline">{term.data.name}</span>
+                        {#if term.type === "calendar"}
+                            <Badge variant="outline">Calendar</Badge>
+                        {:else}
+                            <Badge variant="outline">Image Feed</Badge>
+                        {/if}
                         <!-- <span class="text-xs text-muted-foreground">{term.id}</span> -->
                     </div>
-                    <p class="text-sm text-muted-foreground line-clamp-1">{term.description}</p>
+                    <p class="text-sm text-muted-foreground line-clamp-1">{term.data.description}</p>
                 </a>
             {/each}
         </div>

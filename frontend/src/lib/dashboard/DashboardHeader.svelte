@@ -6,16 +6,16 @@
     import * as Avatar from "$lib/components/ui/avatar/index.js";
     import { Bell, Settings } from "@lucide/svelte";
     import type { RecordModel } from "pocketbase";
-    import { cn, type CalendarDBModel } from "@/utils";
+    import { cn, type CalendarDBModel, type ImageFeedDBModel } from "@/utils";
 
-    let { avatar, user, calendars }: { avatar: string, user: RecordModel, calendars: CalendarDBModel[] } = $props();
+    let { avatar, user, calendars, imageFeeds }: { avatar: string, user: RecordModel, calendars: CalendarDBModel[], imageFeeds: ImageFeedDBModel[] } = $props();
 </script>
 
 <header class="h-16 border-b border-border bg-card">
     <div class="flex h-full items-center gap-4 px-4">
         <div class="flex-1 relative flex items-center gap-4">
             <Sidebar.Trigger class="w-9 h-9" />
-            <EverythingSearch {calendars} />
+            <EverythingSearch {calendars} {imageFeeds} />
         </div>
 
         <div class="flex items-center gap-2">
