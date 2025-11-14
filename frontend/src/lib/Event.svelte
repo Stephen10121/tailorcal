@@ -36,11 +36,15 @@
 </script>
 
 <div class="dark rounded-lg bg-foreground p-4 flex flex-col gap-2" style="border: 1px solid #333333">
-    <div class="dark mb-3 flex items-start justify-between">
+    <div class="dark flex items-start justify-between">
         <h3 class="dark text-lg font-semibold text-white pr-2">{event.name}</h3>
         <p class="dark text-sm text-gray-400" style="white-space: nowrap;">{#if EVENT_DAY_NUMBER !== 1}{MONTHTOSTRING[start.month]} {start.day}, {/if} <Time date={start} useAMPM={calendarCustomizations.useAMPM} /></p>
     </div>
 
+    {#if event.description && calendarCustomizations.showDescription}
+        <p class="text-sm text-gray-300 leading-relaxed">{event.description}</p>
+    {/if}
+    
     <div class="flex items-center gap-2 text-sm text-gray-400">
         <Clock class="h-4 w-4" />
         {#if MULTI_DAY_EVENT}

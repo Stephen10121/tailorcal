@@ -145,5 +145,6 @@ export type CalendarCustomizations = {
 	onlyShowLocationTitle: boolean,
 	showLocation: boolean,
 	showResources: boolean,
-	showRooms: boolean
+	showRooms: boolean,
+	showDescription: boolean
 }

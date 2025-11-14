@@ -235,6 +235,17 @@
             <Card.Content>
             <div class="grid grid-cols-1 gap-6">
                 <div class="flex items-center justify-between space-x-2">
+                    <Label for="showDescription" class="flex flex-col items-start space-y-1 cursor-pointer">
+                        <span class="font-medium">Show Description</span>
+                        <span class="text-sm text-muted-foreground">If a description of an event was set, you can choose if you want to display that info.</span>
+                    </Label>
+                    <Switch
+                        id="showDescription"
+                        bind:checked={displaySettings.showDescription}
+                    />
+                </div>
+
+                <div class="flex items-center justify-between space-x-2">
                     <Label for="useAMPM" class="flex flex-col items-start space-y-1 cursor-pointer">
                         <span class="font-medium">Use AM/PM Format</span>
                         <span class="text-sm text-muted-foreground">Display times in 12-hour format</span>
@@ -311,6 +322,7 @@
             id: "blankEvent",
             name: "Event Info Preview",
             location: "Home - 1234 Main Street, Vancouver WA",
+            description: "This is a short description of this event.",
             times: [],
             resources: [{
                 id: "res1",
