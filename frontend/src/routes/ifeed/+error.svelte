@@ -17,7 +17,7 @@
 
         <p class="dark mb-8 max-w-md text-gray-500">
             {#if page.status === 404}
-                We couldn't find the calendar you're looking for. This might be due to an invalid link or the calendar may not exist.
+                We couldn't find the image feed you're looking for. This might be due to an invalid link or the feed may not exist.
             {:else}
                 An error has occured. Please wait and try again. If the error keeps happening, contact our support team.
             {/if}
