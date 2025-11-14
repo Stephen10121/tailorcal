@@ -100,7 +100,7 @@
                     <Label for="name">Calendar Name</Label>
                     <Input
                     id="name"
-                    placeholder="e.g., 30 Minute Meeting"
+                    placeholder="e.g., Published Events"
                     bind:value={newCalendarName}
                     />
                 </div>
