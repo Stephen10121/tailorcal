@@ -38,6 +38,8 @@ export async function load({ params, locals }) {
         for (let i=0;i<newEvents.length;i++) {
             const { owner, ...rest } = newEvents[i];
             if (newEvents[i].imageURL.length > 0) {
+                if (imageFeed.filters.hideUnpublished && !rest.visibleInChurchCenter) continue
+                if (imageFeed.filters.onlyShowFeatured && !rest.featured) continue
                 events.push(rest as EventDBModel);
             }
         }
