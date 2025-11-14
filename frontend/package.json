@@ -22,6 +22,8 @@
 		"@types/node": "^24.8.1",
 		"bits-ui": "^2.14.0",
 		"clsx": "^2.1.1",
+		"embla-carousel-autoplay": "^8.6.0",
+		"embla-carousel-svelte": "^8.6.0",
 		"svelte": "^5.39.5",
 		"svelte-check": "^4.3.2",
 		"svelte-sonner": "^1.0.5",

@@ -36,7 +36,7 @@
                 <Sidebar.MenuItem>
                     <Sidebar.MenuButton>
                         {#snippet child({ props })}
-                            <a href={item.url} {...props} class="flex items-center rounded-lg text-sm font-medium transition-colors {sidebar.state === "expanded" ? "px-3 py-2 gap-3" : "h-8 w-8 justify-center"} {pathname === item.url || (pathname.includes("/dashboard/calendars") && item.url === "/dashboard/calendars") ? "bg-accent/10 text-accent" : "text-muted-foreground hover:bg-muted hover:text-foreground"}">
+                            <a href={item.url} {...props} class="flex items-center rounded-lg text-sm font-medium transition-colors {sidebar.state === "expanded" ? "px-3 py-2 gap-3" : "h-8 w-8 justify-center"} {pathname === item.url || (pathname.includes("/dashboard/calendars") && item.url === "/dashboard/calendars") || (pathname.includes("/dashboard/image-feeds") && item.url === "/dashboard/image-feeds") ? "bg-accent/10 text-accent" : "text-muted-foreground hover:bg-muted hover:text-foreground"}">
                                 <item.icon class="h-5 w-5" />
                                 {#if sidebar.state === "expanded"}
                                     <span>{item.title}</span>

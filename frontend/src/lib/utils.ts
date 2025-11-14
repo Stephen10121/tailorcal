@@ -80,12 +80,16 @@ export type EventTagsType = {
 
 export interface EventDBModel extends RecordModel {
 	name: string,
+	description: string,
+	imageURL: string,
 	location: string,
 	times: EventTimesType[] | null,
 	resources: EventResourcesType[] | null
 	tags: EventTagsType[] | null,
 	startTime: string,
 	endTime: string,
+	featured: boolean,
+	visibleInChurchCenter: boolean
 }
 
 export interface EventDBModelPrivate extends EventDBModel {
