@@ -3,14 +3,14 @@ package planningcenter
 type EventItselfAttributes struct {
 	ApprovalStatus       string `json:"approval_status"`
 	CreatedAt            string `json:"created_at"`
-	Description          any    `json:"description"`
+	Description          string `json:"description"`
 	Featured             bool   `json:"featured"`
-	ImageUrl             any    `json:"image_url"`
+	ImageUrl             string `json:"image_url"`
 	Name                 string `json:"name"`
 	PercentApproved      int    `json:"percent_approved"`
 	PercentRejected      int    `json:"percent_rejected"`
 	RegistrationURL      any    `json:"registration_url"`
-	Summary              any    `json:"summary"`
+	Summary              string `json:"summary"`
 	UpdatedAt            string `json:"updated_at"`
 	VisibleInChuchCenter bool   `json:"visible_in_church_center"`
 }
@@ -32,9 +32,9 @@ func RestructureEvent(included IncludedType) (EventItself, bool) {
 		return EventItself{}, false
 	}
 
-	description, ok := included.Attributes["description"]
+	description, ok := included.Attributes["description"].(string)
 	if !ok {
-		return EventItself{}, false
+		description = ""
 	}
 
 	featured, ok := included.Attributes["featured"].(bool)
@@ -42,9 +42,9 @@ func RestructureEvent(included IncludedType) (EventItself, bool) {
 		return EventItself{}, false
 	}
 
-	imageUrl, ok := included.Attributes["image_url"]
+	imageUrl, ok := included.Attributes["image_url"].(string)
 	if !ok {
-		return EventItself{}, false
+		imageUrl = ""
 	}
 
 	name, ok := included.Attributes["name"].(string)
@@ -67,9 +67,9 @@ func RestructureEvent(included IncludedType) (EventItself, bool) {
 		return EventItself{}, false
 	}
 
-	summary, ok := included.Attributes["summary"]
+	summary, ok := included.Attributes["summary"].(string)
 	if !ok {
-		return EventItself{}, false
+		summary = ""
 	}
 
 	updatedAt, ok := included.Attributes["updated_at"].(string)

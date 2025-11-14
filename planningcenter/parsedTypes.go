@@ -20,12 +20,14 @@ type EventTag struct {
 }
 
 type Event struct {
-	InstanceId string               `json:"instanceId"`
-	StartTime  string               `json:"startTime"`
-	EndTime    string               `json:"endTime"`
-	Name       string               `json:"name"`
-	Location   string               `json:"location"`
-	Times      []SpecificEventTimes `json:"times"`
-	Resources  []Resource           `json:"resources"`
-	Tags       []EventTag           `json:"tags"`
+	InstanceId  string               `json:"instanceId"`
+	StartTime   string               `json:"startTime"`
+	EndTime     string               `json:"endTime"`
+	Name        string               `json:"name"`
+	Location    string               `json:"location"`
+	Times       []SpecificEventTimes `json:"times"`
+	Resources   []Resource           `json:"resources"`
+	Tags        []EventTag           `json:"tags"`
+	Description string               `json:"description"`
+	ImageURL    string               `json:"imageURL"`
 }
