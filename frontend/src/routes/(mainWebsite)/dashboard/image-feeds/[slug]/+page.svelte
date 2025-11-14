@@ -8,7 +8,7 @@
     import { Button, buttonVariants } from "@/components/ui/button";
     import { Input } from "@/components/ui/input";
     import { Label } from "@/components/ui/label";
-    import { clearFileInput, cn, type ImageFeedCustomizations } from "@/utils.js";
+    import { clearFileInput, cn, type ImageFeedCustomizations, type ImageFeedFilters } from "@/utils.js";
     import { toast } from "svelte-sonner";
     import * as Dialog from "$lib/components/ui/dialog/index.js";
     import Event from "@/Event.svelte";
@@ -28,6 +28,7 @@
     let uploadNewAvatarLink = $derived(uploadNewAvatar ? URL.createObjectURL(uploadNewAvatar) : null);
 
     let displaySettings: ImageFeedCustomizations = $state(data.selectedfeed.displaySettings);
+    let filterSettings: ImageFeedFilters = $state(data.selectedfeed.filters);
     let iFeedDescription = $derived(data.selectedfeed.description);
     let iFeedName = $derived(data.selectedfeed.name);
     let saveRequired = $state(false);
@@ -39,8 +40,9 @@
         const nameChanged = iFeedName !== data.selectedfeed.name;
         const descriptionChanged = iFeedDescription !== data.selectedfeed.description;
         const displaySettingsChanged = JSON.stringify(displaySettings) !== JSON.stringify(data.selectedfeed.displaySettings);
+        const filterSettingsChanged = JSON.stringify(filterSettings) !== JSON.stringify(data.selectedfeed.filters);
 
-        saveRequired = newAvatarUploaded || currentAvatarRemoved || nameChanged || descriptionChanged || displaySettingsChanged;
+        saveRequired = newAvatarUploaded || currentAvatarRemoved || nameChanged || descriptionChanged || displaySettingsChanged || filterSettingsChanged;
     });
 
     $effect(() => {
@@ -75,7 +77,7 @@
     let savingChanges = $state(false);
     async function saveChanges() {
         savingChanges = true;
-        const success = await changeIFeedSettings(data.selectedfeed.id, iFeedName, iFeedDescription, avatarLink, uploadNewAvatar, displaySettings);
+        const success = await changeIFeedSettings(data.selectedfeed.id, iFeedName, iFeedDescription, avatarLink, uploadNewAvatar, displaySettings, filterSettings);
         savingChanges = false;
         if (success) {
             clearFileInput(document.getElementById("imageUploaderIFeed"));
@@ -233,6 +235,37 @@
                         <Switch
                             id="showEventName"
                             bind:checked={displaySettings.showEventName}
+                        />
+                    </div>
+                </div>
+                </Card.Content>
+            </Card.Root>
+
+            <Card.Root>
+                <Card.Header>
+                    <Card.Title>Filter Settings</Card.Title>
+                    <Card.Description>Choose what kind of events you want to show in the feed.</Card.Description>
+                </Card.Header>
+                <Card.Content>
+                <div class="grid grid-cols-1 gap-6">
+                    <div class="flex items-center justify-between space-x-2">
+                        <Label for="onlyShowFeatured" class="flex flex-col items-start space-y-1 cursor-pointer">
+                            <span class="font-medium">Only Featured Events</span>
+                            <span class="text-sm text-muted-foreground">Show only the events that are set to featured.</span>
+                        </Label>
+                        <Switch
+                            id="onlyShowFeatured"
+                            bind:checked={filterSettings.onlyShowFeatured}
+                        />
+                    </div>
+                    <div class="flex items-center justify-between space-x-2">
+                        <Label for="hideUnpublished" class="flex flex-col items-start space-y-1 cursor-pointer">
+                            <span class="font-medium">Hide Unpublished Events</span>
+                            <span class="text-sm text-muted-foreground">Hide the events that are not visible in the church center.</span>
+                        </Label>
+                        <Switch
+                            id="hideUnpublished"
+                            bind:checked={filterSettings.hideUnpublished}
                         />
                     </div>
                 </div>

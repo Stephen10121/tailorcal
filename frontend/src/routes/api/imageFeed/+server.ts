@@ -1,4 +1,4 @@
-import type { CalendarCustomizations, CalendarDBModel, ImageFeedCustomizations, ImageFeedDBModel } from "@/utils.js";
+import type { CalendarCustomizations, CalendarDBModel, ImageFeedCustomizations, ImageFeedDBModel, ImageFeedFilters } from "@/utils.js";
 import { error, json } from "@sveltejs/kit";
 import { config } from "dotenv";
 import type { RecordModel } from "pocketbase";
@@ -62,14 +62,22 @@ export async function PATCH({ locals, request }) {
     const avatarLink = formData.get("avatarLink");
     const newAvatar = formData.get("newAvatar");
     const displaySettings = formData.get("displaySettings");
+    const filterSettings = formData.get("filterSettings");
 
-    if (id == null || name == null || description == null || avatarLink == null || displaySettings === null) {
+    if (id == null || name == null || description == null || avatarLink == null || displaySettings === null || filterSettings === null) {
         return error(400, "Missing Data.");
     }
 
     let parsedDisplaySettings: ImageFeedCustomizations;
     try {
         parsedDisplaySettings = JSON.parse(displaySettings.toString());
+    } catch (_) {
+        return error(400, "Missing Data.");
+    }
+
+    let parsedFilterSettings: ImageFeedFilters;
+    try {
+        parsedFilterSettings = JSON.parse(filterSettings.toString());
     } catch (_) {
         return error(400, "Missing Data.");
     }
@@ -98,7 +106,8 @@ export async function PATCH({ locals, request }) {
         let data: Partial<ImageFeedDBModel> = {
             "name": name.toString(),
             "description": description.toString(),
-            "displaySettings": parsedDisplaySettings
+            "displaySettings": parsedDisplaySettings,
+            "filters": parsedFilterSettings
         };
 
         if (avatarLink.toString().length === 0) {
@@ -175,6 +184,10 @@ export async function POST({ locals, request }) {
             "displaySettings": {
                 "showEventName": false
             },
+            "filters": {
+                "hideUnpublished": true,
+                "onlyShowFeatured": true
+            }
         };
 
         await locals.pb.collection('imageFeeds').create(data, {

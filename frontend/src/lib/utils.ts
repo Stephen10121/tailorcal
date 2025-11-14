@@ -119,7 +119,8 @@ export interface ImageFeedDBModel extends RecordModel {
 	description: string,
 	displaySettings: ImageFeedCustomizations,
 	created: string,
-	updated: string
+	updated: string,
+	filters: ImageFeedFilters
 }
 
 // Dont you dare judge
@@ -166,4 +167,9 @@ export type CalendarCustomizations = {
 
 export type ImageFeedCustomizations = {
 	showEventName: boolean
+}
+
+export type ImageFeedFilters = {
+	onlyShowFeatured: boolean,
+	hideUnpublished: boolean
 }

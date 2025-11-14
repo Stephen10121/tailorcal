@@ -1,4 +1,4 @@
-import type { ImageFeedCustomizations } from "@/utils";
+import type { ImageFeedCustomizations, ImageFeedFilters } from "@/utils";
 import { toast } from "svelte-sonner";
 
 type Success = boolean
@@ -9,7 +9,8 @@ export async function changeIFeedSettings(
     description: string,
     avatarLink: string,
     uploadedAvatar: File | null,
-    displaySettings: ImageFeedCustomizations
+    displaySettings: ImageFeedCustomizations,
+    filterSettings: ImageFeedFilters
 ): Promise<Success> {
     const data = new FormData();
 
@@ -19,6 +20,7 @@ export async function changeIFeedSettings(
     data.append("description", description);
     data.append("avatarLink", avatarLink);
     data.append("displaySettings", JSON.stringify(displaySettings));
+    data.append("filterSettings", JSON.stringify(filterSettings));
 
     const response = await fetch('/api/imageFeed', {
         method: 'PATCH',
