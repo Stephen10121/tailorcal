@@ -112,16 +112,18 @@ func EventFetcher(userId string, app *pocketbase.PocketBase) ([]Event, error) {
 			}
 
 			fetchedEvents = append(fetchedEvents, Event{
-				InstanceId:  responseJson.Data[i].Id,
-				StartTime:   responseJson.Data[i].Attributes.StartsAt,
-				EndTime:     eventTime[len(eventTime)-1].EndTime,
-				Name:        eventItself.Name,
-				Location:    responseJson.Data[i].Attributes.Location,
-				Times:       eventTime,
-				Resources:   resources,
-				Tags:        tags,
-				Description: eventItself.Summary,
-				ImageURL:    eventItself.ImageUrl,
+				InstanceId:           responseJson.Data[i].Id,
+				StartTime:            responseJson.Data[i].Attributes.StartsAt,
+				EndTime:              eventTime[len(eventTime)-1].EndTime,
+				Name:                 eventItself.Name,
+				Location:             responseJson.Data[i].Attributes.Location,
+				Times:                eventTime,
+				Resources:            resources,
+				Tags:                 tags,
+				Description:          eventItself.Summary,
+				ImageURL:             eventItself.ImageUrl,
+				Featured:             eventItself.Featured,
+				VisibleInChuchCenter: eventItself.VisibleInChuchCenter,
 			})
 		} else {
 			fmt.Println("This event is not in the scope:", responseJson.Data[i].Id)
