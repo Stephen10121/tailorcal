@@ -80,8 +80,8 @@
 <div class="w-full h-full space-y-6">
     <div class="flex items-center justify-between">
         <div>
-        <h1 class="text-3xl font-bold text-foreground">My Calendars</h1>
-        <p class="text-muted-foreground mt-1">Manage your calendar types and booking links</p>
+            <h1 class="text-3xl font-bold text-foreground">My Calendars</h1>
+            <p class="text-muted-foreground mt-1">Customisable calendars that can be accessed anywhere by anyone (Unless it's password protected.)</p>
         </div>
 
         <Dialog.Root bind:open={newCalendarDialogOpen}>
