@@ -2,7 +2,7 @@
     import Autoplay from "embla-carousel-autoplay";
     import * as Carousel from "$lib/components/ui/carousel/index.js";
 
-    const plugin = Autoplay({ delay: 5000 });
+    const plugin = Autoplay({ delay: 7000 });
 
     let { data } = $props();
 </script>
@@ -10,6 +10,7 @@
 <svelte:head>
     <title>{data.name}</title>
     <link rel="shortcut icon" href={data.logoLink} type="image/x-icon">
+    <meta name="description" content={data.description}>
 </svelte:head>
 
 <div class="min-h-screen min-w-screen">

@@ -64,6 +64,7 @@ export async function load({ params, locals }) {
         events,
         name: imageFeed.name,
         logoLink: locals.pb.files.getURL(imageFeed, imageFeed.logo),
-        displaySettings: imageFeed.displaySettings
+        displaySettings: imageFeed.displaySettings,
+        description: imageFeed.description
     }
 }

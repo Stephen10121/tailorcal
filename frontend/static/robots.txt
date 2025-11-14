@@ -5,4 +5,6 @@ Disallow: /dashboard/
 Disallow: /api/
 Disallow: /oath/
 Disallow: /cal/
+Disallow /ifeed/
+
 Sitemap: https://tailorcal.com/sitemap.xml
