@@ -2,7 +2,14 @@
     import Autoplay from "embla-carousel-autoplay";
     import * as Carousel from "$lib/components/ui/carousel/index.js";
 
-    const plugin = Autoplay({ delay: 7000 });
+    const plugin = Autoplay({
+        delay: 7000,
+        playOnInit: true,
+        stopOnFocusIn: false,
+        stopOnInteraction: false,
+        stopOnMouseEnter: false,
+        stopOnLastSnap: false,
+    });
 
     let { data } = $props();
 </script>
@@ -16,7 +23,7 @@
 <div class="min-h-screen min-w-screen">
     <Carousel.Root
         opts={{
-            loop: true
+            loop: true,
         }}
         plugins={[plugin]}
         class="min-w-screen min-h-screen"
