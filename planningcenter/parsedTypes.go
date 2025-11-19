@@ -32,4 +32,5 @@ type Event struct {
 	ImageURL             string               `json:"imageURL"`
 	Featured             bool                 `json:"featured"`
 	VisibleInChuchCenter bool                 `json:"visibleInChurchCenter"`
+	RegistrationURL      string               `json:"registrationURL"`
 }

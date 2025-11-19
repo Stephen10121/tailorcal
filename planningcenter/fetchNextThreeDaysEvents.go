@@ -56,7 +56,6 @@ func GetIncludedStructs(included []IncludedType) ([]EventItself, []EventTime, []
 
 func EventFetcher(userId string, app *pocketbase.PocketBase) ([]Event, error) {
 	year, month, day := time.Now().Add(-144 * time.Hour).Date()
-	// thirdDate := time.Now().Add(144 * time.Hour)
 
 	resBody, err := SendAPICall(
 		http.MethodGet,
@@ -93,15 +92,11 @@ func EventFetcher(userId string, app *pocketbase.PocketBase) ([]Event, error) {
 	var fetchedEvents []Event
 
 	for i := 0; i < len(responseJson.Data); i++ {
-		// date, err := time.Parse(time.RFC3339, responseJson.Data[i].Attributes.StartsAt)
-
 		if err != nil {
 			fmt.Println(err)
 			continue
 		}
 
-		// This will only process the events that are happening in the next 3 days. We can probably afford to remove this limitation.
-		// if date.Before(thirdDate) { //
 		eventTime := ParseEventTimes(responseJson.Data[i].Relationships.EventTimes, eventTimes)
 		resources := ParseResourceBookings(responseJson.Data[i].Relationships.ResourceBookings, resourceBookings, resources)
 		tags := ParseTags(responseJson.Data[i].Relationships.Tags, allTags)
@@ -124,11 +119,8 @@ func EventFetcher(userId string, app *pocketbase.PocketBase) ([]Event, error) {
 			ImageURL:             eventItself.ImageUrl,
 			Featured:             eventItself.Featured,
 			VisibleInChuchCenter: eventItself.VisibleInChuchCenter,
+			RegistrationURL:      eventItself.RegistrationURL,
 		})
-		// } else {
-		// 	fmt.Println("This event is not in the scope:", responseJson.Data[i].Id)
-		// 	continue
-		// }
 	}
 
 	return fetchedEvents, nil

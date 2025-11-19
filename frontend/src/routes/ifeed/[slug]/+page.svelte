@@ -20,8 +20,6 @@
         }}
         plugins={[plugin]}
         class="min-w-screen min-h-screen"
-        onmouseenter={plugin.stop}
-        onmouseleave={() => plugin.play()}
     >
         <Carousel.Content>
             {#each data.events as event (`anEvent${event.id}`)}

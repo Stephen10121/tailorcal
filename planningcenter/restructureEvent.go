@@ -9,7 +9,7 @@ type EventItselfAttributes struct {
 	Name                 string `json:"name"`
 	PercentApproved      int    `json:"percent_approved"`
 	PercentRejected      int    `json:"percent_rejected"`
-	RegistrationURL      any    `json:"registration_url"`
+	RegistrationURL      string `json:"registration_url"`
 	Summary              string `json:"summary"`
 	UpdatedAt            string `json:"updated_at"`
 	VisibleInChuchCenter bool   `json:"visible_in_church_center"`
@@ -62,9 +62,9 @@ func RestructureEvent(included IncludedType) (EventItself, bool) {
 		return EventItself{}, false
 	}
 
-	registrationURL, ok := included.Attributes["registration_url"]
+	registrationURL, ok := included.Attributes["registration_url"].(string)
 	if !ok {
-		return EventItself{}, false
+		registrationURL = ""
 	}
 
 	summary, ok := included.Attributes["summary"].(string)
