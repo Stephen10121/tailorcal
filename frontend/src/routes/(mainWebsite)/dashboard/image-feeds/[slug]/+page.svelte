@@ -237,6 +237,17 @@
                             bind:checked={displaySettings.showEventName}
                         />
                     </div>
+                    <div class="space-y-2">
+                        <Label for="feedDurationMS" class="flex flex-col items-start space-y-1 cursor-pointer">
+                            <span class="font-medium">Slideshow Duration</span>
+                            <span class="text-sm text-muted-foreground">How long you want to show each slide in milliseconds.</span>
+                        </Label>
+                        <Input
+                            id="feedDurationMS"
+                            type="number"
+                            bind:value={displaySettings.feedDurationMS}
+                        />
+                    </div>
                 </div>
                 </Card.Content>
             </Card.Root>
