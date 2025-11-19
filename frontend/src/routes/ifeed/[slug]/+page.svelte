@@ -2,16 +2,16 @@
     import Autoplay from "embla-carousel-autoplay";
     import * as Carousel from "$lib/components/ui/carousel/index.js";
 
+    let { data } = $props();
+
     const plugin = Autoplay({
-        delay: 7000,
+        delay: data.displaySettings.feedDurationMS,
         playOnInit: true,
         stopOnFocusIn: false,
         stopOnInteraction: false,
         stopOnMouseEnter: false,
         stopOnLastSnap: false,
     });
-
-    let { data } = $props();
 </script>
 
 <svelte:head>
