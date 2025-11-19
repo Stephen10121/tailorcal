@@ -166,7 +166,15 @@ export type CalendarCustomizations = {
 }
 
 export type ImageFeedCustomizations = {
-	showEventName: boolean
+	showEventName: boolean,
+	feedDurationMS: number,
+	feedAnimationType: "slideshow",
+}
+
+export const defaultImageFeedCustomizations: ImageFeedCustomizations = {
+	showEventName: false,
+	feedDurationMS: 7000,
+	feedAnimationType: "slideshow"
 }
 
 export type ImageFeedFilters = {

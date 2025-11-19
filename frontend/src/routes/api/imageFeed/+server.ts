@@ -1,4 +1,4 @@
-import type { CalendarCustomizations, CalendarDBModel, ImageFeedCustomizations, ImageFeedDBModel, ImageFeedFilters } from "@/utils.js";
+import { defaultImageFeedCustomizations, type CalendarCustomizations, type CalendarDBModel, type ImageFeedCustomizations, type ImageFeedDBModel, type ImageFeedFilters } from "@/utils.js";
 import { error, json } from "@sveltejs/kit";
 import { config } from "dotenv";
 import type { RecordModel } from "pocketbase";
@@ -181,9 +181,7 @@ export async function POST({ locals, request }) {
             "name": name.toString(),
             "description": description.toString(),
             "owner": locals.user.id,
-            "displaySettings": {
-                "showEventName": false
-            },
+            "displaySettings": defaultImageFeedCustomizations,
             "filters": {
                 "hideUnpublished": true,
                 "onlyShowFeatured": true
