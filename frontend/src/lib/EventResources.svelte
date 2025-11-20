@@ -40,7 +40,7 @@
             <span class="text-gray-400">Resource{#if res.length > 1}s{/if}:</span>
             <span class="text-gray-300">
                 {#each res as resource, index}
-                    {resource.name}{#if resource.path_name && showResourcePathname}<span class="pl-1">({resource.path_name})</span>{/if}{#if index+1 < res.length}<span class="pr-1">, </span> {/if}
+                    {resource.name}{#if resource.path_name && showResourcePathname}<span class="pl-1">({resource.path_name.trimEnd()})</span>{/if}{#if index+1 < res.length}<span class="pr-1">, </span> {/if}
                 {/each}
             </span> 
         </p>
