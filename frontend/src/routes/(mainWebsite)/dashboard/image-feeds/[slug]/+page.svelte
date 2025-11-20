@@ -234,15 +234,51 @@
                 <Card.Content>
                 <div class="grid grid-cols-1 gap-6">
                     <div class="flex items-center justify-between space-x-2">
-                        <Label for="showEventName" class="flex flex-col items-start space-y-1 cursor-pointer">
-                            <span class="font-medium">Show Event Name</span>
-                            <span class="text-sm text-muted-foreground">Show the official event name with the image.</span>
+                        <Label for="showEventExtraInfo" class="flex flex-col space-y-1 items-start cursor-pointer">
+                            <span class="font-medium">Display Extra Event Information</span>
+                            <span class="text-sm text-muted-foreground">Display things like the event name, description, registration button.</span>
                         </Label>
                         <Switch
-                            id="showEventName"
-                            bind:checked={displaySettings.showEventName}
+                            id="showEventExtraInfo"
+                            bind:checked={displaySettings.showEventExtraInfo}
                         />
                     </div>
+
+                    {#if displaySettings.showEventExtraInfo}
+                        <div class="flex items-center justify-between space-x-2 ml-5">
+                            <Label for="showEventName" class="flex flex-col items-start space-y-1 cursor-pointer">
+                                <span class="font-medium">Event Name</span>
+                                <span class="text-sm text-muted-foreground">Show the official event name with the image.</span>
+                            </Label>
+                            <Switch
+                                id="showEventName"
+                                bind:checked={displaySettings.showEventName}
+                            />
+                        </div>
+
+                        <div class="flex items-center justify-between space-x-2 ml-5">
+                            <Label for="showEventDescription" class="flex flex-col items-start space-y-1 cursor-pointer">
+                                <span class="font-medium">Event Description</span>
+                                <span class="text-sm text-muted-foreground">Show the official event description IF one was applied for an event.</span>
+                            </Label>
+                            <Switch
+                                id="showEventDescription"
+                                bind:checked={displaySettings.showEventDescription}
+                            />
+                        </div>
+
+                        <div class="flex items-center justify-between space-x-2 ml-5">
+                            <Label for="showEventRegistration" class="flex flex-col items-start space-y-1 cursor-pointer">
+                                <span class="font-medium">Register Button</span>
+                                <span class="text-sm text-muted-foreground">If an event has a registration URL set, a link can be provided to the user.</span>
+                            </Label>
+                            <Switch
+                                id="showEventDesshowEventRegistrationcription"
+                                bind:checked={displaySettings.showEventRegistration}
+                            />
+                        </div>
+                    {/if}
+
                     <div class="space-y-2">
                         <Label for="feedDurationMS" class="flex flex-col items-start space-y-1 cursor-pointer">
                             <span class="font-medium">Slideshow Duration</span>

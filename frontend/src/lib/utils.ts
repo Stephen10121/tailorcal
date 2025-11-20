@@ -82,6 +82,7 @@ export interface EventDBModel extends RecordModel {
 	name: string,
 	description: string,
 	imageURL: string,
+	registrationURL: string,
 	location: string,
 	times: EventTimesType[] | null,
 	resources: EventResourcesType[] | null
@@ -166,13 +167,19 @@ export type CalendarCustomizations = {
 }
 
 export type ImageFeedCustomizations = {
+	showEventExtraInfo: boolean,
 	showEventName: boolean,
+	showEventDescription: boolean,
+	showEventRegistration: boolean,
 	feedDurationMS: number,
 	feedAnimationType: "slideshow",
 }
 
 export const defaultImageFeedCustomizations: ImageFeedCustomizations = {
-	showEventName: false,
+	showEventExtraInfo: false,
+	showEventName: true,
+	showEventDescription: true,
+	showEventRegistration: true,
 	feedDurationMS: 7000,
 	feedAnimationType: "slideshow"
 }

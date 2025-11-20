@@ -323,6 +323,7 @@
             id: "blankEvent",
             name: "Event Info Preview",
             location: "Home - 1234 Main Street, Vancouver WA",
+            registrationURL: "",
             imageURL: "",
             visibleInChurchCenter: true,
             featured: true,
