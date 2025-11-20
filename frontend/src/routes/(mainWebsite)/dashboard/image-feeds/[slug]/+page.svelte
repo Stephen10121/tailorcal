@@ -1,22 +1,22 @@
 <script lang="ts">
     import { ArrowLeft, Copy, Link2, SquareArrowOutUpRight, Upload, X } from "@lucide/svelte";
-    import { Spinner } from "$lib/components/ui/spinner/index.js";
-    import { Switch } from "@/components/ui/switch/index.js";
-    import { Textarea } from "@/components/ui/textarea";
-    import * as Card from "@/components/ui/card/index";
-    import { goto, invalidateAll } from "$app/navigation";
-    import { Button, buttonVariants } from "@/components/ui/button";
-    import { Input } from "@/components/ui/input";
-    import { Label } from "@/components/ui/label";
-    import { clearFileInput, cn, type ImageFeedCustomizations, type ImageFeedFilters } from "@/utils.js";
-    import { toast } from "svelte-sonner";
-    import * as Dialog from "$lib/components/ui/dialog/index.js";
-    import Event from "@/Event.svelte";
-    import { Temporal } from "temporal-polyfill";
-    import PrettyDate from "@/PrettyDate.svelte";
     import { changeIFeedSettings } from "@/endpointCalls/changeIFeedSettings.js";
+    import { Button, buttonVariants } from "@/components/ui/button";
+    import { Spinner } from "$lib/components/ui/spinner/index.js";
+    import * as Dialog from "$lib/components/ui/dialog/index.js";
     import { deleteIFeed } from "@/endpointCalls/deleteIFeed.js";
     import NoImageFeedAvatar from "@/NoImageFeedAvatar.svelte";
+    import { Switch } from "@/components/ui/switch/index.js";
+    import { goto, invalidateAll } from "$app/navigation";
+    import { Textarea } from "@/components/ui/textarea";
+    import * as Card from "@/components/ui/card/index";
+    import { clearFileInput, cn } from "@/utils.js";
+    import { Input } from "@/components/ui/input";
+    import { Label } from "@/components/ui/label";
+    import { Temporal } from "temporal-polyfill";
+    import PrettyDate from "@/PrettyDate.svelte";
+    import { toast } from "svelte-sonner";
+    import Event from "@/Event.svelte";
 
     
     let { data } = $props();
@@ -27,11 +27,11 @@
     let uploadNewAvatar: File | null = $state(null);
     let uploadNewAvatarLink = $derived(uploadNewAvatar ? URL.createObjectURL(uploadNewAvatar) : null);
 
-    let displaySettings = $state(data.selectedfeed.displaySettings);
     let displaySettingsRef = $derived(data.selectedfeed.displaySettings);
-    let filterSettings = $state(data.selectedfeed.filters);
-    let filterSettingsRef = $derived(data.selectedfeed.filters);
+    let displaySettings = $state(data.selectedfeed.displaySettings);
     let iFeedDescription = $derived(data.selectedfeed.description);
+    let filterSettingsRef = $derived(data.selectedfeed.filters);
+    let filterSettings = $state(data.selectedfeed.filters);
     let iFeedName = $derived(data.selectedfeed.name);
     let saveRequired = $state(false);
 
