@@ -1,7 +1,6 @@
 <script lang="ts">
     import { ArrowLeft, Copy, Link2, SquareArrowOutUpRight, Upload, X } from "@lucide/svelte";
     import { changeCalendarSettings } from "@/endpointCalls/changeCalendarSetting.js";
-    import { clearFileInput, cn, type CalendarCustomizations } from "@/utils.js";
     import { deleteCalendar } from "@/endpointCalls/deleteCalendar.js";
     import { Button, buttonVariants } from "@/components/ui/button";
     import { Spinner } from "$lib/components/ui/spinner/index.js";
@@ -11,13 +10,13 @@
     import { goto, invalidateAll } from "$app/navigation";
     import { Textarea } from "@/components/ui/textarea";
     import * as Card from "@/components/ui/card/index";
+    import { clearFileInput, cn } from "@/utils.js";
     import { Input } from "@/components/ui/input";
     import { Label } from "@/components/ui/label";
     import { Temporal } from "temporal-polyfill";
     import PrettyDate from "@/PrettyDate.svelte";
     import { toast } from "svelte-sonner";
     import Event from "@/Event.svelte";
-    import { onMount } from "svelte";
 
     
     let { data } = $props();
@@ -29,11 +28,11 @@
     let uploadNewAvatar: File | null = $state(null);
     let uploadNewAvatarLink = $derived(uploadNewAvatar ? URL.createObjectURL(uploadNewAvatar) : null);
 
-    let displaySettings = $state(data.selectedCalendar.displaySettings);
-    let displaySettingsRef = $derived(data.selectedCalendar.displaySettings);
     let passwordScreenMessage = $derived(data.selectedCalendar.passwordScreenMessage);
+    let displaySettingsRef = $derived(data.selectedCalendar.displaySettings);
     let calendarDescription = $derived(data.selectedCalendar.description);
     let passwordEnabled = $derived(data.selectedCalendar.passwordEnabled);
+    let displaySettings = $state(data.selectedCalendar.displaySettings);
     let calendarName = $derived(data.selectedCalendar.name);
     let saveRequired = $state(false);
     let newPassword = $state("");
@@ -51,8 +50,6 @@
 
         saveRequired = passwordEnableHasChanged || newAvatarUploaded || currentAvatarRemoved || (passwordEnabled && newPasswordCreated) || nameChanged || descriptionChanged || (passwordEnabled && passwordScreenMessageChanged) || displaySettingsChanged;
     });
-
-    $inspect(saveRequired);
 
     $effect(() => {
         displaySettings = displaySettingsRef;
