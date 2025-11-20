@@ -1,10 +1,10 @@
 <script lang="ts">
+    import type { CalendarDBModel, ImageFeedDBModel } from "./utils";
+    import Badge from "./components/ui/badge/badge.svelte";
     import * as Kbd from "$lib/components/ui/kbd/index.js";
     import { Input } from "@/components/ui/input";
     import {  Search, } from "@lucide/svelte";
-    import Badge from "./components/ui/badge/badge.svelte";
     import { goto } from "$app/navigation";
-    import type { CalendarDBModel, ImageFeedDBModel } from "./utils";
 
     let { 
         calendars,
@@ -51,14 +51,6 @@
         }
 
         filteredTerms = newFilteredTerms;
-
-        // filteredTerms = calendars.filter((calendar) => {
-        //     return calendar.id.toLowerCase().includes(searchTerm) ||
-        //     calendar.name.toLowerCase().includes(searchTerm) ||
-        //     calendar.description.toLowerCase().includes(searchTerm) ||
-        //     "calendar".includes(searchTerm)
-        // });
-
         arrowDownIndex = -1;
     }
 
@@ -77,7 +69,7 @@
             everythingInput.focus();
         }
 
-        if ((event.key === "ArrowUp" || event.key === "ArrowDown") && everythingInputFocused && filteredTerms.length > 0) {
+        if (everythingInputFocused && filteredTerms.length > 0) {
             if (event.key === "ArrowUp") {
                 if (arrowDownIndex === -1 || arrowDownIndex === 1) {
                     arrowDownIndex = filteredTerms.length;
@@ -131,7 +123,6 @@
                         {:else}
                             <Badge variant="outline">Image Feed</Badge>
                         {/if}
-                        <!-- <span class="text-xs text-muted-foreground">{term.id}</span> -->
                     </div>
                     <p class="text-sm text-muted-foreground line-clamp-1">{term.data.description}</p>
                 </a>
