@@ -117,7 +117,7 @@
     />
 
     {#if everythingInputFocused && filteredTerms.length > 0}
-        <div class="border shadow-lg bg-card absolute left-0 -bottom-1 translate-y-full w-full max-w-md rounded-lg p-1 z-50">
+        <div class="border shadow-lg bg-card absolute left-0 -bottom-1 translate-y-full w-full max-w-md rounded-lg p-1 z-50 isolate everythingSearcher">
             {#each filteredTerms as term, index (`filteredSearchTerms${term.data.id}`)}
                 <a
                     onclick={resetSearch}
@@ -139,3 +139,12 @@
         </div>
     {/if}
 </div>
+
+<style>
+    @media (max-width: 500px) {
+        .everythingSearcher {
+            min-width: calc(100vw - 20px) !important;
+            left: -58px;
+        }
+    }
+</style>
