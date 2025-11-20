@@ -181,3 +181,26 @@ export type ImageFeedFilters = {
 	onlyShowFeatured: boolean,
 	hideUnpublished: boolean
 }
+
+export interface UserModel extends RecordModel {
+	userEmail: string,
+	username: string,
+	name: string,
+	avatar: string,
+	subscriptionEmail: string
+	customerId: string,
+	priceId: string,
+	new: boolean,
+	authToken: string,
+	refreshToken: string,
+	accessLevel: "none" | "standard" | "premium",
+	refreshTokenExpires: number,
+	accessTokenExpires: number
+}
+
+export function capitalizeFirstLetter(str: string) {
+  if (typeof str !== 'string' || str.length === 0) {
+    return str; // Handle non-string inputs or empty strings
+  }
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}

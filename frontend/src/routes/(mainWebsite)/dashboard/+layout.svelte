@@ -15,7 +15,7 @@
 <SetEmailPopup />
 
 <Sidebar.Provider class="flex min-h-screen bg-background" style="--sidebar-width: 16rem; --sidebar-width-mobile: 16rem;">
-	<DashboardSidebar pathname={data.pathname} />
+	<DashboardSidebar pathname={data.pathname} user={data.user} userAvatar={data.avatar} />
 
 	<div class="flex-1 flex flex-col h-full">
 		<DashboardHeader avatar={data.avatar} user={data.user} calendars={data.calendars} imageFeeds={data.imageFeeds} />

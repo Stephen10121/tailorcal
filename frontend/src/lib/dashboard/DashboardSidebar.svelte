@@ -1,74 +1,151 @@
 <script lang="ts">
-    import { Calendar, Home, GalleryHorizontalEnd } from "@lucide/svelte";
+    import { Calendar, Home, GalleryHorizontalEnd, ChevronsUpDownIcon, SparklesIcon, BadgeCheckIcon, CreditCardIcon, BellIcon, LogOutIcon } from "@lucide/svelte";
     import * as Sidebar from "$lib/components/ui/sidebar/index.js";
+    import { capitalizeFirstLetter, type UserModel } from "@/utils";
+    import * as DropdownMenu from "$lib/components/ui/dropdown-menu/index.js";
+    import * as Avatar from "$lib/components/ui/avatar/index.js";
     import { useSidebar } from "$lib/components/ui/sidebar/index.js";
 
-    const sidebar = useSidebar();
+    let { pathname, user, userAvatar }: { pathname: string, user: UserModel, userAvatar: string } = $props();
 
-    let { pathname }: { pathname: string } = $props();
+    const sidebar = useSidebar();
     
     const navigation = [
-      { title: "Dashboard", icon: Home, url: "/dashboard" },
+      { title: "Home", icon: Home, url: "/dashboard" },
       { title: "Calendars", icon: Calendar, url: "/dashboard/calendars"  },
       { title: "Image Feeds", icon: GalleryHorizontalEnd, url: "/dashboard/image-feeds" },
-    //   { title: "Analytics", icon: BarChart3, url: "/dashboard/analytics" },
     ]
 </script>
 
 <Sidebar.Root collapsible="icon" class="bg-card">
-    <Sidebar.Header class="h-16 border-b border-border bg-card">
-        {#if sidebar.state === "expanded"}
-            <div class="flex h-full w-full items-center gap-2 px-4">
-                <Calendar class="h-6 w-6 text-accent" />
-                <span class="text-xl font-semibold text-foreground">TailorCal</span>
-            </div>
-        {:else}
-            <div class="flex h-full w-full justify-center items-center">
-                <Calendar class="h-6 w-6 text-accent" />
-            </div>
-        {/if}
+    <Sidebar.Header>
+        <Sidebar.Menu>
+            <Sidebar.MenuItem>
+                <Sidebar.MenuButton
+                    size="lg"
+                    class="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+                >
+                    <div class="bg-accent text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
+                        <Calendar class="size-4" />
+                    </div>
+                    <div class="grid flex-1 text-left text-sm leading-tight">
+                        <span class="truncate font-medium">
+                            TailorCal
+                        </span>
+                        <span class="truncate text-xs">
+                            {#if user.accessLevel === "none"}Free{:else}{capitalizeFirstLetter(user.accessLevel)}{/if} Plan
+                        </span>
+                    </div>
+                </Sidebar.MenuButton>
+            </Sidebar.MenuItem>
+        </Sidebar.Menu>
     </Sidebar.Header>
-    <Sidebar.Content class="{sidebar.state === "expanded" ? "p-2" : ""} bg-card">
+
+    <Sidebar.Content>
         <Sidebar.Group>
-        <Sidebar.GroupContent>
+            <Sidebar.GroupLabel>Dashboard</Sidebar.GroupLabel>
             <Sidebar.Menu>
-            {#each navigation as item (item.title)}
-                <Sidebar.MenuItem>
-                    <Sidebar.MenuButton>
+                {#each navigation as item (item.title)}
+                    <Sidebar.MenuButton tooltipContent={item.title} class={pathname === item.url || (pathname.includes("/dashboard/calendars") && item.url === "/dashboard/calendars") || (pathname.includes("/dashboard/image-feeds") && item.url === "/dashboard/image-feeds") ? "bg-accent/10 text-accent hover:bg-accent/10" : "text-muted-foreground hover:bg-muted hover:text-foreground"}>
                         {#snippet child({ props })}
-                            <a href={item.url} {...props} class="flex items-center rounded-lg text-sm font-medium transition-colors {sidebar.state === "expanded" ? "px-3 py-2 gap-3" : "h-8 w-8 justify-center"} {pathname === item.url || (pathname.includes("/dashboard/calendars") && item.url === "/dashboard/calendars") || (pathname.includes("/dashboard/image-feeds") && item.url === "/dashboard/image-feeds") ? "bg-accent/10 text-accent" : "text-muted-foreground hover:bg-muted hover:text-foreground"}">
-                                <item.icon class="h-5 w-5" />
-                                {#if sidebar.state === "expanded"}
-                                    <span>{item.title}</span>
+                            <a href={item.url} {...props}>
+                                {#if item.icon}
+                                    <item.icon />
                                 {/if}
+                                <span>{item.title}</span>
                             </a>
                         {/snippet}
                     </Sidebar.MenuButton>
-                </Sidebar.MenuItem>
-            {/each}
+                {/each}
             </Sidebar.Menu>
-        </Sidebar.GroupContent>
         </Sidebar.Group>
     </Sidebar.Content>
-</Sidebar.Root>
-<!-- <aside class="w-64 border-r border-border bg-card">
-    <div class="flex h-16 items-center gap-2 px-6 border-b border-border">
-        <Calendar class="h-6 w-6 text-accent" />
-        <span class="text-xl font-semibold text-foreground">TailorCal</span>
-    </div>
+    <Sidebar.Footer>
+        <Sidebar.Menu>
+            <Sidebar.MenuItem>
+                <DropdownMenu.Root>
+                    <DropdownMenu.Trigger>
+                        {#snippet child({ props })}
+                            <Sidebar.MenuButton
+                                size="lg"
+                                class="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+                                {...props}
+                            >
+                                <Avatar.Root class="size-8 rounded-lg">
+                                    <Avatar.Image src={userAvatar} alt={user.name} />
+                                    <Avatar.Fallback class="rounded-lg">CN</Avatar.Fallback>
+                                </Avatar.Root>
 
-    <nav class="p-4 space-y-1">
-        {#each navigation as route (`dashboardnav${route.name}`)}
-            <a
-                href={route.href}
-                class={cn(
-                "flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors",
-                pathname === route.href || (pathname.includes("/dashboard/calendars") && route.href === "/dashboard/calendars") ? "bg-accent/10 text-accent" : "text-muted-foreground hover:bg-muted hover:text-foreground",
-                )}
-            >
-                <route.icon class="h-5 w-5" />
-                {route.name}
-            </a>
-        {/each}
-    </nav>
-</aside> -->
+                                <div class="grid flex-1 text-left text-sm leading-tight">
+                                    <span class="truncate font-medium">{user.name}</span>
+                                    <span class="truncate text-xs">{user.userEmail}</span>
+                                </div>
+                                <ChevronsUpDownIcon class="ml-auto size-4" />
+                            </Sidebar.MenuButton>
+                        {/snippet}
+                    </DropdownMenu.Trigger>
+                    <DropdownMenu.Content
+                        class="w-(--bits-dropdown-menu-anchor-width) min-w-56 rounded-lg"
+                        side={sidebar.isMobile ? "bottom" : "right"}
+                        align="end"
+                        sideOffset={4}
+                    >
+                        <DropdownMenu.Label class="p-0 font-normal">
+                            <div class="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
+                                <Avatar.Root class="size-8 rounded-lg">
+                                    <Avatar.Image src={userAvatar} alt={user.name} />
+                                    <Avatar.Fallback class="rounded-lg">CN</Avatar.Fallback>
+                                </Avatar.Root>
+
+                                <div class="grid flex-1 text-left text-sm leading-tight">
+                                    <span class="truncate font-medium">{user.name}</span>
+                                    <span class="truncate text-xs">{user.userEmail}</span>
+                                </div>
+                            </div>
+                        </DropdownMenu.Label>
+
+                        <DropdownMenu.Separator />
+
+                        <DropdownMenu.Group>
+                            <DropdownMenu.Item class="data-highlighted:bg-primary">
+                                <SparklesIcon class="data-highlighted:text-primary" />
+                                Upgrade to Pro
+                            </DropdownMenu.Item>
+                        </DropdownMenu.Group>
+
+                        <DropdownMenu.Separator />
+
+                        <DropdownMenu.Group>
+                            <DropdownMenu.Item class="data-highlighted:bg-primary">
+                                <BadgeCheckIcon class="data-highlighted:text-primary" />
+                                Account
+                            </DropdownMenu.Item>
+
+                            <DropdownMenu.Item class="data-highlighted:bg-primary">
+                                <CreditCardIcon class="data-highlighted:text-primary" />
+                                Billing
+                            </DropdownMenu.Item>
+
+                            <DropdownMenu.Item class="data-highlighted:bg-primary">
+                                <BellIcon class="data-highlighted:text-primary" />
+                                Notifications
+                            </DropdownMenu.Item>
+                        </DropdownMenu.Group>
+
+                        <DropdownMenu.Separator />
+
+                        <DropdownMenu.Item class="data-highlighted:bg-primary">
+                            {#snippet child({ props })}
+                                <a class="w-full h-full" href="/logout" {...props}>
+                                    <LogOutIcon class="data-highlighted:text-primary" />
+                                    Log out
+                                </a>
+                            {/snippet}
+                        </DropdownMenu.Item>
+                    </DropdownMenu.Content>
+                </DropdownMenu.Root>
+            </Sidebar.MenuItem>
+        </Sidebar.Menu>
+    </Sidebar.Footer>
+    <Sidebar.Rail />
+</Sidebar.Root>

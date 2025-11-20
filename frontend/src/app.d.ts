@@ -1,3 +1,4 @@
+import type { UserModel } from "@/utils";
 import type PocketBase from "pocketbase";
 
 type AuthModel = {
@@ -11,7 +12,7 @@ declare global {
 		// interface Error {}
 		interface Locals {
 			pb: PocketBase,
-			user?: AuthModel
+			user?: UserModel
 		}
 		// interface PageData {}
 		// interface PageState {}

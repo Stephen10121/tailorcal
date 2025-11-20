@@ -1,5 +1,6 @@
 import PocketBase from "pocketbase";
 import { config } from "dotenv";
+import type { UserModel } from "@/utils";
 
 config();
 
@@ -17,7 +18,7 @@ export async function handle ({ event, resolve }) {
             event.locals.pb.authStore.isValid && await event.locals.pb.collection('users').authRefresh();
 
             if (event.locals.pb.authStore.isValid) {
-                event.locals.user = structuredClone(event.locals.pb.authStore.record);
+                event.locals.user = structuredClone(event.locals.pb.authStore.record) as UserModel;
             } else {
                 event.locals.user = undefined;
             }
