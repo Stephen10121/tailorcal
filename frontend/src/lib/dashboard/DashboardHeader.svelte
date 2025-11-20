@@ -1,14 +1,11 @@
 <script lang="ts">
-    import * as DropdownMenu from "$lib/components/ui/dropdown-menu/index.js";
-    import EverythingSearch from "@/EverythingSearch.svelte";
-    import { Button, buttonVariants } from "@/components/ui/button";
+    import { type CalendarDBModel, type ImageFeedDBModel } from "@/utils";
     import * as Sidebar from "$lib/components/ui/sidebar/index.js";
-    import * as Avatar from "$lib/components/ui/avatar/index.js";
+    import EverythingSearch from "@/EverythingSearch.svelte";
+    import { Button } from "@/components/ui/button";
     import { Bell, Settings } from "@lucide/svelte";
-    import type { RecordModel } from "pocketbase";
-    import { cn, type CalendarDBModel, type ImageFeedDBModel } from "@/utils";
 
-    let { avatar, user, calendars, imageFeeds }: { avatar: string, user: RecordModel, calendars: CalendarDBModel[], imageFeeds: ImageFeedDBModel[] } = $props();
+    let { calendars, imageFeeds }: { calendars: CalendarDBModel[], imageFeeds: ImageFeedDBModel[] } = $props();
 </script>
 
 <header class="h-16 border-b border-border bg-card">
@@ -25,26 +22,8 @@
             </Button>
 
             <Button variant="ghost" class="hover:bg-primary" size="icon">
-            <Settings class="h-5 w-5" />
+                <Settings class="h-5 w-5" />
             </Button>
-
-            <DropdownMenu.Root>
-                <DropdownMenu.Trigger class={cn(buttonVariants({ variant: "ghost" }), "w-11 h-11 rounded-full hover:bg-primary/50")}>
-                    <Avatar.Root class="h-9 w-9">
-                        <Avatar.Image src={avatar} alt="Avatar" />
-                        <Avatar.Fallback>{user.name[0]}</Avatar.Fallback>
-                    </Avatar.Root>
-                </DropdownMenu.Trigger>
-                <DropdownMenu.Content align="end" class="w-56">
-                    <DropdownMenu.Label>My Account</DropdownMenu.Label>
-                    <DropdownMenu.Separator />
-                    <DropdownMenu.Item class="data-highlighted:bg-primary">Profile</DropdownMenu.Item>
-                    <DropdownMenu.Item class="data-highlighted:bg-primary">Billing</DropdownMenu.Item>
-                    <DropdownMenu.Item class="data-highlighted:bg-primary">Team</DropdownMenu.Item>
-                    <DropdownMenu.Separator />
-                    <DropdownMenu.Item class="data-highlighted:bg-primary"><a class="w-full h-full" href="/logout">Log out</a></DropdownMenu.Item>
-                </DropdownMenu.Content>
-            </DropdownMenu.Root>
         </div>
     </div>
 </header>
