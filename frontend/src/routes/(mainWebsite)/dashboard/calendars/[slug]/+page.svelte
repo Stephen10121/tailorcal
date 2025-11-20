@@ -1,22 +1,23 @@
 <script lang="ts">
     import { ArrowLeft, Copy, Link2, SquareArrowOutUpRight, Upload, X } from "@lucide/svelte";
     import { changeCalendarSettings } from "@/endpointCalls/changeCalendarSetting.js";
+    import { clearFileInput, cn, type CalendarCustomizations } from "@/utils.js";
+    import { deleteCalendar } from "@/endpointCalls/deleteCalendar.js";
+    import { Button, buttonVariants } from "@/components/ui/button";
     import { Spinner } from "$lib/components/ui/spinner/index.js";
+    import * as Dialog from "$lib/components/ui/dialog/index.js";
     import NoCalendarAvatar from "@/NoCalendarAvatar.svelte";
     import { Switch } from "@/components/ui/switch/index.js";
+    import { goto, invalidateAll } from "$app/navigation";
     import { Textarea } from "@/components/ui/textarea";
     import * as Card from "@/components/ui/card/index";
-    import { goto, invalidateAll } from "$app/navigation";
-    import { Button, buttonVariants } from "@/components/ui/button";
     import { Input } from "@/components/ui/input";
     import { Label } from "@/components/ui/label";
-    import { clearFileInput, cn, type CalendarCustomizations } from "@/utils.js";
-    import { toast } from "svelte-sonner";
-    import { deleteCalendar } from "@/endpointCalls/deleteCalendar.js";
-    import * as Dialog from "$lib/components/ui/dialog/index.js";
-    import Event from "@/Event.svelte";
     import { Temporal } from "temporal-polyfill";
     import PrettyDate from "@/PrettyDate.svelte";
+    import { toast } from "svelte-sonner";
+    import Event from "@/Event.svelte";
+    import { onMount } from "svelte";
 
     
     let { data } = $props();
@@ -28,7 +29,8 @@
     let uploadNewAvatar: File | null = $state(null);
     let uploadNewAvatarLink = $derived(uploadNewAvatar ? URL.createObjectURL(uploadNewAvatar) : null);
 
-    let displaySettings: CalendarCustomizations = $state(data.selectedCalendar.displaySettings);
+    let displaySettings = $state(data.selectedCalendar.displaySettings);
+    let displaySettingsRef = $derived(data.selectedCalendar.displaySettings);
     let passwordScreenMessage = $derived(data.selectedCalendar.passwordScreenMessage);
     let calendarDescription = $derived(data.selectedCalendar.description);
     let passwordEnabled = $derived(data.selectedCalendar.passwordEnabled);
@@ -45,13 +47,15 @@
         const nameChanged = calendarName !== data.selectedCalendar.name;
         const descriptionChanged = calendarDescription !== data.selectedCalendar.description;
         const passwordScreenMessageChanged = passwordScreenMessage !== data.selectedCalendar.passwordScreenMessage;
-        const displaySettingsChanged = JSON.stringify(displaySettings) !== JSON.stringify(data.selectedCalendar.displaySettings);
+        const displaySettingsChanged = JSON.stringify(displaySettings) !== JSON.stringify(displaySettingsRef);
 
         saveRequired = passwordEnableHasChanged || newAvatarUploaded || currentAvatarRemoved || (passwordEnabled && newPasswordCreated) || nameChanged || descriptionChanged || (passwordEnabled && passwordScreenMessageChanged) || displaySettingsChanged;
     });
 
+    $inspect(saveRequired);
+
     $effect(() => {
-        displaySettings = data.selectedCalendar.displaySettings;
+        displaySettings = displaySettingsRef;
     });
 
     function handleRemoveAvatar() {
@@ -109,9 +113,9 @@
     <title>{data.selectedCalendar.name} | TailorCal</title>
 </svelte:head>
 
-<div class="max-w-5xl mx-auto space-y-6">
+<div class="max-w-5xl mx-auto space-y-6 isolate">
     {#if saveRequired}
-        <div class="w-full stickySidebar z-50 p-2">
+        <div class="w-full stickySidebar z-40 p-2">
             <div class="bg-foreground w-full p-3 shadow-2xl border rounded-md flex items-center justify-between">
                 <p class="text-accent-foreground">You have some unsaved changes.</p>
                 <Button variant="outline" disabled={savingChanges} onclick={saveChanges}>
