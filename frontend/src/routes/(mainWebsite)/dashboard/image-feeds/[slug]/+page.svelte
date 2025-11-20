@@ -27,8 +27,10 @@
     let uploadNewAvatar: File | null = $state(null);
     let uploadNewAvatarLink = $derived(uploadNewAvatar ? URL.createObjectURL(uploadNewAvatar) : null);
 
-    let displaySettings: ImageFeedCustomizations = $state(data.selectedfeed.displaySettings);
-    let filterSettings: ImageFeedFilters = $state(data.selectedfeed.filters);
+    let displaySettings = $state(data.selectedfeed.displaySettings);
+    let displaySettingsRef = $derived(data.selectedfeed.displaySettings);
+    let filterSettings = $state(data.selectedfeed.filters);
+    let filterSettingsRef = $derived(data.selectedfeed.filters);
     let iFeedDescription = $derived(data.selectedfeed.description);
     let iFeedName = $derived(data.selectedfeed.name);
     let saveRequired = $state(false);
@@ -39,14 +41,18 @@
         const currentAvatarRemoved = avatarLink !== (data.selectedfeed.logo ? `${data.pb_url}/api/files/${data.selectedfeed.collectionId}/${data.selectedfeed.id}/${data.selectedfeed.logo}` : "");
         const nameChanged = iFeedName !== data.selectedfeed.name;
         const descriptionChanged = iFeedDescription !== data.selectedfeed.description;
-        const displaySettingsChanged = JSON.stringify(displaySettings) !== JSON.stringify(data.selectedfeed.displaySettings);
-        const filterSettingsChanged = JSON.stringify(filterSettings) !== JSON.stringify(data.selectedfeed.filters);
+        const displaySettingsChanged = JSON.stringify(displaySettings) !== JSON.stringify(displaySettingsRef);
+        const filterSettingsChanged = JSON.stringify(filterSettings) !== JSON.stringify(filterSettingsRef);
 
         saveRequired = newAvatarUploaded || currentAvatarRemoved || nameChanged || descriptionChanged || displaySettingsChanged || filterSettingsChanged;
     });
 
     $effect(() => {
-        displaySettings = data.selectedfeed.displaySettings;
+        displaySettings = displaySettingsRef;
+    });
+
+    $effect(() => {
+        filterSettings = filterSettingsRef;
     });
 
     function handleRemoveAvatar() {
