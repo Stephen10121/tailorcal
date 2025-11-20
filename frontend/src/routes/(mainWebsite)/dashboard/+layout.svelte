@@ -15,7 +15,13 @@
 <SetEmailPopup />
 
 <Sidebar.Provider class="flex min-h-screen bg-background" style="--sidebar-width: 16rem; --sidebar-width-mobile: 16rem;">
-	<DashboardSidebar pathname={data.pathname} user={data.user} userAvatar={data.avatar} />
+	<DashboardSidebar
+		user={data.user}
+		userAvatar={data.avatar}
+		pathname={data.pathname}
+		stripeUrl={data.stripeUrl}
+		stripeCustomerPortal={data.stripeCustomerPortal}
+	/>
 
 	<div class="flex-1 flex flex-col h-full">
 		<DashboardHeader calendars={data.calendars} imageFeeds={data.imageFeeds} />

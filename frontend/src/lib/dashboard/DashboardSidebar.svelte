@@ -1,12 +1,26 @@
 <script lang="ts">
     import { Calendar, Home, GalleryHorizontalEnd, ChevronsUpDownIcon, SparklesIcon, BadgeCheckIcon, CreditCardIcon, BellIcon, LogOutIcon } from "@lucide/svelte";
     import * as Sidebar from "$lib/components/ui/sidebar/index.js";
-    import { capitalizeFirstLetter, type UserModel } from "@/utils";
+    import { capitalizeFirstLetter, cn, type UserModel } from "@/utils";
     import * as DropdownMenu from "$lib/components/ui/dropdown-menu/index.js";
     import * as Avatar from "$lib/components/ui/avatar/index.js";
     import { useSidebar } from "$lib/components/ui/sidebar/index.js";
+    import Button from "@/components/ui/button/button.svelte";
+    import { emailNotSetDialog } from "@/store";
 
-    let { pathname, user, userAvatar }: { pathname: string, user: UserModel, userAvatar: string } = $props();
+    let { 
+        user,
+        pathname,
+        stripeUrl,
+        userAvatar,
+        stripeCustomerPortal
+    }: {
+        user: UserModel,
+        pathname: string,
+        stripeUrl: string,
+        userAvatar: string,
+        stripeCustomerPortal: string
+    } = $props();
 
     const sidebar = useSidebar();
     
@@ -14,7 +28,9 @@
       { title: "Home", icon: Home, url: "/dashboard" },
       { title: "Calendars", icon: Calendar, url: "/dashboard/calendars"  },
       { title: "Image Feeds", icon: GalleryHorizontalEnd, url: "/dashboard/image-feeds" },
-    ]
+    ];
+
+    let userAccountDropdownOpen = $state(false);
 </script>
 
 <Sidebar.Root collapsible="icon" class="bg-card">
@@ -63,7 +79,7 @@
     <Sidebar.Footer>
         <Sidebar.Menu>
             <Sidebar.MenuItem>
-                <DropdownMenu.Root>
+                <DropdownMenu.Root bind:open={userAccountDropdownOpen}>
                     <DropdownMenu.Trigger>
                         {#snippet child({ props })}
                             <Sidebar.MenuButton
@@ -106,30 +122,55 @@
 
                         <DropdownMenu.Separator />
 
-                        <DropdownMenu.Group>
+                        <!-- <DropdownMenu.Group>
                             <DropdownMenu.Item class="data-highlighted:bg-primary">
                                 <SparklesIcon class="data-highlighted:text-primary" />
                                 Upgrade to Pro
                             </DropdownMenu.Item>
                         </DropdownMenu.Group>
 
-                        <DropdownMenu.Separator />
+                        <DropdownMenu.Separator /> -->
 
                         <DropdownMenu.Group>
-                            <DropdownMenu.Item class="data-highlighted:bg-primary">
+                            <!-- <DropdownMenu.Item class="data-highlighted:bg-primary">
                                 <BadgeCheckIcon class="data-highlighted:text-primary" />
                                 Account
-                            </DropdownMenu.Item>
+                            </DropdownMenu.Item> -->
 
-                            <DropdownMenu.Item class="data-highlighted:bg-primary">
-                                <CreditCardIcon class="data-highlighted:text-primary" />
-                                Billing
-                            </DropdownMenu.Item>
+                            {#if user.accessLevel !== "none"}
+                                <DropdownMenu.Item class="data-highlighted:bg-primary">
+                                    {#snippet child({ props })}
+                                        <a class="w-full h-full" href="{stripeCustomerPortal}?prefilled_email={user.userEmail}" target="_blank" {...props}>
+                                            <CreditCardIcon class="data-highlighted:text-primary" />
+                                            Billing
+                                        </a>
+                                    {/snippet}
+                                </DropdownMenu.Item>
+                            {:else}
+                                <DropdownMenu.Item class="data-highlighted:bg-primary">
+                                    {#snippet child({ props })}
+                                        {#if user.userEmail}
+                                            <a class="w-full h-full" href="{stripeUrl}?prefilled_email={user.userEmail}" target="_blank" {...props}>
+                                                <CreditCardIcon class="data-highlighted:text-primary" />
+                                                Setup Payments
+                                            </a>
+                                        {:else}
+                                            <button style="width:100%;" {...props} onclick={() => {
+                                                userAccountDropdownOpen = false;
+                                                emailNotSetDialog.set(true);
+                                            }}>
+                                                <CreditCardIcon class="data-highlighted:text-primary" />
+                                                Setup Payments
+                                            </button>
+                                        {/if}
+                                    {/snippet}
+                                </DropdownMenu.Item>
+                            {/if}
 
-                            <DropdownMenu.Item class="data-highlighted:bg-primary">
+                            <!-- <DropdownMenu.Item class="data-highlighted:bg-primary">
                                 <BellIcon class="data-highlighted:text-primary" />
                                 Notifications
-                            </DropdownMenu.Item>
+                            </DropdownMenu.Item> -->
                         </DropdownMenu.Group>
 
                         <DropdownMenu.Separator />
