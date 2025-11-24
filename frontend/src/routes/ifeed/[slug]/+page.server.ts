@@ -17,7 +17,7 @@ export async function load({ params, locals }) {
         return error(404, "Image Feed Not Found");
     }
 
-    const now = Date.now() - (2 * 60 * 60 * 1000);
+    const now = Date.now();
 
     let events: EventDBModel[] = [];
     try {
