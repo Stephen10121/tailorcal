@@ -23,29 +23,29 @@ export async function load({ params, locals, cookies }) {
         }
     }
 
-    const seventyTwoHoursAgo = Date.now() - (72 * 60 * 60 * 1000);
+    const seventyTwoHoursAgo = new Date(Date.now() - (72 * 60 * 60 * 1000));
+    const seventyTwoHoursAgoStr = `${seventyTwoHoursAgo.getFullYear()}-${seventyTwoHoursAgo.getMonth()+1}-${seventyTwoHoursAgo.getDate()}`;
+
+    const seventyTwoHoursLater = new Date(Date.now() + (72 * 60 * 60 * 1000));
+    const seventyTwoHoursLaterStr = `${seventyTwoHoursLater.getFullYear()}-${seventyTwoHoursLater.getMonth()+1}-${seventyTwoHoursLater.getDate()}`;
 
     let events: EventDBModel[] = [];
     try {
-        let filter = "";
-        if (calendar.id === "sdinfaplylaesst") {
-            filter = `startTime >= ${seventyTwoHoursAgo}`;
-        } else {
-            filter = `owner="${calendar.owner}" && startTime >= ${seventyTwoHoursAgo}`;
+        let filter = `startTime >= "${seventyTwoHoursAgoStr}" && startTime <= "${seventyTwoHoursLaterStr}"`;
+
+        // This filter shows all events for the testing dev cal.
+        if (calendar.id !== "sdinfaplylaesst") {
+            filter += ` && owner="${calendar.owner}"`;
         }
-        let newEvents = await locals.pb.collection('events').getFullList({
+
+        events = await locals.pb.collection('events').getFullList({
             filter,
             sort: 'startTime',
+            fields: "id,name,description,imageURL,registrationURL,location,times,resources,tags,startTime,endTime,featured,visibleInChurchCenter,created,updated",
             headers: {
                 "Authorization": "Bearer " + process.env.POCKETBASE_TOKEN!
             }
         });
-
-        for (let i=0;i<newEvents.length;i++) {
-            const { owner, ...rest } = newEvents[i];
-            events.push(rest as EventDBModel);
-        }
-
     } catch (err) {
         console.log("Calendar not found.");
         return error(500, "Internal Server error.");
