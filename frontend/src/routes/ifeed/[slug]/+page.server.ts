@@ -1,4 +1,4 @@
-import type { EventDBModel, ImageFeedDBModel, RestrictedEventDBModel } from "@/utils";
+import type { EventDBModel, ImageFeedDBModel } from "@/utils";
 import { error } from "@sveltejs/kit";
 import { config } from "dotenv";
 
@@ -20,7 +20,7 @@ export async function load({ params, locals }) {
     const today = new Date();
     const now = `${today.getFullYear()}-${today.getMonth()+1}-${today.getDate()}`;
 
-    let events: RestrictedEventDBModel[] = [];
+    let events: EventDBModel[] = [];
     try {
         let filter = `startTime >= "${now}" && imageURL != ""`;
 
@@ -45,8 +45,6 @@ export async function load({ params, locals }) {
                 "Authorization": "Bearer " + process.env.POCKETBASE_TOKEN!
             }
         });
-
-        console.log(events);
     } catch (err) {
         console.log("Events not found.", err);
         return error(500, "Internal Server error.");
