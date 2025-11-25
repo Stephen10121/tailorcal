@@ -1,4 +1,4 @@
-import type { EventDBModel, ImageFeedDBModel } from "@/utils";
+import type { EventDBModel, ImageFeedDBModel, RestrictedEventDBModel } from "@/utils";
 import { error } from "@sveltejs/kit";
 import { config } from "dotenv";
 
@@ -17,35 +17,38 @@ export async function load({ params, locals }) {
         return error(404, "Image Feed Not Found");
     }
 
-    const now = Date.now();
+    const today = new Date();
+    const now = `${today.getFullYear()}-${today.getMonth()+1}-${today.getDate()}`;
 
-    let events: EventDBModel[] = [];
+    let events: RestrictedEventDBModel[] = [];
     try {
-        let filter = "";
-        if (imageFeed.id === "v7t0bmf8o0rqx5b") {
-            filter = `startTime >= ${now}`;
-        } else {
-            filter = `owner="${imageFeed.owner}" && startTime >= ${now}`;
+        let filter = `startTime >= "${now}" && imageURL != ""`;
+
+        // This filter shows all events for the testing dev feed.
+        if (imageFeed.id !== "v7t0bmf8o0rqx5b") {
+            filter += ` && owner="${imageFeed.owner}"`;
         }
-        let newEvents: EventDBModel[] = await locals.pb.collection('events').getFullList({
+
+        if (imageFeed.filters.onlyShowFeatured) {
+            filter += " && featured=true"
+        }
+
+        if (imageFeed.filters.hideUnpublished) {
+            filter += " && visibleInChurchCenter=true"
+        }
+
+        events = await locals.pb.collection('events').getFullList({
             filter,
             sort: 'startTime',
+            fields: "id,name,description,imageURL,registrationURL,location,startTime,endTime,featured,visibleInChurchCenter,created,updated",
             headers: {
                 "Authorization": "Bearer " + process.env.POCKETBASE_TOKEN!
             }
         });
 
-        for (let i=0;i<newEvents.length;i++) {
-            const { owner, ...rest } = newEvents[i];
-            if (newEvents[i].imageURL.length > 0) {
-                if (imageFeed.filters.hideUnpublished && !rest.visibleInChurchCenter) continue
-                if (imageFeed.filters.onlyShowFeatured && !rest.featured) continue
-                events.push(rest as EventDBModel);
-            }
-        }
-
+        console.log(events);
     } catch (err) {
-        console.log("Events not found.");
+        console.log("Events not found.", err);
         return error(500, "Internal Server error.");
     }
 
