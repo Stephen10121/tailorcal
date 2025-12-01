@@ -172,7 +172,7 @@ export type ImageFeedCustomizations = {
 	showEventDescription: boolean,
 	showEventRegistration: boolean,
 	feedDurationMS: number,
-	feedAnimationType: "slideshow",
+	feedAnimationType: "slideshow" | "list",
 }
 
 export const defaultImageFeedCustomizations: ImageFeedCustomizations = {

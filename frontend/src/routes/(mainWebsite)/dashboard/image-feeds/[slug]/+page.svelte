@@ -1,6 +1,7 @@
 <script lang="ts">
-    import { ArrowLeft, Copy, Link2, SquareArrowOutUpRight, Upload, X } from "@lucide/svelte";
+    import { ArrowLeft, Copy, GalleryHorizontal, Link2, Rows2, Rows3, SquareArrowOutUpRight, Upload, X } from "@lucide/svelte";
     import { changeIFeedSettings } from "@/endpointCalls/changeIFeedSettings.js";
+    import { AspectRatio } from "@/components/ui/aspect-ratio/index.js";
     import { Button, buttonVariants } from "@/components/ui/button";
     import { Spinner } from "$lib/components/ui/spinner/index.js";
     import * as Dialog from "$lib/components/ui/dialog/index.js";
@@ -233,6 +234,25 @@
                 </Card.Header>
                 <Card.Content>
                 <div class="grid grid-cols-1 gap-6">
+                    <div>
+                        <p class="font-medium">Feed View Type (Alpha)</p>
+                        <p class="text-sm text-muted-foreground">Choose what layout to display upcoming events.</p>
+                        <div class="flex items-center justify-center w-full gap-2 mt-1">
+                            <button onclick={() => displaySettings.feedAnimationType = "slideshow"} class="w-full bg-secondary shadow rounded-2xl flex items-center justify-center flex-col p-5 {displaySettings.feedAnimationType === "slideshow" ? "outline-accent outline-2 opacity-80" : ""}" style="height:200px;">
+                                <div class="p-5 w-full h-full">
+                                    <GalleryHorizontal class="text-accent w-full h-full" style="stroke-width:0.95px" />
+                                </div>
+                                <p class="font-medium">Slideshow</p>
+                            </button>
+                            <button onclick={() => displaySettings.feedAnimationType = "list"} class="w-full bg-secondary shadow rounded-2xl flex items-center justify-center flex-col p-5 {displaySettings.feedAnimationType === "list" ? "outline-accent outline-2 opacity-80" : ""}" style="height:200px;">
+                                <div class="p-5 w-full h-full">
+                                    <Rows3 class="text-accent w-full h-full" style="stroke-width:0.95px" />
+                                </div>
+                                <p class="font-medium">List</p>
+                            </button>
+                        </div>
+                    </div>
+
                     <div class="flex items-center justify-between space-x-2">
                         <Label for="showEventExtraInfo" class="flex flex-col space-y-1 items-start cursor-pointer">
                             <span class="font-medium">Display Extra Event Information</span>
@@ -279,18 +299,34 @@
                         </div>
                     {/if}
 
-                    <div class="space-y-2">
-                        <Label for="feedDurationMS" class="flex flex-col items-start space-y-1 cursor-pointer">
-                            <span class="font-medium">Slideshow Duration</span>
-                            <span class="text-sm text-muted-foreground">How long you want to show each slide in milliseconds.</span>
-                        </Label>
-                        <Input
-                            id="feedDurationMS"
-                            type="number"
-                            bind:value={displaySettings.feedDurationMS}
-                        />
-                    </div>
+                    {#if displaySettings.feedAnimationType === "slideshow"}
+                        <div class="space-y-2">
+                            <Label for="feedDurationMS" class="flex flex-col items-start space-y-1 cursor-pointer">
+                                <span class="font-medium">Slideshow Duration</span>
+                                <span class="text-sm text-muted-foreground">How long you want to show each slide in milliseconds.</span>
+                            </Label>
+                            <Input
+                                id="feedDurationMS"
+                                type="number"
+                                bind:value={displaySettings.feedDurationMS}
+                            />
+                        </div>
+                    {/if}
                 </div>
+                </Card.Content>
+            </Card.Root>
+
+            <Card.Root>
+                <Card.Header>
+                    <Card.Title>Ifeed Preview (Alpha)</Card.Title>
+                    <Card.Description>See the current changes in this preview before saving the settings.</Card.Description>
+                </Card.Header>
+                <Card.Content>
+                    <div class="w-full">
+                        <AspectRatio ratio={16 / 9} class="bg-muted">
+                            <iframe allowtransparency style="background: none;" width="100%" height="100%" src="/ifeed/{data.selectedfeed.id}" title="Image Feed Preview" frameborder="0"></iframe>
+                        </AspectRatio>
+                    </div>
                 </Card.Content>
             </Card.Root>
 

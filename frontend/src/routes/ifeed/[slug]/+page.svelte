@@ -62,6 +62,10 @@
 </div>
  
 <style>
+    :global(body) {
+        background-color: #ffffff00 !important;
+    }
+
     .image-parent {
         width: 100vw;
         height: 100vh;
