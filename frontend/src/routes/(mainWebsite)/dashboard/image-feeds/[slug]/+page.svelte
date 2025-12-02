@@ -340,19 +340,19 @@
                     <Card.Description>See the current changes in this preview before saving the settings.</Card.Description>
                 </Card.Header>
                 <Card.Content>
-                    <div class="w-full">
-                        <AspectRatio ratio={16 / 9} class="bg-muted">
-                            <iframe
+                    <div class="w-full {displaySettings.feedAnimationType === "slideshow" ? "aspect-video" : "h-96"}">
+                        <!-- <AspectRatio ratio={16 / 9} class="bg-muted"> -->
+                            <iframe     
                                 bind:this={previewIFrame}
                                 allowtransparency
-                                style="background: none;"
+                                style="background: none;height:100%"
                                 width="100%"
                                 height="100%"
                                 src="/ifeedPreview/{data.selectedfeed.id}"
                                 title="Image Feed Preview"
                                 frameborder="0"
                             ></iframe>
-                        </AspectRatio>
+                        <!-- </AspectRatio> -->
                     </div>
                 </Card.Content>
             </Card.Root>

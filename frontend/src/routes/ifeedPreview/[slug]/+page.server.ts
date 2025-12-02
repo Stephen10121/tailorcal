@@ -18,7 +18,9 @@ export async function load({ params, locals }) {
     }
 
     const today = new Date();
-    const now = `${today.getFullYear()}-${today.getMonth()+1}-${today.getDate()}`;
+    const now = `${today.getFullYear()}-${today.getMonth()+1}-${today.getDate()-2}`;
+
+    console.log(now);
 
     let events: EventDBModel[] = [];
     try {
