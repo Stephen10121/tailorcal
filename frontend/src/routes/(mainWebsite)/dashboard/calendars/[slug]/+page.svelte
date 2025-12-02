@@ -33,8 +33,8 @@
     let calendarDescription = $derived(data.selectedCalendar.description);
     let passwordEnabled = $derived(data.selectedCalendar.passwordEnabled);
     let displaySettings = $state(data.selectedCalendar.displaySettings);
+    let saveChangesToast: string | number | null = $state(null);
     let calendarName = $derived(data.selectedCalendar.name);
-    let saveRequired = $state(false);
     let newPassword = $state("");
 
     // This effect checks if any configurations have changed. If so, the saveRequired state will be set to true.
@@ -48,7 +48,26 @@
         const passwordScreenMessageChanged = passwordScreenMessage !== data.selectedCalendar.passwordScreenMessage;
         const displaySettingsChanged = JSON.stringify(displaySettings) !== JSON.stringify(displaySettingsRef);
 
-        saveRequired = passwordEnableHasChanged || newAvatarUploaded || currentAvatarRemoved || (passwordEnabled && newPasswordCreated) || nameChanged || descriptionChanged || (passwordEnabled && passwordScreenMessageChanged) || displaySettingsChanged;
+        const saveRequired = passwordEnableHasChanged || newAvatarUploaded || currentAvatarRemoved || (passwordEnabled && newPasswordCreated) || nameChanged || descriptionChanged || (passwordEnabled && passwordScreenMessageChanged) || displaySettingsChanged;
+    
+        if (saveRequired) {
+            if (saveChangesToast === null) {
+                saveChangesToast = toast("Save?", {
+                    description: "You have some unsaved changes.",
+                    dismissable: false,
+                    duration: Number.POSITIVE_INFINITY,
+                    action: {
+                        label: "Save Changes",
+                        onClick: saveChanges
+                    }
+                });
+            }
+        } else {
+            if (saveChangesToast !== null) {
+                toast.dismiss(saveChangesToast);
+            }
+            saveChangesToast = null;
+        }
     });
 
     $effect(() => {
@@ -83,16 +102,16 @@
     let savingChanges = $state(false);
     async function saveChanges() {
         savingChanges = true;
+        const savingChangesToast = toast.loading("Saving changes!");
         const success = await changeCalendarSettings(data.selectedCalendar.id, calendarName, calendarDescription, passwordEnabled, newPassword, avatarLink, uploadNewAvatar, passwordScreenMessage, displaySettings);
         newPassword = "";
         savingChanges = false;
         if (success) {
             clearFileInput(document.getElementById("imageUploaderCalendar"));
             uploadNewAvatar = null;
-            let updating = toast.info("Updating Calendar");
             await invalidateAll();
-            toast.dismiss(updating);
         }
+        toast.dismiss(savingChangesToast);
     }
 
     async function deleteCal() {
@@ -111,21 +130,6 @@
 </svelte:head>
 
 <div class="max-w-5xl mx-auto space-y-6 isolate">
-    {#if saveRequired}
-        <div class="w-full stickySidebar z-40 p-2">
-            <div class="bg-foreground w-full p-3 shadow-2xl border rounded-md flex items-center justify-between">
-                <p class="text-accent-foreground">You have some unsaved changes.</p>
-                <Button variant="outline" disabled={savingChanges} onclick={saveChanges}>
-                    {#if savingChanges}
-                        <Spinner />
-                        Saving Changes...
-                    {:else}
-                        Save Changes
-                    {/if}
-                </Button>
-            </div>
-        </div>
-    {/if}
     <div class="flex items-center gap-4">
         <Button variant="ghost" size="icon" href="/dashboard/calendars">
             <ArrowLeft class="h-5 w-5" />

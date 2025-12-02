@@ -30,11 +30,10 @@
     let displaySettingsRef = $derived(data.selectedfeed.displaySettings);
     let displaySettings = $state(data.selectedfeed.displaySettings);
     let iFeedDescription = $derived(data.selectedfeed.description);
+    let saveChangesToast: string | number | null = $state(null);
     let filterSettingsRef = $derived(data.selectedfeed.filters);
     let filterSettings = $state(data.selectedfeed.filters);
     let iFeedName = $derived(data.selectedfeed.name);
-    let saveRequired = $state(false);
-    let saveChangesToast: string | number | null = $state(null);
 
     // This effect checks if any configurations have changed. If so, the saveRequired state will be set to true.
     $effect(() => {
@@ -45,7 +44,7 @@
         const displaySettingsChanged = JSON.stringify(displaySettings) !== JSON.stringify(displaySettingsRef);
         const filterSettingsChanged = JSON.stringify(filterSettings) !== JSON.stringify(filterSettingsRef);
 
-        saveRequired = newAvatarUploaded || currentAvatarRemoved || nameChanged || descriptionChanged || displaySettingsChanged || filterSettingsChanged;
+        const saveRequired = newAvatarUploaded || currentAvatarRemoved || nameChanged || descriptionChanged || displaySettingsChanged || filterSettingsChanged;
 
         if (saveRequired) {
             if (saveChangesToast === null) {
@@ -106,14 +105,12 @@
         const savingChangesToast = toast.loading("Saving changes!");
         const success = await changeIFeedSettings(data.selectedfeed.id, iFeedName, iFeedDescription, avatarLink, uploadNewAvatar, displaySettings, filterSettings);
         savingChanges = false;
-        toast.dismiss(savingChangesToast);
         if (success) {
             clearFileInput(document.getElementById("imageUploaderIFeed"));
             uploadNewAvatar = null;
-            let updating = toast.info("Updating Image Feed");
             await invalidateAll();
-            toast.dismiss(updating);
         }
+        toast.dismiss(savingChangesToast);
     }
 
     async function deleteCal() {
