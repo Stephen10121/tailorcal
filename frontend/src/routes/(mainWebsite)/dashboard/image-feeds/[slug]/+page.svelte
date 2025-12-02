@@ -3,7 +3,6 @@
     import { changeIFeedSettings } from "@/endpointCalls/changeIFeedSettings.js";
     import { AspectRatio } from "@/components/ui/aspect-ratio/index.js";
     import { Button, buttonVariants } from "@/components/ui/button";
-    import { Spinner } from "$lib/components/ui/spinner/index.js";
     import * as Dialog from "$lib/components/ui/dialog/index.js";
     import { deleteIFeed } from "@/endpointCalls/deleteIFeed.js";
     import NoImageFeedAvatar from "@/NoImageFeedAvatar.svelte";
@@ -34,6 +33,7 @@
     let filterSettingsRef = $derived(data.selectedfeed.filters);
     let filterSettings = $state(data.selectedfeed.filters);
     let iFeedName = $derived(data.selectedfeed.name);
+    let previewIFrame: HTMLIFrameElement | undefined = $state();
 
     // This effect checks if any configurations have changed. If so, the saveRequired state will be set to true.
     $effect(() => {
@@ -63,6 +63,12 @@
                 toast.dismiss(saveChangesToast);
             }
             saveChangesToast = null;
+        }
+    });
+
+    $effect(() => {
+        if (displaySettings && previewIFrame && previewIFrame.contentWindow) {
+            previewIFrame.contentWindow.postMessage({ call: 'displaySettings', value: JSON.stringify(displaySettings) });
         }
     });
 
@@ -336,7 +342,16 @@
                 <Card.Content>
                     <div class="w-full">
                         <AspectRatio ratio={16 / 9} class="bg-muted">
-                            <iframe allowtransparency style="background: none;" width="100%" height="100%" src="/ifeed/{data.selectedfeed.id}" title="Image Feed Preview" frameborder="0"></iframe>
+                            <iframe
+                                bind:this={previewIFrame}
+                                allowtransparency
+                                style="background: none;"
+                                width="100%"
+                                height="100%"
+                                src="/ifeedPreview/{data.selectedfeed.id}"
+                                title="Image Feed Preview"
+                                frameborder="0"
+                            ></iframe>
                         </AspectRatio>
                     </div>
                 </Card.Content>
