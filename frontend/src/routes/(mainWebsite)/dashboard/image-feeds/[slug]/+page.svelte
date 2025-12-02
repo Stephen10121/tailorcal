@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { ArrowLeft, Copy, GalleryHorizontal, Link2, Rows2, Rows3, SquareArrowOutUpRight, Upload, X } from "@lucide/svelte";
+    import { ArrowLeft, Copy, LayoutGrid, Link2, List, SquareArrowOutUpRight, Upload, X } from "@lucide/svelte";
     import { changeIFeedSettings } from "@/endpointCalls/changeIFeedSettings.js";
     import { AspectRatio } from "@/components/ui/aspect-ratio/index.js";
     import { Button, buttonVariants } from "@/components/ui/button";
@@ -19,7 +19,6 @@
     import { toast } from "svelte-sonner";
     import Event from "@/Event.svelte";
 
-    
     let { data } = $props();
 
     let timeZone = $state(Temporal.Now.timeZoneId());
@@ -35,6 +34,7 @@
     let filterSettings = $state(data.selectedfeed.filters);
     let iFeedName = $derived(data.selectedfeed.name);
     let saveRequired = $state(false);
+    let saveChangesToast: string | number | null = $state(null);
 
     // This effect checks if any configurations have changed. If so, the saveRequired state will be set to true.
     $effect(() => {
@@ -46,6 +46,25 @@
         const filterSettingsChanged = JSON.stringify(filterSettings) !== JSON.stringify(filterSettingsRef);
 
         saveRequired = newAvatarUploaded || currentAvatarRemoved || nameChanged || descriptionChanged || displaySettingsChanged || filterSettingsChanged;
+
+        if (saveRequired) {
+            if (saveChangesToast === null) {
+                saveChangesToast = toast("Save?", {
+                    description: "You have some unsaved changes.",
+                    dismissable: false,
+                    duration: Number.POSITIVE_INFINITY,
+                    action: {
+                        label: "Save Changes",
+                        onClick: saveChanges
+                    }
+                });
+            }
+        } else {
+            if (saveChangesToast !== null) {
+                toast.dismiss(saveChangesToast);
+            }
+            saveChangesToast = null;
+        }
     });
 
     $effect(() => {
@@ -84,8 +103,10 @@
     let savingChanges = $state(false);
     async function saveChanges() {
         savingChanges = true;
+        const savingChangesToast = toast.loading("Saving changes!");
         const success = await changeIFeedSettings(data.selectedfeed.id, iFeedName, iFeedDescription, avatarLink, uploadNewAvatar, displaySettings, filterSettings);
         savingChanges = false;
+        toast.dismiss(savingChangesToast);
         if (success) {
             clearFileInput(document.getElementById("imageUploaderIFeed"));
             uploadNewAvatar = null;
@@ -110,21 +131,6 @@
 </svelte:head>
 
 <div class="max-w-5xl mx-auto space-y-6">
-    {#if saveRequired}
-        <div class="w-full stickySidebar z-50 p-2">
-            <div class="bg-foreground w-full p-3 shadow-2xl border rounded-md flex items-center justify-between">
-                <p class="text-accent-foreground">You have some unsaved changes.</p>
-                <Button variant="outline" disabled={savingChanges} onclick={saveChanges}>
-                    {#if savingChanges}
-                        <Spinner />
-                        Saving Changes...
-                    {:else}
-                        Save Changes
-                    {/if}
-                </Button>
-            </div>
-        </div>
-    {/if}
     <div class="flex items-center gap-4">
         <Button variant="ghost" size="icon" href="/dashboard/image-feeds">
             <ArrowLeft class="h-5 w-5" />
@@ -234,22 +240,31 @@
                 </Card.Header>
                 <Card.Content>
                 <div class="grid grid-cols-1 gap-6">
-                    <div>
-                        <p class="font-medium">Feed View Type (Alpha)</p>
-                        <p class="text-sm text-muted-foreground">Choose what layout to display upcoming events.</p>
-                        <div class="flex items-center justify-center w-full gap-2 mt-1">
-                            <button onclick={() => displaySettings.feedAnimationType = "slideshow"} class="w-full bg-secondary shadow rounded-2xl flex items-center justify-center flex-col p-5 {displaySettings.feedAnimationType === "slideshow" ? "outline-accent outline-2 opacity-80" : ""}" style="height:200px;">
-                                <div class="p-5 w-full h-full">
-                                    <GalleryHorizontal class="text-accent w-full h-full" style="stroke-width:0.95px" />
-                                </div>
-                                <p class="font-medium">Slideshow</p>
-                            </button>
-                            <button onclick={() => displaySettings.feedAnimationType = "list"} class="w-full bg-secondary shadow rounded-2xl flex items-center justify-center flex-col p-5 {displaySettings.feedAnimationType === "list" ? "outline-accent outline-2 opacity-80" : ""}" style="height:200px;">
-                                <div class="p-5 w-full h-full">
-                                    <Rows3 class="text-accent w-full h-full" style="stroke-width:0.95px" />
-                                </div>
-                                <p class="font-medium">List</p>
-                            </button>
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="font-medium text-sm">Feed View Type (Alpha)</p>
+                            <p class="text-sm text-muted-foreground">Choose what layout to display upcoming events.</p>
+                        </div>
+                        <div class="flex items-center gap-1 bg-muted p-1 rounded-lg">
+                            <Button
+                                variant={displaySettings.feedAnimationType === "slideshow" ? "default" : "ghost"}
+                                size="sm"
+                                onclick={() => displaySettings.feedAnimationType = "slideshow"}
+                                class="h-8 px-3"
+                            >
+                                <LayoutGrid className="h-4 w-4 mr-1.5" />
+                                Slideshow
+                            </Button>
+
+                            <Button
+                                variant={displaySettings.feedAnimationType === "list" ? "default" : "ghost"}
+                                size="sm"
+                                onclick={() => displaySettings.feedAnimationType = "list"}
+                                class="h-8 px-3"
+                            >
+                                <List className="h-4 w-4 mr-1.5" />
+                                List
+                            </Button>
                         </div>
                     </div>
 
