@@ -345,7 +345,7 @@
             <Card.Root>
                 <Card.Header>
                     <Card.Title>Filter Settings</Card.Title>
-                    <Card.Description>Choose what kind of events you want to show in the feed.</Card.Description>
+                    <Card.Description>Choose what kind of events you want to show in the feed (Changes not reflected in Ifeed preview!)</Card.Description>
                 </Card.Header>
                 <Card.Content>
                 <div class="grid grid-cols-1 gap-6">
