@@ -336,7 +336,7 @@
 
             <Card.Root>
                 <Card.Header>
-                    <Card.Title>Ifeed Preview (Alpha)</Card.Title>
+                    <Card.Title>Ifeed Preview</Card.Title>
                     <Card.Description>See the current changes in this preview before saving the settings.</Card.Description>
                 </Card.Header>
                 <Card.Content>
