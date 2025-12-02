@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { ArrowLeft, Copy, LayoutGrid, Link2, List, SquareArrowOutUpRight, Upload, X } from "@lucide/svelte";
+    import { ArrowLeft, Copy, GalleryHorizontal, LayoutGrid, Link2, List, SquareArrowOutUpRight, Upload, X } from "@lucide/svelte";
     import { changeIFeedSettings } from "@/endpointCalls/changeIFeedSettings.js";
     import { AspectRatio } from "@/components/ui/aspect-ratio/index.js";
     import { Button, buttonVariants } from "@/components/ui/button";
@@ -255,7 +255,7 @@
                                 onclick={() => displaySettings.feedAnimationType = "slideshow"}
                                 class="h-8 px-3"
                             >
-                                <LayoutGrid className="h-4 w-4 mr-1.5" />
+                                <GalleryHorizontal className="h-4 w-4 mr-1.5" />
                                 Slideshow
                             </Button>
 
