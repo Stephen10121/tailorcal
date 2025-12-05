@@ -151,19 +151,18 @@
                     </div>
 
                     <DropdownMenu.Root>
-                    <DropdownMenu.Trigger class={cn(buttonVariants({ variant: "ghost" }), "h-8 w-8 hover:bg-primary/90")}>
+                    <DropdownMenu.Trigger class={cn(buttonVariants({ variant: "ghost" }), "h-8 w-8")}>
                         <MoreVertical class="h-4 w-4" />
                     </DropdownMenu.Trigger>
                     <DropdownMenu.Content align="end">
                         <DropdownMenu.Item
-                            class="data-highlighted:bg-primary dropdownStuff"
                             onclick={() => copyIFeedLinkToClipboard(imageFeed.id)}
                         >
-                        <Copy class="h-4 w-4 mr-2" />
+                        <Copy class="h-4 w-4 mr-2 data-highlighted:text-primary" />
                         Copy Link
                         </DropdownMenu.Item>
-                        <DropdownMenu.Item class="text-destructive data-highlighted:bg-red-500 dropdownStuff" onclick={() => {deleteIFeedId = imageFeed.id}}>
-                        <Trash2 class="h-4 w-4 mr-2" />
+                        <DropdownMenu.Item class="text-destructive" onclick={() => {deleteIFeedId = imageFeed.id}}>
+                        <Trash2 class="h-4 w-4 mr-2 data-highlighted:text-primary" />
                         Delete
                         </DropdownMenu.Item>
                     </DropdownMenu.Content>
@@ -180,7 +179,7 @@
                     <span>{imageFeed.visits} Visit{imageFeed.visits === 1 ? "" : "s"}</span>
                     </div>
 
-                    <Button variant="outline" size="sm" class="hover:bg-primary" href="/dashboard/image-feeds/{imageFeed.id}">
+                    <Button variant="outline" size="sm" href="/dashboard/image-feeds/{imageFeed.id}">
                     View Details
                     </Button>
                 </div>
@@ -204,9 +203,3 @@
         </Dialog.Header>
     </Dialog.Content>
 </Dialog.Root>
-
-<style>
-    :global(.dropdownStuff:hover svg) {
-        filter: brightness(0) invert(1);
-    }
-</style>

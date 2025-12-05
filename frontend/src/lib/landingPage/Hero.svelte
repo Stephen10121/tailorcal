@@ -14,7 +14,7 @@
         <div class="grid lg:grid-cols-2 gap-12 items-center">
             <div class="space-y-8">
                 <div class="inline-flex items-center gap-2 rounded-full bg-secondary px-4 py-1.5 text-sm font-medium text-secondary-foreground">
-                    <span class="h-1.5 w-1.5 rounded-full bg-accent animate-pulse"></span>
+                    <span class="h-1.5 w-1.5 rounded-full bg-ring animate-pulse"></span>
                     Customization made simple
                 </div>
 
@@ -57,7 +57,7 @@
                         <div class="flex items-center justify-between">
                             <h3 class="text-lg font-semibold text-card-foreground">Calendar Insights</h3>
                             <div class="flex gap-2">
-                                <div class="h-2 w-2 rounded-full bg-accent"></div>
+                                <div class="h-2 w-2 rounded-full bg-ring"></div>
                                 <div class="h-2 w-2 rounded-full bg-muted"></div>
                                 <div class="h-2 w-2 rounded-full bg-muted"></div>
                             </div>
@@ -82,8 +82,8 @@
                         {#each mostPopular as pop, index (`mostPopular${index}`)}
                             <div class="flex items-center justify-between rounded-lg bg-muted/50 p-3">
                                 <div class="flex items-center gap-3">
-                                    <div class="h-8 w-8 rounded-full bg-accent/10 flex items-center justify-center">
-                                        <div class="h-4 w-4 rounded-full bg-accent"></div>
+                                    <div class="h-8 w-8 rounded-full bg-ring/10 flex items-center justify-center">
+                                        <div class="h-4 w-4 rounded-full bg-ring"></div>
                                     </div>
                                     <div>
                                         <div class="text-sm font-medium text-foreground">{pop.name}</div>

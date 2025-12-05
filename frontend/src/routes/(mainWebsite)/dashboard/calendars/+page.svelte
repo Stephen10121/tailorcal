@@ -184,22 +184,22 @@
                     </div>
 
                     <DropdownMenu.Root>
-                    <DropdownMenu.Trigger class={cn(buttonVariants({ variant: "ghost" }), "h-8 w-8 hover:bg-primary/90")}>
-                        <MoreVertical class="h-4 w-4" />
-                    </DropdownMenu.Trigger>
-                    <DropdownMenu.Content align="end">
-                        <DropdownMenu.Item
-                            class="data-highlighted:bg-primary dropdownStuff"
-                            onclick={() => copyCalLinkToClipboard(calendar.id)}
-                        >
-                        <Copy class="h-4 w-4 mr-2" />
-                        Copy Link
-                        </DropdownMenu.Item>
-                        <DropdownMenu.Item class="text-destructive data-highlighted:bg-red-500 dropdownStuff" onclick={() => {deleteCalendarId = calendar.id}}>
-                        <Trash2 class="h-4 w-4 mr-2" />
-                        Delete
-                        </DropdownMenu.Item>
-                    </DropdownMenu.Content>
+                        <DropdownMenu.Trigger class={cn(buttonVariants({ variant: "ghost" }), "h-8 w-8")}>
+                            <MoreVertical class="h-4 w-4" />
+                        </DropdownMenu.Trigger>
+                        <DropdownMenu.Content align="end">
+                            <DropdownMenu.Item
+                                onclick={() => copyCalLinkToClipboard(calendar.id)}
+                            >
+                                <Copy class="h-4 w-4 mr-2 data-highlighted:text-primary" />
+                                Copy Link
+                            </DropdownMenu.Item>
+
+                            <DropdownMenu.Item class="text-destructive" onclick={() => {deleteCalendarId = calendar.id}}>
+                                <Trash2 class="h-4 w-4 mr-2 data-highlighted:text-primary" />
+                                Delete
+                            </DropdownMenu.Item>
+                        </DropdownMenu.Content>
                     </DropdownMenu.Root>
                 </div>
                 </Card.Header>
@@ -209,12 +209,12 @@
 
                 <div class="flex items-center justify-between pt-4 border-t border-border">
                     <div class="flex items-center gap-2 text-sm text-muted-foreground">
-                    <Users class="h-4 w-4" />
-                    <span>{calendar.visits} Visit{calendar.visits === 1 ? "" : "s"}</span>
+                        <Users class="h-4 w-4" />
+                        <span>{calendar.visits} Visit{calendar.visits === 1 ? "" : "s"}</span>
                     </div>
 
-                    <Button variant="outline" size="sm" class="hover:bg-primary" href="/dashboard/calendars/{calendar.id}">
-                    View Details
+                    <Button variant="outline" size="sm" href="/dashboard/calendars/{calendar.id}">
+                        View Details
                     </Button>
                 </div>
                 </Card.Content>
@@ -237,9 +237,3 @@
         </Dialog.Header>
     </Dialog.Content>
 </Dialog.Root>
-
-<style>
-    :global(.dropdownStuff:hover svg) {
-        filter: brightness(0) invert(1);
-    }
-</style>

@@ -41,7 +41,7 @@
                     size="lg"
                     class="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
                 >
-                    <div class="bg-accent text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
+                    <div class="text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg bg-ring">
                         <Calendar class="size-4" />
                     </div>
                     <div class="grid flex-1 text-left text-sm leading-tight">
@@ -62,7 +62,7 @@
             <Sidebar.GroupLabel>Dashboard</Sidebar.GroupLabel>
             <Sidebar.Menu>
                 {#each navigation as item (item.title)}
-                    <Sidebar.MenuButton tooltipContent={item.title} class={pathname === item.url || (pathname.includes("/dashboard/calendars") && item.url === "/dashboard/calendars") || (pathname.includes("/dashboard/image-feeds") && item.url === "/dashboard/image-feeds") ? "bg-accent/10 text-accent hover:bg-accent/10" : "text-muted-foreground hover:bg-muted hover:text-foreground"}>
+                    <Sidebar.MenuButton tooltipContent={item.title} class={pathname === item.url || (pathname.includes("/dashboard/calendars") && item.url === "/dashboard/calendars") || (pathname.includes("/dashboard/image-feeds") && item.url === "/dashboard/image-feeds") ? "bg-ring/10 text-ring hover:text-ring hover:bg-ring/10" : "text-muted-foreground hover:bg-ring/10 hover:text-foreground"}>
                         {#snippet child({ props })}
                             <a href={item.url} {...props}>
                                 {#if item.icon}
@@ -122,23 +122,9 @@
 
                         <DropdownMenu.Separator />
 
-                        <!-- <DropdownMenu.Group>
-                            <DropdownMenu.Item class="data-highlighted:bg-primary">
-                                <SparklesIcon class="data-highlighted:text-primary" />
-                                Upgrade to Pro
-                            </DropdownMenu.Item>
-                        </DropdownMenu.Group>
-
-                        <DropdownMenu.Separator /> -->
-
                         <DropdownMenu.Group>
-                            <!-- <DropdownMenu.Item class="data-highlighted:bg-primary">
-                                <BadgeCheckIcon class="data-highlighted:text-primary" />
-                                Account
-                            </DropdownMenu.Item> -->
-
                             {#if user.accessLevel !== "none"}
-                                <DropdownMenu.Item class="data-highlighted:bg-primary">
+                                <DropdownMenu.Item>
                                     {#snippet child({ props })}
                                         <a class="w-full h-full" href="{stripeCustomerPortal}?prefilled_email={user.userEmail}" target="_blank" {...props}>
                                             <CreditCardIcon class="data-highlighted:text-primary" />
@@ -147,7 +133,7 @@
                                     {/snippet}
                                 </DropdownMenu.Item>
                             {:else}
-                                <DropdownMenu.Item class="data-highlighted:bg-primary">
+                                <DropdownMenu.Item>
                                     {#snippet child({ props })}
                                         {#if user.userEmail}
                                             <a class="w-full h-full" href="{stripeUrl}?prefilled_email={user.userEmail}" target="_blank" {...props}>
@@ -166,16 +152,11 @@
                                     {/snippet}
                                 </DropdownMenu.Item>
                             {/if}
-
-                            <!-- <DropdownMenu.Item class="data-highlighted:bg-primary">
-                                <BellIcon class="data-highlighted:text-primary" />
-                                Notifications
-                            </DropdownMenu.Item> -->
                         </DropdownMenu.Group>
 
                         <DropdownMenu.Separator />
 
-                        <DropdownMenu.Item class="data-highlighted:bg-primary">
+                        <DropdownMenu.Item>
                             {#snippet child({ props })}
                                 <a class="w-full h-full" href="/logout" {...props}>
                                     <LogOutIcon class="data-highlighted:text-primary" />

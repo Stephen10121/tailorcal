@@ -5,7 +5,7 @@
 </script>
 
 {#if showWarning}
-    <div class="bg-accent flex p-2 items-center justify-between">
+    <div class="bg-ring/85 flex p-2 items-center justify-between">
         <p class="text-background">Warning. This website is currently in the alpha stage. Not all features are implemented yet.</p>
         <button class="text-background" onclick={() => showWarning = false}><X /></button>
     </div>

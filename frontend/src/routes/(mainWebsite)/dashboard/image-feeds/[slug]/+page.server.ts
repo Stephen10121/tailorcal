@@ -1,7 +1,10 @@
-import type { CalendarDBModel, ImageFeedDBModel } from '@/utils.js';
+import type { CustomEventIFeedDBModel, ImageFeedDBModel } from '@/utils.js';
 import { redirect } from '@sveltejs/kit';
+import { config } from "dotenv";
 
-export async function load({ params, parent }) {
+config();
+
+export async function load({ params, parent, locals }) {
     const data = await parent();
     let slug = params.slug;
 
@@ -16,7 +19,21 @@ export async function load({ params, parent }) {
         return redirect(301, "/dashboard/image-feeds");
     }
 
+    let customEvents: CustomEventIFeedDBModel[] = [];
+    try {
+        customEvents = await locals.pb.collection('customEventsIfeed').getFullList({
+            filter: `imageFeed ~ "${selectedfeed.id}"`,
+            headers: {
+                "Authorization": "Bearer " + process.env.POCKETBASE_TOKEN!
+            }
+        });
+    } catch (err) {
+        console.log("Failed to fetch custom image feeds.", err);
+    }
+
     return {
-        selectedfeed
+        selectedfeed,
+        customEvents,
+        apiServer: process.env.PB_URL!
     }
 }

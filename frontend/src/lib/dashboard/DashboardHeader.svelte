@@ -18,7 +18,7 @@
         <div class="flex items-center gap-2">
             <Button variant="ghost" size="icon" class="relative hover:bg-primary buttonHover">
                 <Bell class="h-5 w-5" />
-                <span class="absolute top-1.5 right-2 h-2 w-2 rounded-full bg-accent"></span>
+                <span class="absolute top-1.5 right-2 h-2 w-2 rounded-full bg-ring"></span>
             </Button>
 
             <Button variant="ghost" class="hover:bg-primary" size="icon">

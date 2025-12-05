@@ -93,6 +93,17 @@ export interface EventDBModel extends RecordModel {
 	visibleInChurchCenter: boolean
 }
 
+export interface CustomEventIFeedDBModel extends RecordModel {
+	name: string,
+	description: string,
+	picture: string,
+	registrationURL: string,
+	startTime: string,
+	endTime: string,
+	show: boolean,
+	imageFeed: string
+}
+
 export interface EventDBModelPrivate extends EventDBModel {
 	owner: string
 }

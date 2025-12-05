@@ -7,7 +7,7 @@
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex h-16 items-center justify-between">
             <div class="flex items-center gap-2">
-                <Calendar class="h-6 w-6 text-accent" />
+                <Calendar class="h-6 w-6 text-ring" />
                 <span class="text-xl font-semibold text-foreground">TailorCal</span>
             </div>
 

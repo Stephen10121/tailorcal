@@ -36,8 +36,8 @@
             {#each features as feature, index (`feature${index}`)}
                 <div class="group relative">
                     <div class="rounded-2xl border border-border bg-card p-8 transition-all hover:shadow-lg hover:border-accent/50">
-                    <div class="mb-6 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-accent/10">
-                        <feature.icon class="h-6 w-6 text-accent" />
+                    <div class="mb-6 inline-flex h-12 w-12 items-center justify-center rounded-xl bg-ring/10">
+                        <feature.icon class="h-6 w-6 text-ring" />
                     </div>
                     <h3 class="text-xl font-semibold text-card-foreground mb-3">{feature.title}</h3>
                     <p class="text-muted-foreground leading-relaxed">{feature.description}</p>

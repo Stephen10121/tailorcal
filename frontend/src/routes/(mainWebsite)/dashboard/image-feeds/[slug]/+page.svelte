@@ -17,6 +17,7 @@
     import PrettyDate from "@/PrettyDate.svelte";
     import { toast } from "svelte-sonner";
     import Event from "@/Event.svelte";
+    import CustomEvents from "@/ifeedslug/CustomEvents.svelte";
 
     let { data } = $props();
 
@@ -243,34 +244,6 @@
                 </Card.Header>
                 <Card.Content>
                 <div class="grid grid-cols-1 gap-6">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="font-medium text-sm">Feed View Type (Alpha)</p>
-                            <p class="text-sm text-muted-foreground">Choose what layout to display upcoming events.</p>
-                        </div>
-                        <div class="flex items-center gap-1 bg-muted p-1 rounded-lg">
-                            <Button
-                                variant={displaySettings.feedAnimationType === "slideshow" ? "default" : "ghost"}
-                                size="sm"
-                                onclick={() => displaySettings.feedAnimationType = "slideshow"}
-                                class="h-8 px-3"
-                            >
-                                <GalleryHorizontal className="h-4 w-4 mr-1.5" />
-                                Slideshow
-                            </Button>
-
-                            <Button
-                                variant={displaySettings.feedAnimationType === "list" ? "default" : "ghost"}
-                                size="sm"
-                                onclick={() => displaySettings.feedAnimationType = "list"}
-                                class="h-8 px-3"
-                            >
-                                <List className="h-4 w-4 mr-1.5" />
-                                List
-                            </Button>
-                        </div>
-                    </div>
-
                     <div class="flex items-center justify-between space-x-2">
                         <Label for="showEventExtraInfo" class="flex flex-col space-y-1 items-start cursor-pointer">
                             <span class="font-medium">Display Extra Event Information</span>
@@ -341,18 +314,16 @@
                 </Card.Header>
                 <Card.Content>
                     <div class="w-full {displaySettings.feedAnimationType === "slideshow" ? "aspect-video" : "h-96"}">
-                        <!-- <AspectRatio ratio={16 / 9} class="bg-muted"> -->
-                            <iframe     
-                                bind:this={previewIFrame}
-                                allowtransparency
-                                style="background: none;height:100%"
-                                width="100%"
-                                height="100%"
-                                src="/ifeedPreview/{data.selectedfeed.id}"
-                                title="Image Feed Preview"
-                                frameborder="0"
-                            ></iframe>
-                        <!-- </AspectRatio> -->
+                        <iframe     
+                            bind:this={previewIFrame}
+                            allowtransparency
+                            style="background: none;height:100%"
+                            width="100%"
+                            height="100%"
+                            src="/ifeedPreview/{data.selectedfeed.id}"
+                            title="Image Feed Preview"
+                            frameborder="0"
+                        ></iframe>
                     </div>
                 </Card.Content>
             </Card.Root>
@@ -387,56 +358,65 @@
                 </div>
                 </Card.Content>
             </Card.Root>
+            <Card.Root>
+                <Card.Header>
+                    <Card.Title>Additional Events (Alpha)</Card.Title>
+                    <Card.Description>Add any extra events that are not in planning center, but you want in the image feed. (Changes not reflected in Ifeed preview!)</Card.Description>
+                </Card.Header>
+                <Card.Content>
+                    <CustomEvents customEvents={data.customEvents} apiServer={data.apiServer} />
+                </Card.Content>
+            </Card.Root>
         </div>
 
         <div class="space-y-6 stickySidebar h-fit">
         <Card.Root>
             <Card.Header>
-            <Card.Title>Link</Card.Title>
-            <Card.Description>Share this feed with others</Card.Description>
+                <Card.Title>Link</Card.Title>
+                <Card.Description>Share this feed with others</Card.Description>
             </Card.Header>
             <Card.Content class="space-y-3">
-            <div class="flex items-center gap-2 p-3 bg-muted rounded-lg">
-                <Link2 class="h-4 w-4 text-muted-foreground flex-shrink-0" />
-                <span class="text-sm font-mono truncate">/ifeed/{data.selectedfeed.id}</span>
-            </div>
-            <Button onclick={handleCopyLink} class="w-full gap-2 bg-transparent" variant="outline">
-                <Copy class="h-4 w-4" />
-                Copy Link
-            </Button>
-            <Button class="w-full gap-2" href="/ifeed/{data.selectedfeed.id}" target="_blank">
-                <SquareArrowOutUpRight class="h-4 w-4" />
-                Goto Page
-            </Button>
+                <div class="flex items-center gap-2 p-3 bg-muted rounded-lg">
+                    <Link2 class="h-4 w-4 text-muted-foreground flex-shrink-0" />
+                    <span class="text-sm font-mono truncate">/ifeed/{data.selectedfeed.id}</span>
+                </div>
+                <Button onclick={handleCopyLink} class="w-full gap-2 bg-transparent" variant="outline">
+                    <Copy class="h-4 w-4" />
+                    Copy Link
+                </Button>
+                <Button class="w-full gap-2" href="/ifeed/{data.selectedfeed.id}" target="_blank">
+                    <SquareArrowOutUpRight class="h-4 w-4" />
+                    Goto Page
+                </Button>
             </Card.Content>
         </Card.Root>
 
         <Card.Root>
             <Card.Header>
-            <Card.Title>Statistics</Card.Title>
-            <Card.Description>Calendar performance</Card.Description>
+                <Card.Title>Statistics</Card.Title>
+                <Card.Description>Calendar performance</Card.Description>
             </Card.Header>
             <Card.Content class="space-y-4">
-            <div class="space-y-2">
-                <div class="flex items-center justify-between text-sm">
-                    <span class="text-muted-foreground">Visits</span>
-                    <span class="font-semibold text-foreground">{data.selectedfeed.visits}</span>
+                <div class="space-y-2">
+                    <div class="flex items-center justify-between text-sm">
+                        <span class="text-muted-foreground">Visits</span>
+                        <span class="font-semibold text-foreground">{data.selectedfeed.visits}</span>
+                    </div>
+                    <div class="flex items-center justify-between text-sm">
+                        <span class="text-muted-foreground">Created</span>
+                        <span class="font-semibold text-foreground"><PrettyDate date={Temporal.Instant.from(data.selectedfeed.created).toZonedDateTimeISO(timeZone)} /></span>
+                    </div>
+                    <div class="flex items-center justify-between text-sm">
+                        <span class="text-muted-foreground">Updated</span>
+                        <span class="font-semibold text-foreground"><PrettyDate date={Temporal.Instant.from(data.selectedfeed.updated).toZonedDateTimeISO(timeZone)} /></span>
+                    </div>
                 </div>
-                <div class="flex items-center justify-between text-sm">
-                    <span class="text-muted-foreground">Created</span>
-                    <span class="font-semibold text-foreground"><PrettyDate date={Temporal.Instant.from(data.selectedfeed.created).toZonedDateTimeISO(timeZone)} /></span>
-                </div>
-                <div class="flex items-center justify-between text-sm">
-                    <span class="text-muted-foreground">Updated</span>
-                    <span class="font-semibold text-foreground"><PrettyDate date={Temporal.Instant.from(data.selectedfeed.updated).toZonedDateTimeISO(timeZone)} /></span>
-                </div>
-            </div>
             </Card.Content>
         </Card.Root>
 
         <Card.Root>
             <Card.Header>
-            <Card.Title>Quick Actions</Card.Title>
+                <Card.Title>Quick Actions</Card.Title>
             </Card.Header>
             <Card.Content class="space-y-2">
                 <!-- Delete Feed Dialog -->

@@ -1,5 +1,8 @@
 import type { CalendarDBModel, ImageFeedDBModel } from '@/utils.js';
 import { redirect } from '@sveltejs/kit';
+import { config } from "dotenv";
+
+config();
 
 export async function load({ parent, locals }) {
     const data = await parent();
