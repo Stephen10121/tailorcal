@@ -18,25 +18,23 @@ export async function load({ params, locals }) {
     }
 
     const today = new Date();
-    const now = `${today.getFullYear()}-${today.getMonth()+1}-${today.getDate()-2}`;
-
-    console.log(now);
+    const now = `${today.getFullYear()}-${(today.getMonth()+1).toString().padStart(2, '0')}-${(today.getDate()-2).toString().padStart(2, '0')}`;
 
     let events: EventDBModel[] = [];
     try {
-        let filter = `startTime >= "${now}" && imageURL != ""`;
+        let filter = `startTime > "${now}" && imageURL != ""`;
 
         // This filter shows all events for the testing dev feed.
         if (imageFeed.id !== "v7t0bmf8o0rqx5b") {
-            filter += ` && owner="${imageFeed.owner}"`;
+            filter += ` && owner = "${imageFeed.owner}"`;
         }
 
         if (imageFeed.filters.onlyShowFeatured) {
-            filter += " && featured=true"
+            filter += " && featured = true"
         }
 
         if (imageFeed.filters.hideUnpublished) {
-            filter += " && visibleInChurchCenter=true"
+            filter += " && visibleInChurchCenter = true"
         }
 
         events = await locals.pb.collection('events').getFullList({
