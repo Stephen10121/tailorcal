@@ -4,13 +4,14 @@
     import { SquareArrowOutUpRight } from "@lucide/svelte";
     import type { CarouselAPI } from "@/components/ui/carousel/context.js";
     import { AspectRatio } from "@/components/ui/aspect-ratio/index.js";
+    import { Temporal } from "temporal-polyfill";
 
     let { data } = $props();
 
     let displaySettings = $derived(data.displaySettings);
 
-    $inspect(data.events);
-
+    let timeZone = $state(Temporal.Now.timeZoneId());
+    let today = $state(Temporal.Now.zonedDateTimeISO(timeZone).startOfDay());
     let api = $state<CarouselAPI>();
 
     function parentSentMessage(event: MessageEvent) {
@@ -65,31 +66,33 @@
         >
             <Carousel.Content class="w-screen h-screen">
                 {#each data.events as event (`anEvent${event.id}`)}
-                    <Carousel.Item class="w-screen h-screen">
-                        <AspectRatio ratio={16 / 9} class="relative max-w-screen max-h-screen aspect-video centered-div">
-                            <img src={event.imageURL} alt={event.name} class="w-full h-full">
-                            {#if displaySettings.showEventExtraInfo && (displaySettings.showEventName || (displaySettings.showEventDescription && event.description.length > 0) || (displaySettings.showEventRegistration && event.registrationURL.length !== 0))}
-                                <div class="extrastuff overflow-hidden">
-                                    <div class="info">
-                                        {#if displaySettings.showEventName}
-                                            <h2 class="text-2xl">{event.name}</h2>
-                                        {/if}
+                    {#if today.toInstant().epochMilliseconds < (new Date(event.startTime)).valueOf()}
+                        <Carousel.Item class="w-screen h-screen">
+                            <AspectRatio ratio={16 / 9} class="relative max-w-screen max-h-screen aspect-video centered-div">
+                                <img src={event.imageURL} alt={event.name} class="w-full h-full">
+                                {#if displaySettings.showEventExtraInfo && (displaySettings.showEventName || (displaySettings.showEventDescription && event.description.length > 0) || (displaySettings.showEventRegistration && event.registrationURL.length !== 0))}
+                                    <div class="extrastuff overflow-hidden">
+                                        <div class="info">
+                                            {#if displaySettings.showEventName}
+                                                <h2 class="text-2xl">{event.name}</h2>
+                                            {/if}
 
-                                        {#if displaySettings.showEventDescription && event.description.length > 0}
-                                            <p class="text-sm">{event.description}</p>
-                                        {/if}
+                                            {#if displaySettings.showEventDescription && event.description.length > 0}
+                                                <p class="text-sm">{event.description}</p>
+                                            {/if}
 
-                                        {#if displaySettings.showEventRegistration && event.registrationURL.length !== 0}
-                                            <a href={event.registrationURL} class="flex items-center gap-1" target="_blank">
-                                                Register Now
-                                                <SquareArrowOutUpRight class="h-4 w-4" />
-                                            </a>
-                                        {/if}
+                                            {#if displaySettings.showEventRegistration && event.registrationURL.length !== 0}
+                                                <a href={event.registrationURL} class="flex items-center gap-1" target="_blank">
+                                                    Register Now
+                                                    <SquareArrowOutUpRight class="h-4 w-4" />
+                                                </a>
+                                            {/if}
+                                        </div>
                                     </div>
-                                </div>
-                            {/if}
-                        </AspectRatio>
-                    </Carousel.Item>
+                                {/if}
+                            </AspectRatio>
+                        </Carousel.Item>
+                    {/if}
                 {/each}
             </Carousel.Content>
         </Carousel.Root>
@@ -97,29 +100,31 @@
 {:else}
     <div class="flex flex-col gap-5 p-5 listView">
         {#each data.events as event, index (`anEventList${event.id}`)}
-            <div class="border listViewItem {index % 2 !== 0 ? "backwards" : ""} border-black">
-                <div class="img-container">
-                    <img src={event.imageURL} alt={event.name} class="aspect-video w-full">
-                </div>
-                {#if displaySettings.showEventExtraInfo && (displaySettings.showEventName || (displaySettings.showEventDescription && event.description.length > 0) || (displaySettings.showEventRegistration && event.registrationURL.length !== 0))}
-                    <div class="extra-info w-full h-full flex items-center justify-center flex-col">
-                        {#if displaySettings.showEventName}
-                            <h2 class="text-2xl">{event.name}</h2>
-                        {/if}
-
-                        {#if displaySettings.showEventDescription && event.description.length > 0}
-                            <p class="text-sm">{event.description}</p>
-                        {/if}
-
-                        {#if displaySettings.showEventRegistration && event.registrationURL.length !== 0}
-                            <a href={event.registrationURL} class="flex items-center gap-1" target="_blank">
-                                Register Now
-                                <SquareArrowOutUpRight class="h-4 w-4" />
-                            </a>
-                        {/if}
+            {#if today.toInstant().epochMilliseconds < (new Date(event.startTime)).valueOf()}
+                <div class="border listViewItem {index % 2 !== 0 ? "backwards" : ""} border-black">
+                    <div class="img-container">
+                        <img src={event.imageURL} alt={event.name} class="aspect-video w-full">
                     </div>
-                {/if}
-            </div>
+                    {#if displaySettings.showEventExtraInfo && (displaySettings.showEventName || (displaySettings.showEventDescription && event.description.length > 0) || (displaySettings.showEventRegistration && event.registrationURL.length !== 0))}
+                        <div class="extra-info w-full h-full flex items-center justify-center flex-col">
+                            {#if displaySettings.showEventName}
+                                <h2 class="text-2xl">{event.name}</h2>
+                            {/if}
+
+                            {#if displaySettings.showEventDescription && event.description.length > 0}
+                                <p class="text-sm">{event.description}</p>
+                            {/if}
+
+                            {#if displaySettings.showEventRegistration && event.registrationURL.length !== 0}
+                                <a href={event.registrationURL} class="flex items-center gap-1" target="_blank">
+                                    Register Now
+                                    <SquareArrowOutUpRight class="h-4 w-4" />
+                                </a>
+                            {/if}
+                        </div>
+                    {/if}
+                </div>
+            {/if}
         {/each}
     </div>
 {/if}
@@ -136,7 +141,12 @@
     }
 
     :global(.centered-div) {
-        margin: 0 auto; /* Centers the div horizontally */
+        margin: 0 auto;
+        position: absolute;
+        max-width: 100vw;
+        max-height: 100vh;
+        width: calc(min(100vw, 100vh * 16 / 9));
+        height: calc(min(100vh, 100vw * 9 / 16));
     }
 
     .listView {
