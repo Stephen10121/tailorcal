@@ -114,7 +114,7 @@
                 <a
                     onclick={resetSearch}
                     href="/dashboard/{term.type === "calendar" ? "calendars" : "image-feeds"}/{term.data.id}"
-                    class="w-full px-4 py-3 hover:bg-accent/50 transition-colors text-left flex flex-col gap-1 rounded-md {arrowDownIndex - 1 === index ? "bg-accent/20" : ""}"
+                    class="w-full px-4 py-3 hover:bg-accent/50 transition-colors text-left flex flex-col gap-1 rounded-md {arrowDownIndex - 1 === index ? "bg-accent/70" : ""}"
                 >
                     <div class="flex items-center justify-between">
                         <span class="font-medium text-foreground underline">{term.data.name}</span>
