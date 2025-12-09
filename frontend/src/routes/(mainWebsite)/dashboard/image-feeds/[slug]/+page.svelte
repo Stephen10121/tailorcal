@@ -106,12 +106,9 @@
         })
     }
 
-    let savingChanges = $state(false);
     async function saveChanges() {
-        savingChanges = true;
         const savingChangesToast = toast.loading("Saving changes!");
         const success = await changeIFeedSettings(data.selectedfeed.id, iFeedName, iFeedDescription, avatarLink, uploadNewAvatar, displaySettings, filterSettings);
-        savingChanges = false;
         if (success) {
             clearFileInput(document.getElementById("imageUploaderIFeed"));
             uploadNewAvatar = null;
@@ -121,9 +118,7 @@
     }
 
     async function deleteCal() {
-        savingChanges = true;
         const success = await deleteIFeed(data.selectedfeed.id);
-        savingChanges = false;
         if (success) {
             goto("/dashboard/image-feeds");
         }
@@ -364,7 +359,7 @@
                     <Card.Description>Add any extra events that are not in planning center, but you want in the image feed. (Changes not reflected in Ifeed preview!)</Card.Description>
                 </Card.Header>
                 <Card.Content>
-                    <CustomEvents customEvents={data.customEvents} apiServer={data.apiServer} />
+                    <CustomEvents customEvents={data.customEvents} apiServer={data.apiServer} imageFeeds={data.imageFeeds} currentFeedID={data.selectedfeed.id} />
                 </Card.Content>
             </Card.Root>
         </div>

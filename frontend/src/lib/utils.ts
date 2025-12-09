@@ -98,10 +98,10 @@ export interface CustomEventIFeedDBModel extends RecordModel {
 	description: string,
 	picture: string,
 	registrationURL: string,
-	startTime: string,
-	endTime: string,
+	date: number | string,
 	show: boolean,
-	imageFeed: string
+	imageFeed: string[],
+	owner: string
 }
 
 export interface EventDBModelPrivate extends EventDBModel {

@@ -22,7 +22,8 @@ export async function load({ params, parent, locals }) {
     let customEvents: CustomEventIFeedDBModel[] = [];
     try {
         customEvents = await locals.pb.collection('customEventsIfeed').getFullList({
-            filter: `imageFeed ~ "${selectedfeed.id}"`,
+            filter: `imageFeed ~ "${selectedfeed.id}" && owner = "${locals.user?.id}"`,
+            sort: "date",
             headers: {
                 "Authorization": "Bearer " + process.env.POCKETBASE_TOKEN!
             }
