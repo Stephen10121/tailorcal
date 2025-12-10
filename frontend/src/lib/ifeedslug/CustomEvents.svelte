@@ -1,22 +1,22 @@
 <script lang="ts">
-    import { cn, type CustomEventIFeedDBModel, type ImageFeedDBModel } from "@/utils";
-    import * as Table from "$lib/components/ui/table/index.js";
+    import { deleteCustomIFeedEvent } from "@/endpointCalls/deleteCustomIFeedEvent";
+    import { type CustomEventIFeedDBModel, type ImageFeedDBModel } from "@/utils";
     import Button, { buttonVariants } from "@/components/ui/button/button.svelte";
     import * as Sheet from "$lib/components/ui/sheet/index.js";
+    import * as Table from "$lib/components/ui/table/index.js";
     import UpdateCustomEvent from "./UpdateCustomEvent.svelte";
     import * as Empty from "$lib/components/ui/empty/index.js";
-    import Badge from "@/components/ui/badge/badge.svelte";
-    import { FolderCodeIcon, ImagePlus } from "@lucide/svelte";
     import CreateCustomEvent from "./CreateCustomEvent.svelte";
+    import Badge from "@/components/ui/badge/badge.svelte";
     import { invalidateAll } from "$app/navigation";
-    import { deleteCustomIFeedEvent } from "@/endpointCalls/deleteCustomIFeedEvent";
     import * as Dialog from "@/components/ui/dialog";
+    import { ImagePlus } from "@lucide/svelte";
 
     let { customEvents, apiServer, imageFeeds, currentFeedID }: { customEvents: CustomEventIFeedDBModel[], apiServer: string, imageFeeds: ImageFeedDBModel[], currentFeedID: string } = $props();
 
+    let createCustomEventDialog = $state(false);
     let selectedEventIndex = $state(0);
     let showEvent = $state(false);
-    let createCustomEventDialog = $state(false);
 
     function eventClicked(index: number) {
         selectedEventIndex = index;
@@ -94,8 +94,8 @@
         <Sheet.Footer>
             <Button form="updateEventForm" type="submit">Save changes</Button>
             <Dialog.Root>
-                <Dialog.Trigger class={cn(buttonVariants({ variant: "outline" }), "justify-start text-destructive hover:bg-red-500 bg-transparent")}>
-                    Delete Feed
+                <Dialog.Trigger class={buttonVariants({ variant: "outline" })}>
+                    Delete Event
                 </Dialog.Trigger>
                 <Dialog.Content>
                     <Dialog.Header>

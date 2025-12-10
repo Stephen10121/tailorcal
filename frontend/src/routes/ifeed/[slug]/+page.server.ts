@@ -1,4 +1,4 @@
-import type { EventDBModel, ImageFeedDBModel } from "@/utils";
+import type { CustomEventIFeedDBModel, EventDBModel, ImageFeedDBModel } from "@/utils";
 import { error } from "@sveltejs/kit";
 import { config } from "dotenv";
 
@@ -50,6 +50,28 @@ export async function load({ params, locals }) {
         return error(500, "Internal Server error.");
     }
 
+    let customEvents: CustomEventIFeedDBModel[] = [];
+    try {
+        let filter = `date > "${now}" && picture != "" && show = true`;
+
+        // This filter shows all events for the testing dev feed.
+        if (imageFeed.id !== "v7t0bmf8o0rqx5b") {
+            filter += ` && owner = "${imageFeed.owner}" && imageFeed ~ "${imageFeed.id}"`;
+        }
+
+        customEvents = await locals.pb.collection('customEventsIfeed').getFullList({
+            filter,
+            sort: 'date',
+            fields: "id,name,description,picture,registrationURL,date,created,updated,collectionId",
+            headers: {
+                "Authorization": "Bearer " + process.env.POCKETBASE_TOKEN!
+            }
+        });
+    } catch (err) {
+        console.log("Custom events not found.", err);
+        customEvents = [];
+    }
+
     try {
         await locals.pb.collection('imageFeeds').update(imageFeed.id, { 
             visits: imageFeed.visits + 1
@@ -65,9 +87,11 @@ export async function load({ params, locals }) {
 
     return {
         events,
+        customEvents,
         name: imageFeed.name,
         logoLink: locals.pb.files.getURL(imageFeed, imageFeed.logo),
         displaySettings: imageFeed.displaySettings,
-        description: imageFeed.description
+        description: imageFeed.description,
+        apiServer: process.env.PB_URL!
     }
 }

@@ -1,18 +1,18 @@
 <script lang="ts">
-    import Button, { buttonVariants } from "@/components/ui/button/button.svelte";
-    import { clearFileInput, cn, type CustomEventIFeedDBModel, type ImageFeedDBModel } from "@/utils";
-    import { Label } from "@/components/ui/label";
-    import { Input } from "@/components/ui/input";
-    import Textarea from "@/components/ui/textarea/textarea.svelte";
-    import { Switch } from "@/components/ui/switch";
     import { DateFormatter, getLocalTimeZone, parseDate, type DateValue } from "@internationalized/date";
-    import * as Popover from "@/components/ui/popover";
-    import { CalendarIcon, Upload, X } from "@lucide/svelte";
-    import { Calendar } from "@/components/ui/calendar";
-    import { Checkbox } from "$lib/components/ui/checkbox/index.js";
-    import { toast } from "svelte-sonner";
+    import { clearFileInput, cn, type CustomEventIFeedDBModel, type ImageFeedDBModel } from "@/utils";
     import { updateCustomIFeedEvent } from "@/endpointCalls/updateCustomIfeedEvent";
+    import Button, { buttonVariants } from "@/components/ui/button/button.svelte";
+    import Textarea from "@/components/ui/textarea/textarea.svelte";
+    import { Checkbox } from "$lib/components/ui/checkbox/index.js";
+    import { CalendarIcon, Upload, X } from "@lucide/svelte";
+    import * as Popover from "@/components/ui/popover";
+    import { Calendar } from "@/components/ui/calendar";
+    import { Switch } from "@/components/ui/switch";
     import { invalidateAll } from "$app/navigation";
+    import { Input } from "@/components/ui/input";
+    import { Label } from "@/components/ui/label";
+    import { toast } from "svelte-sonner";
 
     let {
         customEvents,
@@ -28,9 +28,7 @@
         selectedEventIndex: number,
     } = $props();
 
-    const df = new DateFormatter("en-US", {
-        dateStyle: "long"
-    });
+    const df = new DateFormatter("en-US", { dateStyle: "long" });
 
     let includeInOtherFeeds = $state(imageFeeds.map((feed) => {
         return {

@@ -1,44 +1,44 @@
 <script lang="ts">
-    import { invalidateAll } from "$app/navigation";
+    import { DateFormatter, getLocalTimeZone, parseDate, type DateValue } from "@internationalized/date";
+    import { createCustomIFeedEvent } from "@/endpointCalls/createCustomIFeedEvent";
     import { Button, buttonVariants } from "@/components/ui/button";
+    import { CalendarIcon, Upload, X } from "@lucide/svelte";
     import { Calendar } from "@/components/ui/calendar";
+    import { Textarea } from "@/components/ui/textarea";
+    import * as Popover from "@/components/ui/popover";
     import * as Dialog from "@/components/ui/dialog";
+    import { invalidateAll } from "$app/navigation";
+    import { Switch } from "@/components/ui/switch";
     import { Input } from "@/components/ui/input";
     import { Label } from "@/components/ui/label";
-    import * as Popover from "@/components/ui/popover";
-    import { Switch } from "@/components/ui/switch";
-    import { Textarea } from "@/components/ui/textarea";
-    import { createCustomIFeedEvent } from "@/endpointCalls/createCustomIFeedEvent";
     import { clearFileInput, cn } from "@/utils";
-    import { DateFormatter, getLocalTimeZone, parseDate, type DateValue } from "@internationalized/date";
-    import { CalendarIcon, Upload, X } from "@lucide/svelte";
     import { toast } from "svelte-sonner";
 
     let { iFeedId, dialogOpen = $bindable() }: { iFeedId: string, dialogOpen: boolean } = $props();
 
-    const df = new DateFormatter("en-US", {
-        dateStyle: "long"
-    });
+    const df = new DateFormatter("en-US", { dateStyle: "long" });
 
     let name = $state("");
+    let show = $state(false);
     let description = $state("");
     let registrationURL = $state("");
-    let show = $state(false);
     let uploadNewEventPicture: File | null = $state(null);
     let uploadNewEventPictureLink = $derived(uploadNewEventPicture ? URL.createObjectURL(uploadNewEventPicture) : null);
 
-    let dateValue = $derived<DateValue | undefined>(parseDate(new Date().toISOString().split('T')[0]));
     let dateContentRef = $state<HTMLElement | null>(null);
+    let dateValue = $derived<DateValue | undefined>(parseDate(new Date().toISOString().split('T')[0]));
 
     async function handleCreateEvent() {
         if (!uploadNewEventPicture || !description || !name) {
             toast.error("Missing Data!", { description: "Please fill the required fields." });
             return;
         }
+
         let date = dateValue ? dateValue.toDate(getLocalTimeZone()).getTime() : 0;
 
         const savingChangesToast = toast.loading("Saving changes!");
         const success = await createCustomIFeedEvent(name, description, registrationURL, date, [ iFeedId ], show, uploadNewEventPicture);
+
         if (success) {
             clearFileInput(document.getElementById("imageUploaderIFeed"));
             uploadNewEventPicture = null;
@@ -65,6 +65,7 @@
         uploadNewEventPicture = null;
     }
 </script>
+
 <Dialog.Root bind:open={dialogOpen}>
     <Dialog.Content class="sm:max-w-[500px] max-h-screen overflow-y-auto" style="max-height: calc(100vh - 50px);">
         <Dialog.Header>

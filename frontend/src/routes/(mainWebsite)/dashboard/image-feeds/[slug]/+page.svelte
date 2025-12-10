@@ -355,7 +355,7 @@
             </Card.Root>
             <Card.Root>
                 <Card.Header>
-                    <Card.Title>Additional Events (Alpha)</Card.Title>
+                    <Card.Title>Additional Events</Card.Title>
                     <Card.Description>Add any extra events that are not in planning center, but you want in the image feed. (Changes not reflected in Ifeed preview!)</Card.Description>
                 </Card.Header>
                 <Card.Content>
