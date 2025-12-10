@@ -1,6 +1,6 @@
 <script lang="ts">
     import { DateFormatter, getLocalTimeZone, parseDate, type DateValue } from "@internationalized/date";
-    import { clearFileInput, cn, type CustomEventIFeedDBModel, type ImageFeedDBModel } from "@/utils";
+    import { clearFileInput, cn, type CustomImageIFeedDBModel, type ImageFeedDBModel } from "@/utils";
     import { updateCustomIFeedEvent } from "@/endpointCalls/updateCustomIfeedEvent";
     import Button, { buttonVariants } from "@/components/ui/button/button.svelte";
     import Textarea from "@/components/ui/textarea/textarea.svelte";
@@ -21,7 +21,7 @@
         currentFeedID,
         selectedEventIndex,
     }: {
-        customEvents: CustomEventIFeedDBModel[],
+        customEvents: CustomImageIFeedDBModel[],
         apiServer: string,
         imageFeeds: ImageFeedDBModel[],
         currentFeedID: string,

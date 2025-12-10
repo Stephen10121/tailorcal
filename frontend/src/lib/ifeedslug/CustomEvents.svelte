@@ -1,6 +1,6 @@
 <script lang="ts">
     import { deleteCustomIFeedEvent } from "@/endpointCalls/deleteCustomIFeedEvent";
-    import { type CustomEventIFeedDBModel, type ImageFeedDBModel } from "@/utils";
+    import { type CustomImageIFeedDBModel, type ImageFeedDBModel } from "@/utils";
     import Button, { buttonVariants } from "@/components/ui/button/button.svelte";
     import * as Sheet from "$lib/components/ui/sheet/index.js";
     import * as Table from "$lib/components/ui/table/index.js";
@@ -12,7 +12,7 @@
     import * as Dialog from "@/components/ui/dialog";
     import { ImagePlus } from "@lucide/svelte";
 
-    let { customEvents, apiServer, imageFeeds, currentFeedID }: { customEvents: CustomEventIFeedDBModel[], apiServer: string, imageFeeds: ImageFeedDBModel[], currentFeedID: string } = $props();
+    let { customEvents, apiServer, imageFeeds, currentFeedID }: { customEvents: CustomImageIFeedDBModel[], apiServer: string, imageFeeds: ImageFeedDBModel[], currentFeedID: string } = $props();
 
     let createCustomEventDialog = $state(false);
     let selectedEventIndex = $state(0);

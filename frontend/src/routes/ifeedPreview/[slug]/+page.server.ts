@@ -1,4 +1,4 @@
-import type { CustomEventIFeedDBModel, EventDBModel, ImageFeedDBModel } from "@/utils";
+import type { CustomImageIFeedDBModel, EventDBModel, ImageFeedDBModel } from "@/utils";
 import { error } from "@sveltejs/kit";
 import { config } from "dotenv";
 
@@ -50,7 +50,7 @@ export async function load({ params, locals }) {
         return error(500, "Internal Server error.");
     }
 
-    let customEvents: CustomEventIFeedDBModel[] = [];
+    let customEvents: CustomImageIFeedDBModel[] = [];
     try {
         let filter = `date > "${now}" && picture != "" && show = true`;
 

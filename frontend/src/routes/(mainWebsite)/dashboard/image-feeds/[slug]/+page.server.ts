@@ -1,4 +1,4 @@
-import type { CustomEventIFeedDBModel, ImageFeedDBModel } from '@/utils.js';
+import type { CustomImageIFeedDBModel, ImageFeedDBModel } from '@/utils.js';
 import { redirect } from '@sveltejs/kit';
 import { config } from "dotenv";
 
@@ -19,7 +19,7 @@ export async function load({ params, parent, locals }) {
         return redirect(301, "/dashboard/image-feeds");
     }
 
-    let customEvents: CustomEventIFeedDBModel[] = [];
+    let customEvents: CustomImageIFeedDBModel[] = [];
     try {
         customEvents = await locals.pb.collection('customEventsIfeed').getFullList({
             filter: `imageFeed ~ "${selectedfeed.id}" && owner = "${locals.user?.id}"`,

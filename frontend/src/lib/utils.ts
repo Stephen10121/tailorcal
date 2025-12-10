@@ -93,7 +93,7 @@ export interface EventDBModel extends RecordModel {
 	visibleInChurchCenter: boolean
 }
 
-export interface CustomEventIFeedDBModel extends RecordModel {
+export interface CustomImageIFeedDBModel extends RecordModel {
 	name: string,
 	description: string,
 	picture: string,
@@ -223,14 +223,14 @@ export function capitalizeFirstLetter(str: string) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
-export function mergeEventArrayAndCustomEventArray(eventArr: EventDBModel[], customEvent: CustomEventIFeedDBModel[]) {
+export function mergeEventArrayAndCustomEventArray(eventArr: EventDBModel[], customEvent: CustomImageIFeedDBModel[]) {
   let i = 0, j = 0;
 	const result: ({
 		type: "event";
 		data: EventDBModel;
 		} | {
 		type: "customEvent";
-		data: CustomEventIFeedDBModel;
+		data: CustomImageIFeedDBModel;
 	})[] = [];
 
 	while (i < eventArr.length && j < customEvent.length) {

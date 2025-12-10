@@ -1,4 +1,4 @@
-import type { CustomEventIFeedDBModel, UserModel } from "@/utils";
+import type { CustomImageIFeedDBModel, UserModel } from "@/utils";
 import { error, json } from "@sveltejs/kit";
 import { config } from "dotenv";
 
@@ -15,7 +15,7 @@ export async function DELETE({ locals, request }) {
         return error(400, "Missing Data.");
     }
 
-    let customEventsIfeed: CustomEventIFeedDBModel | null = null;
+    let customEventsIfeed: CustomImageIFeedDBModel | null = null;
     try {
         customEventsIfeed = await locals.pb.collection("customEventsIfeed").getOne(id.toString(), {
             headers: {
@@ -76,7 +76,7 @@ export async function PATCH({ locals, request }) {
         return error(400, "Missing Data.");
     }
 
-    let customEventsIfeed: CustomEventIFeedDBModel | null = null;
+    let customEventsIfeed: CustomImageIFeedDBModel | null = null;
     try {
         customEventsIfeed = await locals.pb.collection("customEventsIfeed").getOne(id.toString(), {
             headers: {
@@ -97,7 +97,7 @@ export async function PATCH({ locals, request }) {
     }
     
     try {
-        let data: Partial<CustomEventIFeedDBModel> = {
+        let data: Partial<CustomImageIFeedDBModel> = {
             "name": name.toString(),
             "description": description.toString(),
             "registrationURL": registrationURL?.toString(),
@@ -167,7 +167,7 @@ export async function POST({ locals, request }) {
     }
 
     try {
-        let data: Partial<CustomEventIFeedDBModel> = {
+        let data: Partial<CustomImageIFeedDBModel> = {
             "name": name.toString(),
             "description": description.toString(),
             "registrationURL": registrationURL?.toString(),
