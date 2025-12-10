@@ -83,7 +83,7 @@
 {/if}
 
 <Sheet.Root bind:open={showEvent}>
-    <Sheet.Content side="right">
+    <Sheet.Content side="left">
         <Sheet.Header>
             <Sheet.Title>{customEvents[selectedEventIndex].name}</Sheet.Title>
             <Sheet.Description>Make changes to the event here. Click save when you're done.</Sheet.Description>
