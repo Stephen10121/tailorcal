@@ -63,7 +63,7 @@
     }
 
     function keyDown(event: KeyboardEvent) {
-        if (event.key === "/" && everythingInput && !everythingInputFocused) {
+        if (event.key === "/" && event.ctrlKey && everythingInput && !everythingInputFocused) {
             event.preventDefault();
             arrowDownIndex = -1;
             everythingInput.focus();
@@ -97,7 +97,11 @@
 <div class="relative w-full max-w-md">
     <Search class="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
     <div class="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground">
-        <Kbd.Root>/</Kbd.Root>
+        <Kbd.Group>
+            <Kbd.Root>⌘</Kbd.Root>
+            <span>+</span>
+            <Kbd.Root>/</Kbd.Root>
+        </Kbd.Group>
     </div>
     <Input
         bind:ref={everythingInput}
