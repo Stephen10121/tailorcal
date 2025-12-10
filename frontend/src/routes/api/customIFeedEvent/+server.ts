@@ -15,9 +15,9 @@ export async function DELETE({ locals, request }) {
         return error(400, "Missing Data.");
     }
 
-    let customEventsIfeed: CustomImageIFeedDBModel | null = null;
+    let customImageIfeed: CustomImageIFeedDBModel | null = null;
     try {
-        customEventsIfeed = await locals.pb.collection("customEventsIfeed").getOne(id.toString(), {
+        customImageIfeed = await locals.pb.collection("customImageIfeed").getOne(id.toString(), {
             headers: {
                 "Authorization": "Bearer " + process.env.POCKETBASE_TOKEN!
             }
@@ -27,16 +27,16 @@ export async function DELETE({ locals, request }) {
         return error(500);
     }
 
-    if (customEventsIfeed === null) {
+    if (customImageIfeed === null) {
         return error(400, "No user");
     }
 
-    if (customEventsIfeed.owner !== locals.user.id) {
+    if (customImageIfeed.owner !== locals.user.id) {
         return error(401, "Invalid Request.");
     }
 
     try {
-        await locals.pb.collection('customEventsIfeed').delete(customEventsIfeed.id, {
+        await locals.pb.collection('customImageIfeed').delete(customImageIfeed.id, {
             headers: {
                 "Authorization": "Bearer " + process.env.POCKETBASE_TOKEN!
             }
@@ -76,9 +76,9 @@ export async function PATCH({ locals, request }) {
         return error(400, "Missing Data.");
     }
 
-    let customEventsIfeed: CustomImageIFeedDBModel | null = null;
+    let customImageIfeed: CustomImageIFeedDBModel | null = null;
     try {
-        customEventsIfeed = await locals.pb.collection("customEventsIfeed").getOne(id.toString(), {
+        customImageIfeed = await locals.pb.collection("customImageIfeed").getOne(id.toString(), {
             headers: {
                 "Authorization": "Bearer " + process.env.POCKETBASE_TOKEN!
             }
@@ -88,11 +88,11 @@ export async function PATCH({ locals, request }) {
         return error(500);
     }
 
-    if (customEventsIfeed === null) {
+    if (customImageIfeed === null) {
         return error(400, "No user");
     }
 
-    if (customEventsIfeed.owner !== locals.user.id) {
+    if (customImageIfeed.owner !== locals.user.id) {
         return error(401, "Invalid Request.");
     }
     
@@ -111,7 +111,7 @@ export async function PATCH({ locals, request }) {
             data["picture"] = uploadNewEventPicture;
         }
 
-        await locals.pb.collection('customEventsIfeed').update(customEventsIfeed.id, data, {
+        await locals.pb.collection('customImageIfeed').update(customImageIfeed.id, data, {
             headers: {
                 "Authorization": "Bearer " + process.env.POCKETBASE_TOKEN!
             }
@@ -180,7 +180,7 @@ export async function POST({ locals, request }) {
         //@ts-ignore
         data["picture"] = uploadNewEventPicture;
 
-        await locals.pb.collection('customEventsIfeed').create(data, {
+        await locals.pb.collection('customImageIfeed').create(data, {
             headers: {
                 "Authorization": "Bearer " + process.env.POCKETBASE_TOKEN!
             }

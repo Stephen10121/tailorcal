@@ -59,7 +59,7 @@ export async function load({ params, locals }) {
             filter += ` && owner = "${imageFeed.owner}" && imageFeed ~ "${imageFeed.id}"`;
         }
 
-        customEvents = await locals.pb.collection('customEventsIfeed').getFullList({
+        customEvents = await locals.pb.collection('customImageIfeed').getFullList({
             filter,
             sort: 'date',
             fields: "id,name,description,picture,registrationURL,date,created,updated,collectionId",
