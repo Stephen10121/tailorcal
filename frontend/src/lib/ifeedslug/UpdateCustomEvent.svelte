@@ -19,13 +19,13 @@
         apiServer,
         imageFeeds,
         currentFeedID,
-        selectedEventIndex
+        selectedEventIndex,
     }: {
         customEvents: CustomEventIFeedDBModel[],
         apiServer: string,
         imageFeeds: ImageFeedDBModel[],
         currentFeedID: string,
-        selectedEventIndex: number
+        selectedEventIndex: number,
     } = $props();
 
     const df = new DateFormatter("en-US", {

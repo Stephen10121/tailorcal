@@ -1,21 +1,34 @@
 <script lang="ts">
-    import { type CustomEventIFeedDBModel, type ImageFeedDBModel } from "@/utils";
+    import { cn, type CustomEventIFeedDBModel, type ImageFeedDBModel } from "@/utils";
     import * as Table from "$lib/components/ui/table/index.js";
-    import Button from "@/components/ui/button/button.svelte";
+    import Button, { buttonVariants } from "@/components/ui/button/button.svelte";
     import * as Sheet from "$lib/components/ui/sheet/index.js";
     import UpdateCustomEvent from "./UpdateCustomEvent.svelte";
     import * as Empty from "$lib/components/ui/empty/index.js";
     import Badge from "@/components/ui/badge/badge.svelte";
     import { FolderCodeIcon, ImagePlus } from "@lucide/svelte";
+    import CreateCustomEvent from "./CreateCustomEvent.svelte";
+    import { invalidateAll } from "$app/navigation";
+    import { deleteCustomIFeedEvent } from "@/endpointCalls/deleteCustomIFeedEvent";
+    import * as Dialog from "@/components/ui/dialog";
 
     let { customEvents, apiServer, imageFeeds, currentFeedID }: { customEvents: CustomEventIFeedDBModel[], apiServer: string, imageFeeds: ImageFeedDBModel[], currentFeedID: string } = $props();
 
     let selectedEventIndex = $state(0);
     let showEvent = $state(false);
+    let createCustomEventDialog = $state(false);
 
     function eventClicked(index: number) {
         selectedEventIndex = index;
         showEvent = true;
+    }
+
+    async function deleteEvent() {
+        const success = await deleteCustomIFeedEvent(customEvents[selectedEventIndex].id);
+        if (success) {
+            showEvent = false;
+            invalidateAll();
+        }
     }
 </script>
  
@@ -52,7 +65,7 @@
         </Table.Body>
     </Table.Root>
     <div class="w-full flex items-center justify-center mt-2">
-        <Button variant="outline" class="w-full">Add Event</Button>
+        <Button variant="outline" class="w-full" onclick={() => createCustomEventDialog=true}>Add Event</Button>
     </div>
 {:else}
     <Empty.Root>
@@ -64,7 +77,7 @@
             <Empty.Description>You haven't created any additional events yet.</Empty.Description>
         </Empty.Header>
         <Empty.Content>
-            <Button>Create One</Button>
+            <Button onclick={() => createCustomEventDialog=true}>Create One</Button>
         </Empty.Content>
     </Empty.Root>
 {/if}
@@ -80,6 +93,24 @@
         {/if}
         <Sheet.Footer>
             <Button form="updateEventForm" type="submit">Save changes</Button>
+            <Dialog.Root>
+                <Dialog.Trigger class={cn(buttonVariants({ variant: "outline" }), "justify-start text-destructive hover:bg-red-500 bg-transparent")}>
+                    Delete Feed
+                </Dialog.Trigger>
+                <Dialog.Content>
+                    <Dialog.Header>
+                        <Dialog.Title>Are you sure absolutely sure?</Dialog.Title>
+                        <Dialog.Description>
+                            This action cannot be undone. This will permanently delete this event from our servers. All feeds relying on this event will not work.
+                        </Dialog.Description>
+                        <Dialog.Footer>
+                            <Button variant="destructive" type="reset" onclick={deleteEvent}>Confirm Delete</Button>
+                        </Dialog.Footer>
+                    </Dialog.Header>
+                </Dialog.Content>
+            </Dialog.Root>
         </Sheet.Footer>
     </Sheet.Content>
 </Sheet.Root>
+
+<CreateCustomEvent iFeedId={currentFeedID} bind:dialogOpen={createCustomEventDialog} />
