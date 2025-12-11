@@ -94,12 +94,10 @@ export interface EventDBModel extends RecordModel {
 }
 
 export interface CustomImageIFeedDBModel extends RecordModel {
-	name: string,
-	description: string,
 	picture: string,
 	registrationURL: string,
-	date: number | string,
-	show: boolean,
+	showLink: boolean,
+	linkText: string,
 	imageFeed: string[],
 	owner: string
 }

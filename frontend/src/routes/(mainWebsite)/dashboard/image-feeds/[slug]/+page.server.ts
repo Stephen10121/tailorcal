@@ -19,11 +19,10 @@ export async function load({ params, parent, locals }) {
         return redirect(301, "/dashboard/image-feeds");
     }
 
-    let customEvents: CustomImageIFeedDBModel[] = [];
+    let customImages: CustomImageIFeedDBModel[] = [];
     try {
-        customEvents = await locals.pb.collection('customImageIfeed').getFullList({
+        customImages = await locals.pb.collection('customImageIfeed').getFullList({
             filter: `imageFeed ~ "${selectedfeed.id}" && owner = "${locals.user?.id}"`,
-            sort: "date",
             headers: {
                 "Authorization": "Bearer " + process.env.POCKETBASE_TOKEN!
             }
@@ -34,7 +33,7 @@ export async function load({ params, parent, locals }) {
 
     return {
         selectedfeed,
-        customEvents,
+        customImages,
         apiServer: process.env.PB_URL!
     }
 }

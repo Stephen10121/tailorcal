@@ -52,17 +52,16 @@ export async function load({ params, locals }) {
 
     let customEvents: CustomImageIFeedDBModel[] = [];
     try {
-        let filter = `date > "${now}" && picture != "" && show = true`;
+        let filter = `picture != "" && imageFeed ~ "${imageFeed.id}"`;
 
         // This filter shows all events for the testing dev feed.
         if (imageFeed.id !== "v7t0bmf8o0rqx5b") {
-            filter += ` && owner = "${imageFeed.owner}" && imageFeed ~ "${imageFeed.id}"`;
+            filter += ` && owner = "${imageFeed.owner}"`;
         }
 
         customEvents = await locals.pb.collection('customImageIfeed').getFullList({
             filter,
-            sort: 'date',
-            fields: "id,name,description,picture,registrationURL,date,created,updated,collectionId",
+            fields: "id,picture,registrationURL,created,updated,collectionId,showLink,linkText",
             headers: {
                 "Authorization": "Bearer " + process.env.POCKETBASE_TOKEN!
             }

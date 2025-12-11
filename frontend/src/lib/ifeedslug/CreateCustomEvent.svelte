@@ -1,52 +1,39 @@
 <script lang="ts">
-    import { DateFormatter, getLocalTimeZone, parseDate, type DateValue } from "@internationalized/date";
+    import { DateFormatter } from "@internationalized/date";
     import { createCustomIFeedEvent } from "@/endpointCalls/createCustomIFeedEvent";
-    import { Button, buttonVariants } from "@/components/ui/button";
-    import { CalendarIcon, Upload, X } from "@lucide/svelte";
-    import { Calendar } from "@/components/ui/calendar";
-    import { Textarea } from "@/components/ui/textarea";
-    import * as Popover from "@/components/ui/popover";
+    import { Button } from "@/components/ui/button";
+    import { Upload, X } from "@lucide/svelte";
     import * as Dialog from "@/components/ui/dialog";
     import { invalidateAll } from "$app/navigation";
     import { Switch } from "@/components/ui/switch";
     import { Input } from "@/components/ui/input";
     import { Label } from "@/components/ui/label";
-    import { clearFileInput, cn } from "@/utils";
+    import { clearFileInput } from "@/utils";
     import { toast } from "svelte-sonner";
 
     let { iFeedId, dialogOpen = $bindable() }: { iFeedId: string, dialogOpen: boolean } = $props();
 
-    const df = new DateFormatter("en-US", { dateStyle: "long" });
-
-    let name = $state("");
-    let show = $state(false);
-    let description = $state("");
+    let linkText = $state("");
+    let showLink = $state(false);
     let registrationURL = $state("");
     let uploadNewEventPicture: File | null = $state(null);
     let uploadNewEventPictureLink = $derived(uploadNewEventPicture ? URL.createObjectURL(uploadNewEventPicture) : null);
 
-    let dateContentRef = $state<HTMLElement | null>(null);
-    let dateValue = $derived<DateValue | undefined>(parseDate(new Date().toISOString().split('T')[0]));
-
     async function handleCreateEvent() {
-        if (!uploadNewEventPicture || !description || !name) {
+        if (!uploadNewEventPicture || (showLink && (registrationURL.length === 0 || linkText.length === 0))) {
             toast.error("Missing Data!", { description: "Please fill the required fields." });
             return;
         }
 
-        let date = dateValue ? dateValue.toDate(getLocalTimeZone()).getTime() : 0;
-
         const savingChangesToast = toast.loading("Saving changes!");
-        const success = await createCustomIFeedEvent(name, description, registrationURL, date, [ iFeedId ], show, uploadNewEventPicture);
+        const success = await createCustomIFeedEvent(linkText, registrationURL, [ iFeedId ], showLink, uploadNewEventPicture);
 
         if (success) {
             clearFileInput(document.getElementById("imageUploaderIFeed"));
             uploadNewEventPicture = null;
-            name = "";
-            description = "";
+            linkText = "";
             registrationURL = "";
-            show = false;
-            dateValue = parseDate(new Date().toISOString().split('T')[0]);
+            showLink = false;
             dialogOpen = false;
             await invalidateAll();
         }
@@ -69,65 +56,12 @@
 <Dialog.Root bind:open={dialogOpen}>
     <Dialog.Content class="sm:max-w-[500px] max-h-screen overflow-y-auto" style="max-height: calc(100vh - 50px);">
         <Dialog.Header>
-            <Dialog.Title>Create New Event</Dialog.Title>
-            <Dialog.Description>Add a new event to this calendar</Dialog.Description>
+            <Dialog.Title>Add Image</Dialog.Title>
+            <Dialog.Description>Add an image to this feed.</Dialog.Description>
         </Dialog.Header>
         <div class="space-y-4 py-4">
             <div class="space-y-2">
-                <Label for="event-name">Event Name*</Label>
-                <Input
-                    id="event-name"
-                    placeholder="Enter event name"
-                    bind:value={name}
-                />
-            </div>
-
-            <div class="space-y-2">
-                <Label for="event-description">Description*</Label>
-                <Textarea
-                    id="event-description"
-                    placeholder="Enter event description"
-                    bind:value={description}
-                    rows={3}
-                />
-            </div>
-
-            <div class="grid gap-2">
-                <Label for="eventDate" class="flex flex-col items-start space-y-1 cursor-pointer">
-                    <span class="font-medium">Event Date</span>
-                </Label>
-                <Popover.Root>
-                    <Popover.Trigger
-                        id="eventDate"
-                        class={cn(
-                        buttonVariants({
-                            variant: "outline",
-                            class: "w-full justify-start text-start font-normal"
-                        }),
-                        !dateValue && "text-muted-foreground"
-                        )}
-                    >
-                        <CalendarIcon />
-                        {dateValue ? df.format(dateValue.toDate(getLocalTimeZone())) : "Pick a date"}
-                    </Popover.Trigger>
-                    <Popover.Content bind:ref={dateContentRef} class="w-auto p-0">
-                        <Calendar id="date" type="single" bind:value={dateValue} captionLayout="dropdown" />
-                    </Popover.Content>
-                </Popover.Root>
-            </div>
-
-            <div class="space-y-2">
-                <Label for="event-registration">Registration URL</Label>
-                <Input
-                    id="event-registration"
-                    type="url"
-                    placeholder="https://example.com/register"
-                    bind:value={registrationURL}
-                />
-            </div>
-
-            <div class="space-y-2">
-                <Label for="event-picture">Event Picture*</Label>
+                <Label for="event-picture">Picture*</Label>
                 {#if uploadNewEventPictureLink}
                     <div class="relative">
                         <img
@@ -163,15 +97,34 @@
             <div class="flex items-center justify-between">
                 <div class="space-y-0.5">
                 <Label for="event-show" class="text-base">
-                    Show Event
+                    Add Link
                 </Label>
-                <p class="text-sm text-muted-foreground">Make this event visible to users</p>
+                <p class="text-sm text-muted-foreground">This adds a button that lets people click a custom link.</p>
                 </div>
                 <Switch
                     id="event-show"
-                    bind:checked={show}
+                    bind:checked={showLink}
                 />
             </div>
+            {#if showLink}
+                <div class="space-y-2">
+                    <Label for="event-name">Link Button Text</Label>
+                    <Input
+                        id="event-name"
+                        placeholder="Link Button Text"
+                        bind:value={linkText}
+                    />
+                </div>
+                <div class="space-y-2">
+                    <Label for="event-registration">Link URL</Label>
+                    <Input
+                        id="event-registration"
+                        type="url"
+                        placeholder="https://example.com/register"
+                        bind:value={registrationURL}
+                    />
+                </div>
+            {/if}
         </div>
         <Dialog.Footer>
             <Button variant="outline" onclick={() => dialogOpen = false} class="bg-transparent">

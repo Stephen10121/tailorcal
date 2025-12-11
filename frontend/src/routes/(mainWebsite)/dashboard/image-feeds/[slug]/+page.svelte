@@ -17,7 +17,7 @@
     import PrettyDate from "@/PrettyDate.svelte";
     import { toast } from "svelte-sonner";
     import Event from "@/Event.svelte";
-    import CustomEvents from "@/ifeedslug/CustomEvents.svelte";
+    import CustomImages from "@/ifeedslug/CustomImages.svelte";
 
     let { data } = $props();
 
@@ -355,11 +355,11 @@
             </Card.Root>
             <Card.Root>
                 <Card.Header>
-                    <Card.Title>Additional Events</Card.Title>
-                    <Card.Description>Add any extra events that are not in planning center, but you want in the image feed. (Changes not reflected in Ifeed preview!)</Card.Description>
+                    <Card.Title>Additional Images</Card.Title>
+                    <Card.Description>Add any extra pics that are not in planning center, but you want in the image feed. (Changes not reflected in Ifeed preview!)</Card.Description>
                 </Card.Header>
                 <Card.Content>
-                    <CustomEvents customEvents={data.customEvents} apiServer={data.apiServer} imageFeeds={data.imageFeeds} currentFeedID={data.selectedfeed.id} />
+                    <CustomImages customImages={data.customImages} apiServer={data.apiServer} imageFeeds={data.imageFeeds} currentFeedID={data.selectedfeed.id} />
                 </Card.Content>
             </Card.Root>
         </div>

@@ -56,16 +56,16 @@ export async function PATCH({ locals, request }) {
     const formData = await request.formData();
 
     const id = formData.get("id");
-    const name = formData.get("name");
-    const description = formData.get("description");
     const eventPictureLink = formData.get("eventPictureLink");
     const registrationURL = formData.get("registrationURL");
-    const dateValue = formData.get("dateValue");
     const included = formData.get("included");
-    const show = formData.get("show");
+    const linkText = formData.get("linkText");
+    const showLink = formData.get("showLink");
     const uploadNewEventPicture = formData.get("uploadNewEventPicture");
 
-    if (id == null || name == null || description == null || eventPictureLink == null || dateValue === null || included === null) {
+    const showLinkBool = showLink?.toString() === "1";
+
+    if (id == null || eventPictureLink == null || included === null || (showLinkBool && (linkText === null || registrationURL === null))) {
         return error(400, "Missing Data.");
     }
 
@@ -98,12 +98,10 @@ export async function PATCH({ locals, request }) {
     
     try {
         let data: Partial<CustomImageIFeedDBModel> = {
-            "name": name.toString(),
-            "description": description.toString(),
+            "linkText": linkText?.toString(),
             "registrationURL": registrationURL?.toString(),
-            "show": show?.toString() === "1",
+            "showLink": showLinkBool,
             "imageFeed": parsedIncludedIfeeds,
-            "date": (new Date(parseInt(dateValue.toString()))).toISOString()
         };
         
         if (uploadNewEventPicture !== null) {
@@ -130,15 +128,15 @@ export async function POST({ locals, request }) {
 
     const formData = await request.formData();
 
-    const name = formData.get("name");
-    const description = formData.get("description");
+    const linkText = formData.get("linkText");
     const registrationURL = formData.get("registrationURL");
-    const dateValue = formData.get("dateValue");
     const included = formData.get("included");
-    const show = formData.get("show");
+    const showLink = formData.get("showLink");
     const uploadNewEventPicture = formData.get("uploadNewEventPicture");
 
-    if (name == null || description == null || dateValue === null || included === null || uploadNewEventPicture === null) {
+    const showLinkBool = showLink?.toString() === "1";
+
+    if ((showLinkBool && (linkText === null || registrationURL === null)) || uploadNewEventPicture === null || included === null) {
         return error(400, "Missing Data.");
     }
 
@@ -168,12 +166,10 @@ export async function POST({ locals, request }) {
 
     try {
         let data: Partial<CustomImageIFeedDBModel> = {
-            "name": name.toString(),
-            "description": description.toString(),
+            "linkText": linkText?.toString(),
             "registrationURL": registrationURL?.toString(),
-            "show": show?.toString() === "1",
+            "showLink": showLinkBool,
             "imageFeed": parsedIncludedIfeeds,
-            "date": (new Date(parseInt(dateValue.toString()))).toISOString(),
             "owner": locals.user.id
         };
 

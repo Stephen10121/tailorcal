@@ -5,7 +5,6 @@
     import type { CarouselAPI } from "@/components/ui/carousel/context.js";
     import { AspectRatio } from "@/components/ui/aspect-ratio/index.js";
     import { Temporal } from "temporal-polyfill";
-    import { mergeEventArrayAndCustomEventArray } from "@/utils";
 
     let { data } = $props();
 
@@ -14,8 +13,6 @@
     let timeZone = $state(Temporal.Now.timeZoneId());
     let today = $state(Temporal.Now.zonedDateTimeISO(timeZone).startOfDay());
     let api = $state<CarouselAPI>();
-
-    let allEvents = $derived(mergeEventArrayAndCustomEventArray(data.events, data.customEvents));
 
     function parentSentMessage(event: MessageEvent) {
         try {
@@ -68,64 +65,51 @@
             class="w-full h-full"
         >
             <Carousel.Content class="w-screen h-screen">
-                {#each allEvents as event (`anEvent${event.data.id}`)}
-                    {#if event.type === "event"}
-                        {#if today.toInstant().epochMilliseconds < (new Date(event.data.startTime)).valueOf()}
-                            <Carousel.Item class="w-screen h-screen">
-                                <AspectRatio ratio={16 / 9} class="relative max-w-screen max-h-screen aspect-video centered-div">
-                                    <img src={event.data.imageURL} alt={event.data.name} class="w-full h-full">
-                                    {#if displaySettings.showEventExtraInfo && (displaySettings.showEventName || (displaySettings.showEventDescription && event.data.description.length > 0) || (displaySettings.showEventRegistration && event.data.registrationURL.length !== 0))}
-                                        <div class="extrastuff overflow-hidden">
-                                            <div class="info">
-                                                {#if displaySettings.showEventName}
-                                                    <h2 class="text-2xl">{event.data.name}</h2>
-                                                {/if}
+                {#each data.events as event (`anEvent${event.id}`)}
+                    {#if today.toInstant().epochMilliseconds < (new Date(event.startTime)).valueOf()}
+                        <Carousel.Item class="w-screen h-screen">
+                            <AspectRatio ratio={16 / 9} class="relative max-w-screen max-h-screen aspect-video centered-div">
+                                <img src={event.imageURL} alt={event.name} class="w-full h-full">
+                                {#if displaySettings.showEventExtraInfo && (displaySettings.showEventName || (displaySettings.showEventDescription && event.description.length > 0) || (displaySettings.showEventRegistration && event.registrationURL.length !== 0))}
+                                    <div class="extrastuff overflow-hidden">
+                                        <div class="info">
+                                            {#if displaySettings.showEventName}
+                                                <h2 class="text-2xl">{event.name}</h2>
+                                            {/if}
 
-                                                {#if displaySettings.showEventDescription && event.data.description.length > 0}
-                                                    <p class="text-sm">{event.data.description}</p>
-                                                {/if}
+                                            {#if displaySettings.showEventDescription && event.description.length > 0}
+                                                <p class="text-sm">{event.description}</p>
+                                            {/if}
 
-                                                {#if displaySettings.showEventRegistration && event.data.registrationURL.length !== 0}
-                                                    <a href={event.data.registrationURL} class="flex items-center gap-1" target="_blank">
-                                                        Register Now
-                                                        <SquareArrowOutUpRight class="h-4 w-4" />
-                                                    </a>
-                                                {/if}
-                                            </div>
+                                            {#if displaySettings.showEventRegistration && event.registrationURL.length !== 0}
+                                                <a href={event.registrationURL} class="flex items-center gap-1" target="_blank">
+                                                    Register Now
+                                                    <SquareArrowOutUpRight class="h-4 w-4" />
+                                                </a>
+                                            {/if}
                                         </div>
-                                    {/if}
-                                </AspectRatio>
-                            </Carousel.Item>
-                        {/if}
-                    {:else}
-                        {#if today.toInstant().epochMilliseconds < (new Date(event.data.date)).valueOf()}
-                            <Carousel.Item class="w-screen h-screen">
-                                <AspectRatio ratio={16 / 9} class="relative max-w-screen max-h-screen aspect-video centered-div">
-                                    <img src="{data.apiServer}api/files/{event.data.collectionId}/{event.data.id}/{event.data.picture}" alt={event.data.name} class="w-full h-full">
-                                    {#if displaySettings.showEventExtraInfo && (displaySettings.showEventName || (displaySettings.showEventDescription && event.data.description.length > 0) || (displaySettings.showEventRegistration && event.data.registrationURL.length !== 0))}
-                                        <div class="extrastuff overflow-hidden">
-                                            <div class="info">
-                                                {#if displaySettings.showEventName}
-                                                    <h2 class="text-2xl">{event.data.name}</h2>
-                                                {/if}
-
-                                                {#if displaySettings.showEventDescription && event.data.description.length > 0}
-                                                    <p class="text-sm">{event.data.description}</p>
-                                                {/if}
-
-                                                {#if displaySettings.showEventRegistration && event.data.registrationURL.length !== 0}
-                                                    <a href={event.data.registrationURL} class="flex items-center gap-1" target="_blank">
-                                                        Register Now
-                                                        <SquareArrowOutUpRight class="h-4 w-4" />
-                                                    </a>
-                                                {/if}
-                                            </div>
-                                        </div>
-                                    {/if}
-                                </AspectRatio>
-                            </Carousel.Item>
-                        {/if}
+                                    </div>
+                                {/if}
+                            </AspectRatio>
+                        </Carousel.Item>
                     {/if}
+                {/each}
+                {#each data.customEvents as customImage (`anCustomImage${customImage.id}`)}
+                    <Carousel.Item class="w-screen h-screen">
+                        <AspectRatio ratio={16 / 9} class="relative max-w-screen max-h-screen aspect-video centered-div">
+                            <img src="{data.apiServer}api/files/{customImage.collectionId}/{customImage.id}/{customImage.picture}" alt={customImage.name} class="w-full h-full">
+                            {#if displaySettings.showEventExtraInfo && (displaySettings.showEventRegistration && customImage.showLink && customImage.registrationURL.length !== 0)}
+                                <div class="extrastuff overflow-hidden">
+                                    <div class="info">
+                                        <a href={customImage.registrationURL} class="flex items-center gap-1" target="_blank">
+                                            {customImage.linkText}
+                                            <SquareArrowOutUpRight class="h-4 w-4" />
+                                        </a>
+                                    </div>
+                                </div>
+                            {/if}
+                        </AspectRatio>
+                    </Carousel.Item>
                 {/each}
             </Carousel.Content>
         </Carousel.Root>

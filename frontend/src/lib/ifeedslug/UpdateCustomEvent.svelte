@@ -15,40 +15,35 @@
     import { toast } from "svelte-sonner";
 
     let {
-        customEvents,
+        customImages,
         apiServer,
         imageFeeds,
         currentFeedID,
         selectedEventIndex,
     }: {
-        customEvents: CustomImageIFeedDBModel[],
+        customImages: CustomImageIFeedDBModel[],
         apiServer: string,
         imageFeeds: ImageFeedDBModel[],
         currentFeedID: string,
         selectedEventIndex: number,
     } = $props();
 
-    const df = new DateFormatter("en-US", { dateStyle: "long" });
-
     let includeInOtherFeeds = $state(imageFeeds.map((feed) => {
         return {
             id: feed.id,
             name: feed.name,
-            include: customEvents[selectedEventIndex].imageFeed.includes(feed.id)
+            include: customImages[selectedEventIndex].imageFeed.includes(feed.id)
         }
     }))
 
     let uploadNewEventPicture: File | null = $state(null);
     let uploadNewEventPictureLink = $derived(uploadNewEventPicture ? URL.createObjectURL(uploadNewEventPicture) : null);
 
-    let eventPictureLink = $derived(customEvents[selectedEventIndex].picture ? `${apiServer}api/files/${customEvents[selectedEventIndex].collectionId}/${customEvents[selectedEventIndex].id}/${customEvents[selectedEventIndex].picture}` : "");
-    let dateValue = $derived<DateValue | undefined>(parseDate(new Date(customEvents[selectedEventIndex].date).toISOString().split('T')[0]));
-    let dateContentRef = $state<HTMLElement | null>(null);
+    let eventPictureLink = $derived(customImages[selectedEventIndex].picture ? `${apiServer}api/files/${customImages[selectedEventIndex].collectionId}/${customImages[selectedEventIndex].id}/${customImages[selectedEventIndex].picture}` : "");
 
-    let name = $state(customEvents[selectedEventIndex].name);
-    let description = $state(customEvents[selectedEventIndex].description);
-    let registrationURL = $state(customEvents[selectedEventIndex].registrationURL);
-    let show = $state(customEvents[selectedEventIndex].show);
+    let linkText = $state(customImages[selectedEventIndex].linkText);
+    let registrationURL = $state(customImages[selectedEventIndex].registrationURL);
+    let showLink = $state(customImages[selectedEventIndex].showLink);
 
     function handleRemoveEventPicture() {
         clearFileInput(document.getElementById("imageUploaderIFeed"))
@@ -65,16 +60,20 @@
 
     async function updateEvent(event: SubmitEvent) {
         event.preventDefault();
+
+        if (showLink && (linkText.length === 0 || registrationURL.length === 0)) {
+            toast.error("Missing Data", { description: "Please fill all required fields." });
+            return;
+        }
         let included: string[] = [];
         for (let i=0;i<includeInOtherFeeds.length;i++) {
             if (includeInOtherFeeds[i].include) {
                 included.push(includeInOtherFeeds[i].id);
             }
         }
-        let date = dateValue ? dateValue.toDate(getLocalTimeZone()).getTime() : 0;
 
         const savingChangesToast = toast.loading("Saving changes!");
-        const success = await updateCustomIFeedEvent(customEvents[selectedEventIndex].id, name, description, registrationURL, date, included, show, uploadNewEventPicture, eventPictureLink);
+        const success = await updateCustomIFeedEvent(customImages[selectedEventIndex].id, linkText, registrationURL, included, showLink, uploadNewEventPicture, eventPictureLink);
         if (success) {
             clearFileInput(document.getElementById("imageUploaderIFeed"));
             uploadNewEventPicture = null;
@@ -135,56 +134,29 @@
         </div>
         </div>
     </div>
-    
-    <div class="grid gap-2">
-        <Label for="name" class="text-end">Name</Label>
-        <Input name="eventName" id="name" bind:value={name} />
-    </div>
-
-    <div class="grid gap-2">
-        <Label for="description" class="text-end">Description</Label>
-        <Textarea name="eventDescription" id="description" bind:value={description} />
-    </div>
-
-    <div class="grid gap-2">
-        <Label for="registrationURL" class="text-end">Registration URL</Label>
-        <Input name="eventRegistrationURL" id="registrationURL" bind:value={registrationURL} placeholder='e.g. "https://event123.example.com/register"' />
-    </div>
-
-    <div class="grid gap-2">
-        <Label for="eventDate" class="flex flex-col items-start space-y-1 cursor-pointer">
-            <span class="font-medium">Event Date</span>
-        </Label>
-        <Popover.Root>
-            <Popover.Trigger
-                id="eventDate"
-                class={cn(
-                buttonVariants({
-                    variant: "outline",
-                    class: "w-full justify-start text-start font-normal"
-                }),
-                !dateValue && "text-muted-foreground"
-                )}
-            >
-                <CalendarIcon />
-                {dateValue ? df.format(dateValue.toDate(getLocalTimeZone())) : "Pick a date"}
-            </Popover.Trigger>
-            <Popover.Content bind:ref={dateContentRef} class="w-auto p-0">
-                <Calendar id="date" type="single" bind:value={dateValue} captionLayout="dropdown" />
-            </Popover.Content>
-        </Popover.Root>
-    </div>
 
     <div class="flex items-center justify-between space-x-2">
         <Label for="showEvent" class="flex flex-col items-start space-y-1 cursor-pointer">
-            <span class="font-medium">Show Event</span>
+            <span class="font-medium">Show Link</span>
         </Label>
         <Switch
             name="eventShow"
             id="showEvent"
-            bind:checked={show}
+            bind:checked={showLink}
         />
     </div>
+
+    {#if showLink}
+        <div class="grid gap-2">
+            <Label for="name" class="text-end">Name*</Label>
+            <Input name="eventName" id="name" bind:value={linkText} />
+        </div>
+
+        <div class="grid gap-2">
+            <Label for="registrationURL" class="text-end">Link URL*</Label>
+            <Input name="eventRegistrationURL" id="registrationURL" bind:value={registrationURL} placeholder='e.g. "https://event123.example.com/register"' />
+        </div>
+    {/if}
 
     {#each includeInOtherFeeds as imageFeed, index (`includeinifeed${imageFeed.id}`)}
         {#if imageFeed.id !== currentFeedID}
