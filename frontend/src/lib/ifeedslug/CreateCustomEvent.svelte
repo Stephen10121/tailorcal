@@ -130,7 +130,7 @@
             <Button variant="outline" onclick={() => dialogOpen = false} class="bg-transparent">
                 Cancel
             </Button>
-            <Button onclick={handleCreateEvent}>Create Event</Button>
+            <Button onclick={handleCreateEvent}>Save</Button>
         </Dialog.Footer>
     </Dialog.Content>
 </Dialog.Root>
