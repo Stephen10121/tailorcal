@@ -108,7 +108,7 @@
         </div>
         <div class="flex-1 space-y-3">
         <div>
-            <p class="text-sm text-foreground font-medium">Upload an event picture</p>
+            <p class="text-sm text-foreground font-medium">Upload an image</p>
             <p class="text-sm text-muted-foreground mt-1">
             JPG, PNG or GIF. Max size 2MB. Recommended 960x540px.
             </p>
