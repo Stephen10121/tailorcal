@@ -8,7 +8,7 @@
         <div class="flex h-16 items-center justify-between">
             <div class="flex items-center gap-2">
                 <Calendar class="h-6 w-6 text-ring" />
-                <span class="text-xl font-semibold text-foreground">TailorCal</span>
+                <span class="text-xl font-semibold text-foreground">InfoSections</span>
             </div>
 
             <nav class="hidden md:flex items-center gap-8">

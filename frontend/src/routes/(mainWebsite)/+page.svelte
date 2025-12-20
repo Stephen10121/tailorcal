@@ -8,7 +8,7 @@
 </script>
 
 <svelte:head>
-    <title>TailorCal</title>
+    <title>InfoSections</title>
 </svelte:head>
 
 <AlphaWarning />
