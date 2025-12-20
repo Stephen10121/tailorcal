@@ -23,7 +23,7 @@
         <div class="grid gap-4 py-4">
             <div class="flex flex-col gap-1">
                 <Label for="email" class="text-right">Email Address</Label>
-                <Input bind:value={email} id="email" placeholder="example@tailorcal.com" class="col-span-3" />
+                <Input bind:value={email} id="email" placeholder="example@infosections.com" class="col-span-3" />
             </div>
         </div>
         <Dialog.Footer>

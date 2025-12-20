@@ -10,7 +10,7 @@
                 Ready to transform your scheduling?
             </h2>
             <p class="text-lg text-secondary-foreground/80 leading-relaxed">
-                Join many professionals who have streamlined their calendar management with TailorCal. Start your
+                Join many professionals who have streamlined their calendar management with InfoSections. Start your
                 free trial today—no credit card required.
             </p>
             <div class="flex flex-col sm:flex-row gap-4 justify-center">

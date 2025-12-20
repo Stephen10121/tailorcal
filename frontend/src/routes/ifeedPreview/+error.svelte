@@ -32,7 +32,7 @@
                 Try Again
             </a>
 
-        <div class="dark mt-8 text-sm text-gray-500">Need help? <a href="mailto:support@tailorcal.com" class="underline">Contact support</a></div>
-        <div class="dark mt-1 text-sm text-gray-500"><a href="https://uptime.stephengruzin.dev/status/tailorcal" target="_blank" class="underline">Status Page</a></div>
+        <div class="dark mt-8 text-sm text-gray-500">Need help? <a href="mailto:support@infosections.com" class="underline">Contact support</a></div>
+        <div class="dark mt-1 text-sm text-gray-500"><a href="https://uptime.stephengruzin.dev/status/infosections" target="_blank" class="underline">Status Page</a></div>
     </div>
 </main>

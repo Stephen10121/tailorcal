@@ -126,7 +126,7 @@
 </script>
 
 <svelte:head>
-    <title>{data.selectedfeed.name} | TailorCal</title>
+    <title>{data.selectedfeed.name} | InfoSections</title>
 </svelte:head>
 
 <div class="max-w-5xl mx-auto space-y-6">

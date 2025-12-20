@@ -21,7 +21,7 @@
 </script>
 
 <svelte:head>
-    <title>Dashboard | TailorCal</title>
+    <title>Dashboard | InfoSections</title>
 </svelte:head>
 
 {#if data.user.accessLevel !== "none"}

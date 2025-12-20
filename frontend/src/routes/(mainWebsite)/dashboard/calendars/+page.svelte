@@ -74,7 +74,7 @@
 </script>
 
 <svelte:head>
-    <title>My Calendars | TailorCal</title>
+    <title>My Calendars | InfoSections</title>
 </svelte:head>
 
 <div class="w-full h-full space-y-6">

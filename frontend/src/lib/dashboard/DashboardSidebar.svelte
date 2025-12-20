@@ -1,11 +1,10 @@
 <script lang="ts">
-    import { Calendar, Home, GalleryHorizontalEnd, ChevronsUpDownIcon, SparklesIcon, BadgeCheckIcon, CreditCardIcon, BellIcon, LogOutIcon } from "@lucide/svelte";
-    import * as Sidebar from "$lib/components/ui/sidebar/index.js";
-    import { capitalizeFirstLetter, cn, type UserModel } from "@/utils";
+    import { Calendar, Home, GalleryHorizontalEnd, ChevronsUpDownIcon, CreditCardIcon, LogOutIcon } from "@lucide/svelte";
     import * as DropdownMenu from "$lib/components/ui/dropdown-menu/index.js";
-    import * as Avatar from "$lib/components/ui/avatar/index.js";
     import { useSidebar } from "$lib/components/ui/sidebar/index.js";
-    import Button from "@/components/ui/button/button.svelte";
+    import { capitalizeFirstLetter, type UserModel } from "@/utils";
+    import * as Sidebar from "$lib/components/ui/sidebar/index.js";
+    import * as Avatar from "$lib/components/ui/avatar/index.js";
     import { emailNotSetDialog } from "@/store";
 
     let { 
@@ -46,7 +45,7 @@
                     </div>
                     <div class="grid flex-1 text-left text-sm leading-tight">
                         <span class="truncate font-medium">
-                            TailorCal
+                            InfoSections
                         </span>
                         <span class="truncate text-xs">
                             {#if user.accessLevel === "none"}Free{:else}{capitalizeFirstLetter(user.accessLevel)}{/if} Plan

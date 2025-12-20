@@ -7,4 +7,4 @@ Disallow: /oath/
 Disallow: /cal/
 Disallow /ifeed/
 
-Sitemap: https://tailorcal.com/sitemap.xml
+Sitemap: https://infosections.com/sitemap.xml
