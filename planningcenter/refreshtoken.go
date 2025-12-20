@@ -9,7 +9,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/Stephen10121/tailorcalbackend/initializers"
+	"github.com/Stephen10121/infosections/initializers"
 	"github.com/pocketbase/pocketbase"
 )
 

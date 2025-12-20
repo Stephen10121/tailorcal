@@ -1,4 +1,4 @@
-module github.com/Stephen10121/tailorcalbackend
+module github.com/Stephen10121/infosections
 
 go 1.25.3
 

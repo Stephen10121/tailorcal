@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/Stephen10121/tailorcalbackend/initializers"
-	"github.com/Stephen10121/tailorcalbackend/planningcenter"
+	"github.com/Stephen10121/infosections/initializers"
+	"github.com/Stephen10121/infosections/planningcenter"
 	"github.com/pocketbase/pocketbase"
 	"github.com/pocketbase/pocketbase/core"
 )

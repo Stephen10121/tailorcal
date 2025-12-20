@@ -70,7 +70,7 @@
 </script>
 
 <svelte:head>
-    <title>My Image Feeds | TailorCal</title>
+    <title>My Image Feeds | InfoSections</title>
 </svelte:head>
 
 <div class="w-full h-full space-y-6">

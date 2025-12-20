@@ -1,7 +1,7 @@
 package automations
 
 import (
-	"github.com/Stephen10121/tailorcalbackend/functions"
+	"github.com/Stephen10121/infosections/functions"
 	"github.com/pocketbase/pocketbase"
 )
 

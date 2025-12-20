@@ -3,7 +3,7 @@ package webhooks
 import (
 	"net/http"
 
-	"github.com/Stephen10121/tailorcalbackend/planningcenter"
+	"github.com/Stephen10121/infosections/planningcenter"
 	"github.com/pocketbase/pocketbase"
 )
 

@@ -1,4 +1,4 @@
-name: Docker Build TailorCal backend
+name: Docker Build InfoSections backend
 
 on:
     push:
@@ -17,8 +17,8 @@ jobs:
         name: Push code
         run: |
             echo "${{ secrets.DOCKERPW }}" | docker login -u "stephen10121" --password-stdin
-            docker build -t stephen10121/tailorcalbackend:1.${{ github.run_number }} .
-            docker tag stephen10121/tailorcalbackend:1.${{ github.run_number }} stephen10121/tailorcalbackend:prod
-            docker tag stephen10121/tailorcalbackend:1.${{ github.run_number }} stephen10121/tailorcalbackend:1.${{ github.run_number }}
-            docker image push stephen10121/tailorcalbackend:prod
-            docker image push stephen10121/tailorcalbackend:1.${{ github.run_number }}
+            docker build -t stephen10121/infosectionsbackend:1.${{ github.run_number }} .
+            docker tag stephen10121/infosectionsbackend:1.${{ github.run_number }} stephen10121/infosectionsbackend:prod
+            docker tag stephen10121/infosectionsbackend:1.${{ github.run_number }} stephen10121/infosectionsbackend:1.${{ github.run_number }}
+            docker image push stephen10121/infosectionsbackend:prod
+            docker image push stephen10121/infosectionsbackend:1.${{ github.run_number }}

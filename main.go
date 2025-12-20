@@ -6,10 +6,10 @@ import (
 	"io"
 	"log"
 
-	"github.com/Stephen10121/tailorcalbackend/automations"
-	"github.com/Stephen10121/tailorcalbackend/enpoints"
-	"github.com/Stephen10121/tailorcalbackend/initializers"
-	"github.com/Stephen10121/tailorcalbackend/webhooks"
+	"github.com/Stephen10121/infosections/automations"
+	"github.com/Stephen10121/infosections/enpoints"
+	"github.com/Stephen10121/infosections/initializers"
+	"github.com/Stephen10121/infosections/webhooks"
 	"github.com/pocketbase/dbx"
 	"github.com/pocketbase/pocketbase"
 	"github.com/pocketbase/pocketbase/core"
@@ -102,7 +102,7 @@ func main() {
 		automations.UpdateEventInstances(app)
 	})
 
-	log.Println("[server] TailorCal backend online.")
+	log.Println("[server] InfoSections backend online.")
 	if err := app.Start(); err != nil {
 		log.Fatal(err)
 	}
