@@ -98,7 +98,7 @@ func main() {
 		return se.Next()
 	})
 
-	app.Cron().MustAdd("updateEventInstancesForEachSubscribedUser", "0 */12 * * *", func() {
+	app.Cron().MustAdd("updateEventInstancesForEachSubscribedUser", "0 */1 * * *", func() {
 		automations.UpdateEventInstances(app)
 	})
 
