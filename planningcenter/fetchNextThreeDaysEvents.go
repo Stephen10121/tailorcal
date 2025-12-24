@@ -92,11 +92,6 @@ func EventFetcher(userId string, app *pocketbase.PocketBase) ([]Event, error) {
 	var fetchedEvents []Event
 
 	for i := 0; i < len(responseJson.Data); i++ {
-		if err != nil {
-			fmt.Println(err)
-			continue
-		}
-
 		eventTime := ParseEventTimes(responseJson.Data[i].Relationships.EventTimes, eventTimes)
 		resources := ParseResourceBookings(responseJson.Data[i].Relationships.ResourceBookings, resourceBookings, resources)
 		tags := ParseTags(responseJson.Data[i].Relationships.Tags, allTags)
